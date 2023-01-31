@@ -5,9 +5,9 @@ import LoginForm from "../loginForm/LoginForm";
 const LoginPage = () => {
   return (
     <Box class="screen">
-        <LoginForm/>
-    </Box>  
+      <LoginForm />
+    </Box>
   );
-}
+};
 
 export default LoginPage;
