@@ -1,6 +1,6 @@
 {
   "hosting": {
-    "public": "public",
+    "public": "build",
     "ignore": [
       "firebase.json",
       "**/.*",
@@ -12,14 +12,5 @@
         "destination": "/index.html"
       }
     ]
-  },
-  "emulators": {
-    "hosting": {
-      "port": 3000
-    },
-    "ui": {
-      "enabled": true
-    },
-    "singleProjectMode": true
   }
 }
