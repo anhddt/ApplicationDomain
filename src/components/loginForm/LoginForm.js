@@ -1,12 +1,6 @@
 import "./loginForm.css";
 import { NavLink } from "react-router-dom";
-import {
-  Box,
-  Button,
-  Grid,
-  TextField,
-  Typography,
-} from "@mui/material";
+import { Box, Button, Grid, TextField, Typography } from "@mui/material";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import PersonOutlineOutlinedIcon from "@mui/icons-material/PersonOutlineOutlined";
 import { useMemo, useState } from "react";
@@ -25,7 +19,15 @@ const LoginForm = () => {
         Welcome
       </Typography>
       <Box>
-        Not a member? <NavLink to="/register" component="button" underline="hover" variant="subtitle1">Create Account</NavLink>
+        Not a member?{" "}
+        <NavLink
+          to="/register"
+          component="button"
+          underline="hover"
+          variant="subtitle1"
+        >
+          Create Account
+        </NavLink>
       </Box>
       <Box className="field-container">
         <PersonOutlineOutlinedIcon sx={{ fontSize: 50 }} />
@@ -56,10 +58,14 @@ const LoginForm = () => {
       </Button>
       <Grid container>
         <Grid item xs={6}>
-          <NavLink component="button" underline="hover" variant="subtitle1">Forgot Password</NavLink>
+          <NavLink component="button" underline="hover" variant="subtitle1">
+            Forgot Password
+          </NavLink>
         </Grid>
         <Grid item xs={6}>
-          <NavLink component="button" underline="hover" variant="subtitle1">Forgot Username</NavLink>
+          <NavLink component="button" underline="hover" variant="subtitle1">
+            Forgot Username
+          </NavLink>
         </Grid>
       </Grid>
     </Box>
