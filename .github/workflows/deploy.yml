@@ -1,9 +1,9 @@
-name: Firebase Deploy
+ame: Firebase Deploy
 
 on:
   push:
     branches: 
-      - main
+      - deploy
 
 jobs:
   build:
