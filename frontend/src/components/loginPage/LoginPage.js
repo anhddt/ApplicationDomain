@@ -4,7 +4,7 @@ import LoginForm from "../loginForm/LoginForm";
 
 const LoginPage = () => {
   return (
-    <Box class="screen">
+    <Box className="screen">
       <LoginForm />
     </Box>
   );
