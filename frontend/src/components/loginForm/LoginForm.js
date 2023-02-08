@@ -1,10 +1,9 @@
 import "./loginForm.css";
+import { NavLink } from "react-router-dom";
 import {
   Box,
   Button,
-  FormControl,
   Grid,
-  Link,
   TextField,
   Typography,
 } from "@mui/material";
@@ -12,7 +11,7 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import PersonOutlineOutlinedIcon from "@mui/icons-material/PersonOutlineOutlined";
 import { useMemo, useState } from "react";
 
-const LoginPage = () => {
+const LoginForm = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
@@ -21,12 +20,12 @@ const LoginPage = () => {
   }, [username, password]);
 
   return (
-    <FormControl class="login-form">
+    <Box className="login-form">
       <Typography id="login-form-message" variant="h4">
         Welcome
       </Typography>
       <Box>
-        Not a member? <Link>Create Account</Link>
+        Not a member? <NavLink to="/register" component="button" underline="hover" variant="subtitle1">Create Account</NavLink>
       </Box>
       <Box className="field-container">
         <PersonOutlineOutlinedIcon sx={{ fontSize: 50 }} />
@@ -52,19 +51,19 @@ const LoginPage = () => {
           required
         />
       </Box>
-      <Button color="primary" variant="contained" disabled={isDisabled}>
+      <Button variant="contained" disabled={isDisabled}>
         Login
       </Button>
       <Grid container>
         <Grid item xs={6}>
-          <Link>Forgot Password</Link>
+          <NavLink component="button" underline="hover" variant="subtitle1">Forgot Password</NavLink>
         </Grid>
         <Grid item xs={6}>
-          <Link>Forgot Username</Link>
+          <NavLink component="button" underline="hover" variant="subtitle1">Forgot Username</NavLink>
         </Grid>
       </Grid>
-    </FormControl>
+    </Box>
   );
 };
 
-export default LoginPage;
+export default LoginForm;
