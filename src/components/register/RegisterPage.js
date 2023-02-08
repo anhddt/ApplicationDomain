@@ -1,38 +1,23 @@
 import "./registerPage.css";
+import { useState } from "react";
 import { Box, Button, Grid, TextField } from "@mui/material";
-
+import { createAccount } from "../../firebase";
 const RegisterPage = () => {
-  const fieldName = [
-    "First Name",
-    "Last Name",
-    "D.O.B.",
-    "Email",
-    "Street",
-    "City",
-    "Zip Code",
-    "State",
-    "Username",
-    "Password",
-  ];
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
-  const InputField = () => {
-    return (
-      <Box backgroundColor="red">
-        <Grid container spacing={3}>
-          {fieldName.map((field) => (
-            <Grid item xs={6}>
-              <TextField label={`${field}`} />
-            </Grid>
-          ))}
-        </Grid>
-      </Box>
-    );
-  };
   return (
     <Box className="container">
       <Box className="register-form">
-        <InputField />
-        <Button variant="contained" disabled={false}>
+        <Grid container>
+          <Grid item xs={6}>
+            <TextField label="Email" variant="outlined" onChange={(e) => {setEmail(e.target.value)}} />
+          </Grid>
+          <Grid item xs={6}>
+            <TextField label="Password" variant="outlined" onChange={(e) => {setPassword(e.target.value)}} />
+          </Grid>
+        </Grid>
+        <Button variant="contained" disabled={false} onClick={createAccount(email, password)}>
           Submit
         </Button>
       </Box>

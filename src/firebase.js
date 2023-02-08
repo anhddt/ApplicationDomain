@@ -1,5 +1,5 @@
 import { initializeApp } from "firebase/app";
-import { getAuth } from "firebase/auth";
+import { getAuth, connectAuthEmulator, createUserWithEmailAndPassword } from "firebase/auth";
 
 const firebaseConfig = {
     apiKey: process.env.FIREBASE_API_KEY,
@@ -14,6 +14,14 @@ const firebaseConfig = {
 
 const firebaseApp = initializeApp(firebaseConfig);
 
-
-// Initialize Firebase Authentication and get a reference to the service
 export const auth = getAuth(firebaseApp);
+connectAuthEmulator(auth, "localhost:8080");
+
+export const createAccount = async (email, password) => {
+    try {
+        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+        console.log(userCredential);
+    } catch (error) {
+        console.log(error);
+    }
+};
