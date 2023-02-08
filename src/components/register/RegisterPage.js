@@ -17,7 +17,7 @@ const RegisterPage = () => {
             <TextField label="Password" variant="outlined" onChange={(e) => {setPassword(e.target.value)}} />
           </Grid>
         </Grid>
-        <Button variant="contained" disabled={false} onClick={createAccount(email, password)}>
+        <Button variant="contained" disabled={false} onClick={() => {createAccount(email, password)}}>
           Submit
         </Button>
       </Box>
