@@ -1,7 +1,7 @@
 import "./registerPage.css";
 import { useState } from "react";
 import { Box, Button, Grid, TextField } from "@mui/material";
-import { createAccount } from "../../firebase";
+import { createAccount } from "./register";
 const RegisterPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");

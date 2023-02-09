@@ -19,10 +19,10 @@ You may also see any lint errors in the console.
 
 ### `firebase serve` 
 This is after running `npm run build` to build the local deployment
-Open [http:///localhost:5000] to view the firebase project.
+Open [http:///localhost:5000](http:///localhost:5000) to view the firebase project.
 
 ### `firebase emulators:start --only auth`
-Open [http:///localhost:8080] to view the firebase project local db.
+Open [http:///localhost:8080](http:///localhost:8080) to view the firebase project local db.
 ### `npm run test`
 
 Launches the test runner in the interactive watch mode.\
