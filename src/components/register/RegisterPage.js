@@ -2,10 +2,17 @@ import "./registerPage.css";
 import { useState } from "react";
 import { Box, Button, Grid, TextField } from "@mui/material";
 import { createAccount } from "./register";
+import { useNavigate } from "react-router-dom";
 const RegisterPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const navigateTo = useNavigate();
 
+  const handleSubmit = () => {
+    createAccount(email, password);
+    navigateTo("/");
+  };
+  
   return (
     <Box className="container">
       <Box className="register-form">
@@ -17,7 +24,7 @@ const RegisterPage = () => {
             <TextField label="Password" variant="outlined" onChange={(e) => {setPassword(e.target.value)}} />
           </Grid>
         </Grid>
-        <Button variant="contained" disabled={false} onClick={() => {createAccount(email, password)}}>
+        <Button variant="contained" disabled={false} onClick={() => {handleSubmit()}}>
           Submit
         </Button>
       </Box>

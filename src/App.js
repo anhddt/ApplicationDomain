@@ -2,7 +2,8 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import LoginPage from "./components/loginPage/LoginPage";
 import RegisterPage from "./components/register/RegisterPage";
 import HomePage from "./components/homePage/Home";
-function App() {
+
+const App = () => {
   return (
     <BrowserRouter>
         <Routes>
