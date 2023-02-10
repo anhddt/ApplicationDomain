@@ -15,10 +15,7 @@ const RegisterPage = () => {
   const [zip, setZip] = useState("");
   const [country, setCountry] = useState("");
   const [phone, setPhone] = useState("");
-
   const navigateTo = useNavigate();
-
-
   const handleSubmit = async () => {
     const userInfo = {firstName: firstName, lastName: lastName, email: email, password: password, street: street, city: city, state: state, zip, country: country, phone: phone};
     createAccount(userInfo, navigateTo);
