@@ -17,6 +17,9 @@
     "auth": {
       "port": 8080
     },
+    "firestore": {
+      "port": 8081
+    },
     "hosting": {
       "port": 5000
     },
@@ -25,5 +28,9 @@
       "port": 4000
     },
     "singleProjectMode": true
+  },
+  "firestore": {
+    "rules": "firestore.rules",
+    "indexes": "firestore.indexes.json"
   }
 }
