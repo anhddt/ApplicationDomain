@@ -1,7 +1,7 @@
 import "./registerPage.css";
 import { useState } from "react";
 import { Box, Button, Grid, TextField } from "@mui/material";
-import { createAccount } from "./register";
+import { createAccount } from "../../utilities/utils";
 import { useNavigate } from "react-router-dom";
 const RegisterPage = () => {
   const [email, setEmail] = useState("");
@@ -9,8 +9,7 @@ const RegisterPage = () => {
   const navigateTo = useNavigate();
 
   const handleSubmit = () => {
-    createAccount(email, password);
-    navigateTo("/");
+    createAccount(email, password, navigateTo);
   };
   
   return (

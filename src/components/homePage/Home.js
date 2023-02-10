@@ -1,5 +1,5 @@
 import { Button } from "@mui/material";
-import { logOut } from "./util";
+import { logOut } from "../../utilities/utils"
 import { useNavigate } from "react-router-dom"
 
 const HomePage = () => {

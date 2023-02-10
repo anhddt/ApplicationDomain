@@ -4,7 +4,7 @@ import { NavLink, useNavigate } from "react-router-dom";
 import { Box, Button, Grid, TextField, Typography } from "@mui/material";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import PersonOutlineOutlinedIcon from "@mui/icons-material/PersonOutlineOutlined";
-import { signInEmailPassword } from "./login";
+import { signInEmailPassword } from "../../utilities/utils";
 
 const LoginForm = () => {
   const [email, setEmail] = useState("");
