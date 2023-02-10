@@ -17,7 +17,7 @@ const RegisterPage = () => {
 
   const InputField = () => {
     return (
-      <Box backgroundColor="red">
+      <Box backgroundColor="white">
         <Grid container spacing={3}>
           {fieldName.map((field) => (
             <Grid item xs={6}>
