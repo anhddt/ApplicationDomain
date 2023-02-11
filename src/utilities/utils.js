@@ -1,5 +1,7 @@
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from "firebase/auth";
 import { auth } from "../firebase";
+import { addUserProfile } from "../middleware/addUserData";
+
 export const signInEmailPassword = async (email, password,navigateTo) => {
     try {   
         await signInWithEmailAndPassword(auth, email, password);
@@ -11,7 +13,8 @@ export const signInEmailPassword = async (email, password,navigateTo) => {
 
 export const createAccount = async (userInfo, navigateTo) => {
     try {
-        await createUserWithEmailAndPassword(auth, userInfo.email, userInfo.password);
+        const newUser = await createUserWithEmailAndPassword(auth, userInfo.email, userInfo.password);
+        addUserProfile(newUser.user.uid,userInfo);
         navigateTo("/login");
     } catch (error) {
         console.log(error);
