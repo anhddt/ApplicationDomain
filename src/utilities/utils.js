@@ -5,7 +5,7 @@ import { addUserProfile } from "../middleware/addUserData";
 export const signInEmailPassword = async (email, password,navigateTo) => {
     try {   
         await signInWithEmailAndPassword(auth, email, password);
-        navigateTo("/home");
+        navigateTo("/");
     } catch (error) {
         console.log(error);
     }
