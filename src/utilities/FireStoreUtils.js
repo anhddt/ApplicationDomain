@@ -1,4 +1,4 @@
-import { collection, doc , setDoc, getDocs, updateDoc } from 'firebase/firestore';
+import { collection, doc , setDoc, getDocs, updateDoc, deleteDoc } from 'firebase/firestore';
 const {firestore} = require("../firebase.js");
 const db = firestore;
 const usersRef = collection(db, 'Users');
@@ -37,12 +37,22 @@ function getUserName(userInfo) {
 //a function to retrieve the data of current users
 export const getUsers = async () => {
 	try {
-		let data;
+		let userMap = new Map()
 		const querySnapshot = await getDocs(collection(db, "newUsers"));
 		querySnapshot.forEach((doc) => {
-				data.doc.id = doc.data;
+				userMap.set(doc.id, doc.data);		
 		});
-		return data;
+		return userMap;
+	} catch (error) {
+		console.log(error);
+	}
+}
+
+//a function delete a user
+export const removeUser = async (userID) => {
+	try {
+		await deleteDoc(doc(db, "newUsers", userID));
+		console.log("Deleted user " + userID)
 	} catch (error) {
 		console.log(error);
 	}
