@@ -8,8 +8,8 @@ const LoginPage = () => {
   
   return (
     <Box className="screen">
-      <Header className = "header" />
-      <LoginForm className = "logbox" />
+      <Header />
+      <LoginForm />
     </Box>
   );
 };
