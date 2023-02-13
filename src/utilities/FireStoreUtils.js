@@ -35,14 +35,21 @@ function getUserName(userInfo) {
 }
 
 //a function to retrieve the data of current users
+//returns a map with the generated username as the key
 export const getUsers = async () => {
 	try {
 		let userMap = new Map();
 		const querySnapshot = await getDocs(collection(db, "newUsers"));
 		console.log("query just passed");
+		let docs = querySnapshot.docs();
+		docs.forEach(function(doc) {
+			userMap.set(doc.username, doc);
+		})
+		/*
 		querySnapshot.forEach((doc) => {
-				userMap.set(doc.data.username, doc.data);		
+				userMap.set(doc.data.username, doc.data());		
 		});
+		*/
 		console.log("set data values into map");
 		return userMap;
 	} catch (error) {

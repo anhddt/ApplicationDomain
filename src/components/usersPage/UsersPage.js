@@ -7,10 +7,13 @@ import { useNavigate } from "react-router-dom";
 import { getUsers } from "../../utilities/FireStoreUtils";
 
 const UsersPage = () => {
+    let data;
     const printUsers = () => {
         try{
-            const data = getUsers();
-            console.log(data);
+            data = getUsers();
+            console.log(data.size);
+            const itr = data.keys();
+            console.log(itr.next().value);
         } catch (error) {
             console.log(error);
         }
