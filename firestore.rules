@@ -12,18 +12,14 @@ service cloud.firestore {
       }
 
       function isValidUserAccount() {
-        return true;
+        return request.auth.uid == newUsers;
       }
 
-      //read permissions
-      //allow list: if request.auth != null && userIsAdmin();
-      allow list;
-      //allow get: if request.auth != null && (isUsersData() || userIsAdmin());
-      allow get;
-
+      allow read: if request.auth != null && (isUsersData() || userIsAdmin());
+      
       //write permissions
       allow update: if (request.auth != null) && (isUsersData() || userIsAdmin());
-      allow create: if isValidUserAccount();
+      allow create; 
       allow delete: if userIsAdmin();
     }
   }
