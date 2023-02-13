@@ -1,6 +1,6 @@
 import { Button } from "@mui/material";
 import { logOut } from "../../utilities/utils"
-import { useNavigate } from "react-router-dom"
+import { Navigate, useNavigate, NavLink } from "react-router-dom"
 
 const HomePage = () => {
   const navigateTo = useNavigate();
@@ -11,6 +11,14 @@ const HomePage = () => {
     <>
       <Button onClick={() => {handleLogOut()}} variant="contained">
         Sign out
+      </Button>
+      <Button variant="contained">
+        <NavLink
+          to="/users"
+          component="button"
+        >
+          view users
+        </NavLink>
       </Button>
     </>);
 };

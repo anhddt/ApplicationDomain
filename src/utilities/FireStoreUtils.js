@@ -1,4 +1,4 @@
-import { collection, doc , setDoc, getDocs, updateDoc, deleteDoc } from 'firebase/firestore';
+import { collection, doc , setDoc, getDocs, updateDoc, deleteDoc, query, where } from 'firebase/firestore';
 const {firestore} = require("../firebase.js");
 const db = firestore;
 const usersRef = collection(db, 'Users');
@@ -10,7 +10,7 @@ export const createUser = async (uid, userInfo) => {
 	userInfo.username = userName;
 	userInfo.role = "user";
 	try {
-		await setDoc(doc(db, "newUsers", userName, uid), userInfo);
+		await setDoc(doc(db, "newUsers", uid), userInfo);
 		console.log("created doc");
 	} catch (error) {
 		console.log(error);
@@ -37,13 +37,16 @@ function getUserName(userInfo) {
 //a function to retrieve the data of current users
 export const getUsers = async () => {
 	try {
-		let userMap = new Map()
+		let userMap = new Map();
 		const querySnapshot = await getDocs(collection(db, "newUsers"));
+		console.log("query just passed");
 		querySnapshot.forEach((doc) => {
-				userMap.set(doc.id, doc.data);		
+				userMap.set(doc.data.username, doc.data);		
 		});
+		console.log("set data values into map");
 		return userMap;
 	} catch (error) {
+		console.log("called from inside getUsers error");
 		console.log(error);
 	}
 }
@@ -53,6 +56,17 @@ export const removeUser = async (userID) => {
 	try {
 		await deleteDoc(doc(db, "newUsers", userID));
 		console.log("Deleted user " + userID)
+	} catch (error) {
+		console.log(error);
+	}
+}
+
+//a function to remove users based on userName
+export const removeUserbyName = async (userName) => {
+	const q = query(collection(db, "newUsers"), where("username", "==", userName));
+	try {
+		const querySnapshot = await getDocs(q);
+		await deleteDoc(db, "newUsers", querySnapshot[0].id);
 	} catch (error) {
 		console.log(error);
 	}
