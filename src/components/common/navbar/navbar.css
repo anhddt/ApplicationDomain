@@ -1,0 +1,18 @@
+.navbar {
+    display: flex;
+    position: relative;
+ 
+
+    
+}
+
+.navbar-item {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-left: 50px;
+    color: inherit;
+    text-decoration: inherit;
+    text-transform: uppercase;
+    outline: none;
+}

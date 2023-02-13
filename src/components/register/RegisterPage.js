@@ -1,7 +1,9 @@
 import "./registerPage.css";
 import { Box, Button, Grid, TextField } from "@mui/material";
+import { Header } from "../common";
 
 const RegisterPage = () => {
+  
   const fieldName = [
     "First Name",
     "Last Name",
@@ -30,6 +32,7 @@ const RegisterPage = () => {
   };
   return (
     <Box className="container">
+      <Header />
       <Box className="register-form">
         <InputField />
         <Button variant="contained" disabled={false}>
