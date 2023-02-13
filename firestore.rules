@@ -2,7 +2,7 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
     match /newUsers/{newUsers} {
-      allow write;
+      allow read, write;
     }
   }
 }

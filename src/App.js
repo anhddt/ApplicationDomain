@@ -1,5 +1,5 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import PrivateRoute from "./components/customRoute/PrivateRoute";
+import { PrivateRoute } from "./components/customRoute/PrivateRoute";
 import LoginPage from "./components/loginPage/LoginPage";
 import RegisterPage from "./components/register/RegisterPage";
 import HomePage from "./components/homePage/Home";
