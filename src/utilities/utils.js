@@ -40,7 +40,7 @@ export const createAccount = async (
   }
 };
 
-export const logOut = async (navigateTo) => {
+export const logOut = async () => {
   try {
     await signOut(auth);
   } catch (error) {}

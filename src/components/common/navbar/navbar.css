@@ -14,3 +14,16 @@
     text-transform: uppercase;
     outline: none;
 }
+
+#navbar-logout-button {
+    background: none!important;
+    border: none;
+    padding: 0!important;
+    cursor: pointer;
+    font-size: medium;
+}
+
+#navbar-logout-button:hover {
+    text-decoration: underline;
+    color: rgb(27, 191, 220);
+}
