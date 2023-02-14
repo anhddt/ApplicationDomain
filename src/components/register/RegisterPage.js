@@ -1,6 +1,7 @@
 import "./registerPage.css";
 import { useMemo, useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
+import { Header } from "../common";
 import { Box, Button, TextField, Typography } from "@mui/material";
 import { createAccount } from "../../utilities/utils";
 import {
@@ -57,6 +58,7 @@ const RegisterPage = () => {
 
   return (
     <Box className="container">
+      <Header />
       <Box className="userInfo-form">
         <Typography id="create-your-account-title" variant="h4">
           Create your account
