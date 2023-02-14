@@ -9,14 +9,7 @@ const App = () => {
   return (
     <BrowserRouter>
       <Routes>
-        <Route
-          index
-          element={
-            <PrivateRoute>
-              <HomePage />
-            </PrivateRoute>
-          }
-        />
+        <Route index element={<HomePage />}/>
         <Route path="admin" element={
           <PrivateRoute>
             <AdminPage />
