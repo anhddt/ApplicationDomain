@@ -1,29 +1,37 @@
 # To get started 
 
 1. Clone the main branch
-2. Navigate to frontend folder
-3. Make sure that you installed nodejs
-4. Run `npm i` and wait for the process to finish
-
-## Available Scripts
-
-In the project directory, you can run:
-
-### `npm run start`
-
-Runs the app in the development mode.\
+2. Make sure that you installed nodejs
+3. Run `npm i` and wait for the process to finish
+4. Run `npm start` and wait for the process to finish
+This command runs the app in the development mode.\
 Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
-
 The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## Available Scripts
+### `firebase emulators:start`
+Open [http://localhost:4000](http://localhost:4000) to view the firebase project local db.\
+It turns on all of the emulators by default.\
+You may include options like `--only auth` if you just want to run the authentication emulator.\
+Example: `firebase emulators:start --only auth`
+Check your `firebase.json` for a list of ports numbers that associated with the corespoding emulator.\
+Import `connectAuthEmulator`, or `connectFirestoreEmulator` if you want to run the local emulators.\
+### `firebase serve` 
+Run this command after running `npm run build` to build the local deployment
+Open [http://localhost:5000](http://localhost:5000) to view the firebase project.
 
+## Before pushing
+Make sure to run `npx prettier --write`
+Example: `npx prettier --write /src`
+This handle any indentation error and delete unused variables from the modifed code.
+## Before merging
+* Make sure there is no merge conflict otherwise the pull request will fail.
+* To resolve merge conflicts, run `git rebase main yourBranchName`. Update any conflicting changes if there is any conflict. Run `git commit -m "commit message"` to make a commit. Finally run `git commit --continue` to finish the rebase process.
+* If there is no conflict then simply set the local branch upstream and proceed to merge reqest.
+## Other commands
 ### `npm run test`
-
 Launches the test runner in the interactive watch mode.\
 See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
 ### `npm run build`
-
 Builds the app for production to the `build` folder.\
 It correctly bundles React in production mode and optimizes the build for the best performance.
 
