@@ -7,11 +7,18 @@ import HomePage from "./components/homePage/Home";
 const App = () => {
   return (
     <BrowserRouter>
-        <Routes>
-          <Route index element={<PrivateRoute><HomePage /></PrivateRoute>} />
-          <Route exact path="/login" element={<LoginPage />} />
-          <Route exact path="/register" element={<RegisterPage />} />
-        </Routes>
+      <Routes>
+        <Route
+          index
+          element={
+            <PrivateRoute>
+              <HomePage />
+            </PrivateRoute>
+          }
+        />
+        <Route exact path="/login" element={<LoginPage />} />
+        <Route exact path="/register" element={<RegisterPage />} />
+      </Routes>
     </BrowserRouter>
   );
 };
