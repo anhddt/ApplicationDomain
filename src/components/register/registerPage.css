@@ -71,3 +71,12 @@
   flex-direction: column;
   gap: 20px;
 }
+
+.nav-link{
+  color: blue;
+  text-decoration: none;
+}
+.nav-link:hover {
+  color: rgb(41, 234, 237);
+  text-decoration: underline;
+}

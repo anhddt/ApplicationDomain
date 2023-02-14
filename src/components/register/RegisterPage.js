@@ -65,9 +65,7 @@ const RegisterPage = () => {
           Already have an account?{" "}
           <NavLink
             to="/login"
-            component="button"
-            underline="hover"
-            variant="subtitle1"
+            className="nav-link"
           >
             Login instead
           </NavLink>
@@ -194,7 +192,6 @@ const RegisterPage = () => {
                 textAlign="left"
                 variant="contained"
               >
-                {" "}
                 Must be at least 8 characters.
               </Typography>
               <Typography
@@ -203,7 +200,6 @@ const RegisterPage = () => {
                 textAlign="left"
                 variant="contained"
               >
-                {" "}
                 Must start with a letter.
               </Typography>
               <Typography
@@ -212,7 +208,6 @@ const RegisterPage = () => {
                 textAlign="left"
                 variant="contained"
               >
-                {" "}
                 Must have a number.
               </Typography>
               <Typography
@@ -221,7 +216,6 @@ const RegisterPage = () => {
                 textAlign="left"
                 variant="contained"
               >
-                {" "}
                 Must have a special character (!, @, #, $, %, *, etc.).{" "}
               </Typography>
             </Box>
