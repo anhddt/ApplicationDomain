@@ -1,8 +1,9 @@
 import "./registerPage.css";
-import { useState } from "react";
-import { Box, Button, Grid, TextField } from "@mui/material";
+import { useMemo, useState } from "react";
+import { NavLink, useNavigate } from "react-router-dom";
+import { Box, Button, TextField, Typography } from "@mui/material";
 import { createAccount } from "../../utilities/utils";
-import { useNavigate } from "react-router-dom";
+import { checkPwLength, checkPwFirstChar, checkPwForNumbers, checkPwForSpecialChar } from "../../middleware/verification/userInfo";
 
 const RegisterPage = () => {
   const [email, setEmail] = useState("");
@@ -15,51 +16,77 @@ const RegisterPage = () => {
   const [zip, setZip] = useState("");
   const [country, setCountry] = useState("");
   const [phone, setPhone] = useState("");
+  const [error, setError] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
   const navigateTo = useNavigate();
+
   const handleSubmit = async () => {
     const userInfo = {firstName: firstName, lastName: lastName, email: email, password: password, street: street, city: city, state: state, zip, country: country, phone: phone};
-    createAccount(userInfo, navigateTo);
+    createAccount(userInfo, navigateTo, setError, setErrorMessage);
   };
-  
+
+  const isDisabled = useMemo(() => {
+    return email === "" || firstName === "" || lastName === "" || !(checkPwFirstChar(password) && checkPwForNumbers(password) && (checkPwLength(password) && checkPwForSpecialChar(password)));
+  }, [email, password, firstName, lastName]);
+
   return (
     <Box className="container">
-      <Box className="register-form">
-        <Grid container>
-          <Grid item xs={6}>
-            <TextField required label="First Name" variant="outlined" onChange={(e) => {setFirstName(e.target.value)}} />
-          </Grid>
-          <Grid item xs={6}>
-            <TextField required label="Last Name" variant="outlined" onChange={(e) => {setLastName(e.target.value)}} />
-          </Grid>
-          <Grid item xs={6}>
-            <TextField required label="Email" variant="outlined" onChange={(e) => {setEmail(e.target.value)}} />
-          </Grid>
-          <Grid item xs={6}>
-            <TextField required label="Password" variant="outlined" onChange={(e) => {setPassword(e.target.value)}} />
-          </Grid>
-          <Grid item xs={6}>
-            <TextField label="Phone number" variant="outlined" onChange={(e) => {setPhone(e.target.value)}} />
-          </Grid>
-          <Grid item xs={6}>
-            <TextField label="Street" variant="outlined" onChange={(e) => {setStreet(e.target.value)}} />
-          </Grid>
-          <Grid item xs={6}>
-            <TextField label="City" variant="outlined" onChange={(e) => {setCity(e.target.value)}} />
-          </Grid>
-          <Grid item xs={6}>
-            <TextField label="State" variant="outlined" onChange={(e) => {setState(e.target.value)}} />
-          </Grid>
-          <Grid item xs={6}>
-            <TextField label="Zip" variant="outlined" onChange={(e) => {setZip(e.target.value)}} />
-          </Grid>
-          <Grid item xs={6}>
-            <TextField label="Country" variant="outlined" onChange={(e) => {setCountry(e.target.value)}} />
-          </Grid>
-        </Grid>
-        <Button variant="contained" disabled={false} onClick={() => {handleSubmit()}}>
-          Submit
-        </Button>
-      </Box>
+        <Box className="userInfo-form">
+          <Typography id="create-your-account-title" variant="h4">
+            Create your account
+          </Typography>
+          <Box>
+            Already have an account?{" "}
+            <NavLink
+              to="/login"
+              component="button"
+              underline="hover"
+              variant="subtitle1"
+            >
+              Login instead
+            </NavLink>
+          </Box>
+          <Box id="input-container">
+            <Typography textAlign="left" variant="h6">
+              Contact info:
+            </Typography>
+            <Box id="contact-container">
+              <Box id="contact-info-container">
+                <TextField fullWidth required label="First Name" size="small" variant="outlined" onChange={(e) => {setFirstName(e.target.value)}} />
+                <TextField fullWidth required label="Last Name" size="small" variant="outlined" onChange={(e) => {setLastName(e.target.value)}} />
+              </Box>
+              <Box id="contact-info-container">
+                <TextField fullWidth label="Phone number" size="small" variant="outlined" onChange={(e) => {setPhone(e.target.value)}} />
+                <TextField fullWidth label="Street" size="small" variant="outlined" onChange={(e) => {setStreet(e.target.value)}} />
+              </Box>
+              <Box id="contact-info-container">
+                <TextField fullWidth label="City" size="small" variant="outlined" onChange={(e) => {setCity(e.target.value)}} />
+                <TextField fullWidth label="State" size="small" variant="outlined" onChange={(e) => {setState(e.target.value)}} />
+              </Box>
+              <Box id="contact-info-container">
+                <TextField fullWidth label="Zip" size="small" variant="outlined" onChange={(e) => {setZip(e.target.value)}} />
+                <TextField fullWidth label="Country" size="small" variant="outlined" onChange={(e) => {setCountry(e.target.value)}} />
+              </Box>
+            </Box>
+            <Typography textAlign="left" variant="h6">
+              Login info:
+            </Typography>
+            <Box id="login-info-container">
+              <TextField fullWidth required label="Email" size="small" variant="outlined" onChange={(e) => {setEmail(e.target.value)}} error={error} helperText={errorMessage} />
+              <TextField fullWidth required label="Password" size="small" variant="outlined" type="password" onChange={(e) => {setPassword(e.target.value)}} />
+              <Box id="password-constrains">
+                  <Typography color={checkPwLength(password)? "green": "black"} display="block" textAlign="left" variant="contained"> Must be at least 8 characters.</Typography>
+                  <Typography color={checkPwFirstChar(password)? "green": "black"} display="block" textAlign="left" variant="contained"> Must start with a letter.</Typography>
+                  <Typography color={checkPwForNumbers(password)? "green": "black"} display="block" textAlign="left" variant="contained"> Must have a number.</Typography>
+                  <Typography color={checkPwForSpecialChar(password)? "green": "black"} display="block" textAlign="left" variant="contained"> Must have a special character (!, @, #, $, %, *, etc.). </Typography>
+              </Box>
+              <Button variant="contained" disabled={isDisabled} onClick={() => {handleSubmit()}}>
+                Submit
+              </Button>
+            </Box>
+          </Box>
+          
+        </Box>
     </Box>
   );
 };
