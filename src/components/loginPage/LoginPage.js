@@ -2,6 +2,7 @@ import "./loginPage.css";
 import { useMemo, useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { Box, Button, TextField, Typography } from "@mui/material";
+import { Header } from "../common";
 import { showIf } from "../utils/conditionalRendering";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import PersonOutlineOutlinedIcon from "@mui/icons-material/PersonOutlineOutlined";
@@ -22,6 +23,7 @@ const LoginForm = () => {
 
   return (
     <Box className="screen">
+      <Header />
       <Box className="login-form">
         <Typography id="login-form-message" variant="h4">
           Welcome
