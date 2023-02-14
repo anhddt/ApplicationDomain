@@ -43,6 +43,5 @@ export const createAccount = async (
 export const logOut = async (navigateTo) => {
   try {
     await signOut(auth);
-    navigateTo("/login");
   } catch (error) {}
 };

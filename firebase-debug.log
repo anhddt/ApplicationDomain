@@ -1,0 +1,103 @@
+[debug] [2023-02-14T04:01:59.662Z] ----------------------------------------------------------------------
+[debug] [2023-02-14T04:01:59.664Z] Command:       /Users/kyanh/.nvm/versions/node/v18.14.0/bin/node /Users/kyanh/.nvm/versions/node/v18.14.0/bin/firebase emulators:start
+[debug] [2023-02-14T04:01:59.665Z] CLI Version:   11.22.0
+[debug] [2023-02-14T04:01:59.665Z] Platform:      darwin
+[debug] [2023-02-14T04:01:59.665Z] Node Version:  v18.14.0
+[debug] [2023-02-14T04:01:59.666Z] Time:          Mon Feb 13 2023 23:01:59 GMT-0500 (Eastern Standard Time)
+[debug] [2023-02-14T04:01:59.667Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2023-02-14T04:01:59.801Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2023-02-14T04:01:59.802Z] > authorizing via signed-in user (o0nh0ckut30o@gmail.com)
+[debug] [2023-02-14T04:01:59.895Z] java version "19.0.2" 2023-01-17
+
+[debug] [2023-02-14T04:01:59.896Z] Java(TM) SE Runtime Environment (build 19.0.2+7-44)
+Java HotSpot(TM) 64-Bit Server VM (build 19.0.2+7-44, mixed mode, sharing)
+
+[debug] [2023-02-14T04:01:59.900Z] Parsed Java major version: 19
+[info] i  emulators: Starting emulators: auth, firestore, hosting {"metadata":{"emulator":{"name":"hub"},"message":"Starting emulators: auth, firestore, hosting"}}
+[debug] [2023-02-14T04:02:01.418Z] [logging] Logging Emulator only supports listening on one address (127.0.0.1). Not listening on ::1
+[debug] [2023-02-14T04:02:01.418Z] [auth] Authentication Emulator only supports listening on one address (127.0.0.1). Not listening on ::1
+[debug] [2023-02-14T04:02:01.418Z] [firestore] Firestore Emulator only supports listening on one address (127.0.0.1). Not listening on ::1
+[debug] [2023-02-14T04:02:01.418Z] [firestore.websocket] websocket server for firestore only supports listening on one address (127.0.0.1). Not listening on ::1
+[debug] [2023-02-14T04:02:01.418Z] [hosting] Hosting Emulator only supports listening on one address (127.0.0.1). Not listening on ::1
+[debug] [2023-02-14T04:02:01.418Z] assigned listening specs for emulators {"user":{"hub":[{"address":"127.0.0.1","family":"IPv4","port":4400},{"address":"::1","family":"IPv6","port":4400}],"ui":[{"address":"127.0.0.1","family":"IPv4","port":4000},{"address":"::1","family":"IPv6","port":4000}],"logging":[{"address":"127.0.0.1","family":"IPv4","port":4500}],"auth":[{"address":"127.0.0.1","family":"IPv4","port":3500}],"firestore":[{"address":"127.0.0.1","family":"IPv4","port":8080}],"firestore.websocket":[{"address":"127.0.0.1","family":"IPv4","port":9150}],"hosting":[{"address":"127.0.0.1","family":"IPv4","port":5000}]},"metadata":{"message":"assigned listening specs for emulators"}}
+[debug] [2023-02-14T04:02:01.428Z] [hub] writing locator at /var/folders/h8/k0_8p51s7cv60js25mkz0dg00000gn/T/hub-accountant-friend-90d59.json
+[debug] [2023-02-14T04:02:01.444Z] Ignoring unsupported arg: auto_download {"metadata":{"emulator":{"name":"firestore"},"message":"Ignoring unsupported arg: auto_download"}}
+[debug] [2023-02-14T04:02:01.444Z] Ignoring unsupported arg: single_project_mode_error {"metadata":{"emulator":{"name":"firestore"},"message":"Ignoring unsupported arg: single_project_mode_error"}}
+[debug] [2023-02-14T04:02:01.444Z] Starting Firestore Emulator with command {"binary":"java","args":["-Dgoogle.cloud_firestore.debug_log_level=FINE","-Duser.language=en","-jar","/Users/kyanh/.cache/firebase/emulators/cloud-firestore-emulator-v1.15.1.jar","--host","127.0.0.1","--port",8080,"--websocket_port",9150,"--project_id","accountant-friend-90d59","--rules","/Users/kyanh/Desktop/project/ApplicationDomain/firestore.rules","--single_project_mode",true],"optionalArgs":["port","webchannel_port","host","rules","websocket_port","functions_emulator","seed_from_export","project_id","single_project_mode"],"joinArgs":false} {"metadata":{"emulator":{"name":"firestore"},"message":"Starting Firestore Emulator with command {\"binary\":\"java\",\"args\":[\"-Dgoogle.cloud_firestore.debug_log_level=FINE\",\"-Duser.language=en\",\"-jar\",\"/Users/kyanh/.cache/firebase/emulators/cloud-firestore-emulator-v1.15.1.jar\",\"--host\",\"127.0.0.1\",\"--port\",8080,\"--websocket_port\",9150,\"--project_id\",\"accountant-friend-90d59\",\"--rules\",\"/Users/kyanh/Desktop/project/ApplicationDomain/firestore.rules\",\"--single_project_mode\",true],\"optionalArgs\":[\"port\",\"webchannel_port\",\"host\",\"rules\",\"websocket_port\",\"functions_emulator\",\"seed_from_export\",\"project_id\",\"single_project_mode\"],\"joinArgs\":false}"}}
+[info] i  firestore: Firestore Emulator logging to firestore-debug.log {"metadata":{"emulator":{"name":"firestore"},"message":"Firestore Emulator logging to \u001b[1mfirestore-debug.log\u001b[22m"}}
+[debug] [2023-02-14T04:02:02.622Z] Feb 13, 2023 11:02:02 PM com.google.cloud.datastore.emulator.firestore.websocket.WebSocketServer start
+INFO: Started WebSocket server on ws://127.0.0.1:9150
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Feb 13, 2023 11:02:02 PM com.google.cloud.datastore.emulator.firestore.websocket.WebSocketServer start\nINFO: Started WebSocket server on ws://127.0.0.1:9150\n"}}
+[debug] [2023-02-14T04:02:02.652Z] API endpoint: http://127.0.0.1:8080
+If you are using a library that supports the FIRESTORE_EMULATOR_HOST environment variable, run:
+
+   export FIRESTORE_EMULATOR_HOST=127.0.0.1:8080
+
+Dev App Server is now running.
+
+ {"metadata":{"emulator":{"name":"firestore"},"message":"API endpoint: http://127.0.0.1:8080\nIf you are using a library that supports the FIRESTORE_EMULATOR_HOST environment variable, run:\n\n   export FIRESTORE_EMULATOR_HOST=127.0.0.1:8080\n\nDev App Server is now running.\n\n"}}
+[info] ✔  firestore: Firestore Emulator UI websocket is running on 9150. {"metadata":{"emulator":{"name":"firestore"},"message":"Firestore Emulator UI websocket is running on 9150."}}
+[debug] [2023-02-14T04:02:09.832Z] > refreshing access token with scopes: []
+[debug] [2023-02-14T04:02:09.834Z] >>> [apiv2][query] POST https://www.googleapis.com/oauth2/v3/token [none]
+[debug] [2023-02-14T04:02:09.834Z] >>> [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2023-02-14T04:02:10.023Z] <<< [apiv2][status] POST https://www.googleapis.com/oauth2/v3/token 200
+[debug] [2023-02-14T04:02:10.023Z] <<< [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2023-02-14T04:02:10.057Z] >>> [apiv2][query] GET https://firebasehosting.googleapis.com/v1beta1/projects/accountant-friend-90d59/sites 
+[debug] [2023-02-14T04:02:10.692Z] <<< [apiv2][status] GET https://firebasehosting.googleapis.com/v1beta1/projects/accountant-friend-90d59/sites 200
+[debug] [2023-02-14T04:02:10.692Z] <<< [apiv2][body] GET https://firebasehosting.googleapis.com/v1beta1/projects/accountant-friend-90d59/sites {"sites":[{"name":"projects/accountant-friend-90d59/sites/accountant-friend-90d59","defaultUrl":"https://accountant-friend-90d59.web.app","appId":"1:582455569394:web:6eb1e5424589f54d52596b","type":"DEFAULT_SITE"}]}
+[debug] [2023-02-14T04:02:10.693Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/accountant-friend-90d59/webApps/1:582455569394:web:6eb1e5424589f54d52596b/config [none]
+[debug] [2023-02-14T04:02:11.511Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/accountant-friend-90d59/webApps/1:582455569394:web:6eb1e5424589f54d52596b/config 200
+[debug] [2023-02-14T04:02:11.512Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/accountant-friend-90d59/webApps/1:582455569394:web:6eb1e5424589f54d52596b/config {"projectId":"accountant-friend-90d59","appId":"1:582455569394:web:6eb1e5424589f54d52596b","storageBucket":"accountant-friend-90d59.appspot.com","locationId":"us-central","apiKey":"AIzaSyARbeIaC9fgMjgU8xOMf18DK8Hn-aIz8CY","authDomain":"accountant-friend-90d59.firebaseapp.com","messagingSenderId":"582455569394","measurementId":"G-ENKCXR1RE0"}
+[debug] [2023-02-14T04:02:11.532Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/accountant-friend-90d59 [none]
+[debug] [2023-02-14T04:02:11.920Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/accountant-friend-90d59 200
+[debug] [2023-02-14T04:02:11.920Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/accountant-friend-90d59 {"projectId":"accountant-friend-90d59","projectNumber":"582455569394","displayName":"Accountant Friend","name":"projects/accountant-friend-90d59","resources":{"hostingSite":"accountant-friend-90d59","storageBucket":"accountant-friend-90d59.appspot.com","locationId":"us-central"},"state":"ACTIVE","etag":"1_db68123d-2620-4ff2-ae5a-edab87164228"}
+[debug] [2023-02-14T04:02:11.921Z] Specified "public" directory "build" does not exist; Deploy to Hosting site "accountant-friend-90d59" may fail or be empty.
+[info] i  hosting[accountant-friend-90d59]: Serving hosting files from: build {"metadata":{"emulator":{"name":"hosting"},"message":"Serving hosting files from: \u001b[1mbuild\u001b[22m"}}
+[info] ✔  hosting[accountant-friend-90d59]: Local server: http://127.0.0.1:5000 {"metadata":{"emulator":{"name":"hosting"},"message":"Local server: \u001b[4m\u001b[1mhttp://127.0.0.1:5000\u001b[22m\u001b[24m"}}
+[debug] [2023-02-14T04:02:12.049Z] Ignoring unsupported arg: auto_download {"metadata":{"emulator":{"name":"ui"},"message":"Ignoring unsupported arg: auto_download"}}
+[debug] [2023-02-14T04:02:12.050Z] Ignoring unsupported arg: port {"metadata":{"emulator":{"name":"ui"},"message":"Ignoring unsupported arg: port"}}
+[debug] [2023-02-14T04:02:12.050Z] Starting Emulator UI with command {"binary":"node","args":["/Users/kyanh/.cache/firebase/emulators/ui-v1.11.2/server/server.js"],"optionalArgs":[],"joinArgs":false} {"metadata":{"emulator":{"name":"ui"},"message":"Starting Emulator UI with command {\"binary\":\"node\",\"args\":[\"/Users/kyanh/.cache/firebase/emulators/ui-v1.11.2/server/server.js\"],\"optionalArgs\":[],\"joinArgs\":false}"}}
+[info] i  ui: Emulator UI logging to ui-debug.log {"metadata":{"emulator":{"name":"ui"},"message":"Emulator UI logging to \u001b[1mui-debug.log\u001b[22m"}}
+[debug] [2023-02-14T04:02:12.177Z] Web / API server started at 127.0.0.1:4000
+ {"metadata":{"emulator":{"name":"ui"},"message":"Web / API server started at 127.0.0.1:4000\n"}}
+[debug] [2023-02-14T04:02:12.178Z] Web / API server started at ::1:4000
+ {"metadata":{"emulator":{"name":"ui"},"message":"Web / API server started at ::1:4000\n"}}
+[info] 
+┌─────────────────────────────────────────────────────────────┐
+│ ✔  All emulators ready! It is now safe to connect your app. │
+│ i  View Emulator UI at http://127.0.0.1:4000/               │
+└─────────────────────────────────────────────────────────────┘
+
+┌────────────────┬────────────────┬─────────────────────────────────┐
+│ Emulator       │ Host:Port      │ View in Emulator UI             │
+├────────────────┼────────────────┼─────────────────────────────────┤
+│ Authentication │ 127.0.0.1:3500 │ http://127.0.0.1:4000/auth      │
+├────────────────┼────────────────┼─────────────────────────────────┤
+│ Firestore      │ 127.0.0.1:8080 │ http://127.0.0.1:4000/firestore │
+├────────────────┼────────────────┼─────────────────────────────────┤
+│ Hosting        │ 127.0.0.1:5000 │ n/a                             │
+└────────────────┴────────────────┴─────────────────────────────────┘
+  Emulator Hub running at 127.0.0.1:4400
+  Other reserved ports: 4500, 9150
+
+Issues? Report them at https://github.com/firebase/firebase-tools/issues and attach the *-debug.log files.
+ 
+[debug] [2023-02-14T04:02:29.521Z] Feb 13, 2023 11:02:29 PM com.google.cloud.datastore.emulator.firestore.websocket.WebSocketChannelHandler initChannel
+INFO: Connected to new websocket client
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Feb 13, 2023 11:02:29 PM com.google.cloud.datastore.emulator.firestore.websocket.WebSocketChannelHandler initChannel\nINFO: Connected to new websocket client\n"}}
+[debug] [2023-02-14T04:02:51.713Z] Feb 13, 2023 11:02:51 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Feb 13, 2023 11:02:51 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected non-HTTP/2 connection.\n"}}
+[debug] [2023-02-14T04:02:52.369Z] Feb 13, 2023 11:02:52 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Feb 13, 2023 11:02:52 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected non-HTTP/2 connection.\n"}}
+[debug] [2023-02-14T04:02:52.387Z] Feb 13, 2023 11:02:52 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Feb 13, 2023 11:02:52 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected non-HTTP/2 connection.\n"}}
+[debug] [2023-02-14T04:03:00.156Z] Feb 13, 2023 11:03:00 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Feb 13, 2023 11:03:00 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected non-HTTP/2 connection.\n"}}
+[debug] [2023-02-14T04:03:00.162Z] Feb 13, 2023 11:03:00 PM com.google.cloud.datastore.emulator.firestore.webchannel.FirestoreV1WebChannelAdapter$FirestoreWriteHandler onClose
+INFO: channel closed
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Feb 13, 2023 11:03:00 PM com.google.cloud.datastore.emulator.firestore.webchannel.FirestoreV1WebChannelAdapter$FirestoreWriteHandler onClose\nINFO: channel closed\n"}}
