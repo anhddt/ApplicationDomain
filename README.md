@@ -16,6 +16,7 @@ It turns on all of the emulators by default.\
 You may include options like `--only auth` if you just want to run the authentication emulator.\
 Example: `firebase emulators:start --only auth`
 Check your `firebase.json` for a list of ports numbers that associated with the corespoding emulator.\
+Import `connectAuthEmulator`, or `connectFirestoreEmulator` if you want to run the local emulators.\
 ### `firebase serve` 
 Run this command after running `npm run build` to build the local deployment
 Open [http://localhost:5000](http://localhost:5000) to view the firebase project.
