@@ -5,7 +5,7 @@ import { Box, Button, TextField, Typography } from "@mui/material";
 import { showIf } from "../utils/conditionalRendering";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import PersonOutlineOutlinedIcon from "@mui/icons-material/PersonOutlineOutlined";
-import { signInEmailPassword } from "../../utilities/utils";
+import { signInEmailPassword, logOut } from "../../utilities/utils";
 
 const LoginForm = () => {
   const [email, setEmail] = useState("");
@@ -15,7 +15,7 @@ const LoginForm = () => {
   const isDisabled = useMemo(() => {
     return email === "" || password === "";
   }, [email, password]);
-
+  logOut();
   const handleLogin = () => {
     signInEmailPassword(email, password, navigateTo, setErrorMessage);
   };
