@@ -1,7 +1,6 @@
 import { collection, doc , setDoc, getDocs, updateDoc, deleteDoc, query, where } from 'firebase/firestore';
 const {firestore} = require("../firebase.js");
 const db = firestore;
-const usersRef = collection(db, 'Users');
 
 //a function to add data of new users into the database
 //titles user docs based on usernames for easy search/sorting
