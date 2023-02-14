@@ -1,4 +1,4 @@
-import { Navigate } from "react-router-dom"
+import { Navigate } from "react-router-dom";
 import { auth } from "../../firebase";
 
 export const PrivateRoute = ({ children }) => {
