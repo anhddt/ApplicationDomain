@@ -4,6 +4,7 @@ import LoginPage from "./components/loginPage/LoginPage";
 import RegisterPage from "./components/register/RegisterPage";
 import HomePage from "./components/homePage/Home";
 import AdminPage from "./components/adminPage/AdminPage";
+import UsersPage from "./components/usersPage/UsersPage";
 
 const App = () => {
   return (
@@ -14,6 +15,7 @@ const App = () => {
             <Route exact path="/admin" element={<AdminPage />} />
             <Route exact path="/login" element={<LoginPage />} />
             <Route exact path="/register" element={<RegisterPage />} />
+            <Route exact path="/users" element={<UsersPage />} />
           </Routes>
         </AuthProvider>
       </BrowserRouter>
