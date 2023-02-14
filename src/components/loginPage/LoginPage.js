@@ -1,8 +1,8 @@
 import "./loginPage.css";
 import { useMemo, useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
-import { Box, Button, Grid, TextField, Typography } from "@mui/material";
-import { showIf } from "../utils/conditionalRendering"
+import { Box, Button, TextField, Typography } from "@mui/material";
+import { showIf } from "../utils/conditionalRendering";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import PersonOutlineOutlinedIcon from "@mui/icons-material/PersonOutlineOutlined";
 import { signInEmailPassword } from "../../utilities/utils";
@@ -15,7 +15,7 @@ const LoginForm = () => {
   const isDisabled = useMemo(() => {
     return email === "" || password === "";
   }, [email, password]);
-  
+
   const handleLogin = () => {
     signInEmailPassword(email, password, navigateTo, setErrorMessage);
   };
@@ -37,8 +37,9 @@ const LoginForm = () => {
             Create Account
           </NavLink>
         </Box>
-        {showIf(errorMessage.length > 0,
-          <Typography color="red">{errorMessage}</Typography> 
+        {showIf(
+          errorMessage.length > 0,
+          <Typography color="red">{errorMessage}</Typography>
         )}
         <Box className="field-container">
           <PersonOutlineOutlinedIcon sx={{ fontSize: 50 }} />
@@ -65,7 +66,11 @@ const LoginForm = () => {
             required
           />
         </Box>
-        <Button variant="contained" disabled={isDisabled} onClick={()=>handleLogin()}>
+        <Button
+          variant="contained"
+          disabled={isDisabled}
+          onClick={() => handleLogin()}
+        >
           Login
         </Button>
         <NavLink component="button" underline="hover" variant="subtitle1">
