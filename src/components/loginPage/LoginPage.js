@@ -30,9 +30,7 @@ const LoginForm = () => {
           Not a member?{" "}
           <NavLink
             to="/register"
-            component="button"
-            underline="hover"
-            variant="subtitle1"
+            className="nav-link"
           >
             Create Account
           </NavLink>
@@ -73,7 +71,7 @@ const LoginForm = () => {
         >
           Login
         </Button>
-        <NavLink component="button" underline="hover" variant="subtitle1">
+        <NavLink className="nav-link">
           Forgot Password
         </NavLink>
       </Box>
