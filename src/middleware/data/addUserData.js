@@ -1,5 +1,5 @@
 import { doc, setDoc } from "firebase/firestore";
-import { firestore } from "../firebase";
+import { firestore } from "../../firebase";
 
 export const addUserProfile = async (uid, userInfo) => {
   try {

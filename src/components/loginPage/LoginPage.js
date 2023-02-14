@@ -1,7 +1,8 @@
 import "./loginPage.css";
 import { useMemo, useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
-import { Box, Button, Grid, TextField, Typography } from "@mui/material";
+import { Box, Button, TextField, Typography } from "@mui/material";
+import { showIf } from "../utils/conditionalRendering";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import PersonOutlineOutlinedIcon from "@mui/icons-material/PersonOutlineOutlined";
 import { signInEmailPassword } from "../../utilities/utils";
@@ -9,15 +10,20 @@ import { signInEmailPassword } from "../../utilities/utils";
 const LoginForm = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
   const navigateTo = useNavigate();
   const isDisabled = useMemo(() => {
     return email === "" || password === "";
   }, [email, password]);
-  
-  const handleLogin = () => {
-    signInEmailPassword(email, password, navigateTo);
-  };
 
+  const handleLogin = () => {
+    signInEmailPassword(email, password, navigateTo, setErrorMessage);
+  };
+  const handleKeyDown = (keyDown) => {
+    if (keyDown.key === "Enter") {
+      handleLogin();
+    }
+  };
   return (
     <Box className="screen">
       <Box className="login-form">
@@ -28,13 +34,15 @@ const LoginForm = () => {
           Not a member?{" "}
           <NavLink
             to="/register"
-            component="button"
-            underline="hover"
-            variant="subtitle1"
+            className="nav-link"
           >
             Create Account
           </NavLink>
         </Box>
+        {showIf(
+          errorMessage.length > 0,
+          <Typography color="red">{errorMessage}</Typography>
+        )}
         <Box className="field-container">
           <PersonOutlineOutlinedIcon sx={{ fontSize: 50 }} />
           <TextField
@@ -51,29 +59,26 @@ const LoginForm = () => {
           <LockOutlinedIcon sx={{ fontSize: 50 }} />
           <TextField
             fullWidth
+            type="password"
             label="Password"
             variant="outlined"
+            onKeyDown={(key) => {handleKeyDown(key)}}
             onChange={(e) => {
               setPassword(e.target.value);
             }}
             required
           />
         </Box>
-        <Button variant="contained" disabled={isDisabled} onClick={()=>handleLogin()}>
+        <Button
+          variant="contained"
+          disabled={isDisabled}
+          onClick={() => handleLogin()}
+        >
           Login
         </Button>
-        <Grid container>
-          <Grid item xs={6}>
-            <NavLink component="button" underline="hover" variant="subtitle1">
-              Forgot Password
-            </NavLink>
-          </Grid>
-          <Grid item xs={6}>
-            <NavLink component="button" underline="hover" variant="subtitle1">
-              Forgot Username
-            </NavLink>
-          </Grid>
-        </Grid>
+        <NavLink className="nav-link">
+          Forgot Password
+        </NavLink>
       </Box>
     </Box>
   );

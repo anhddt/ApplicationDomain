@@ -15,17 +15,6 @@
   flex-direction: row;
 }
 #login-form-message {
-  color: aqua;
+  color: #30343f;
   text-align: center;
 }
-.screen {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  width: 100vw;
-  background-color: #032b43;
-  background-position: center;
-  background-size: cover;
-}
-

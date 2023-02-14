@@ -1,33 +1,47 @@
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from "firebase/auth";
-import { auth } from "../firebase.js";
-import { addUserProfile } from "../middleware/addUserData.js";
-import { createUser } from "./FireStoreUtils.js";
+import {
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  signOut,
+} from "firebase/auth";
+import { auth } from "../firebase";
+import { addUserProfile } from "../middleware/data/addUserData";
 
-export const signInEmailPassword = async (email, password,navigateTo) => {
-    try {   
-        await signInWithEmailAndPassword(auth, email, password);
-        navigateTo("/home");
-    } catch (error) {
-        console.log(error);
-    }
+export const signInEmailPassword = async (
+  email,
+  password,
+  navigateTo,
+  setErrorMessage
+) => {
+  try {
+    await signInWithEmailAndPassword(auth, email, password);
+    navigateTo("/");
+  } catch (error) {
+    setErrorMessage(error.code.substr(5));
+  }
 };
 
-export const createAccount = async (userInfo, navigateTo) => {
-    try {
-        const newUser = await createUserWithEmailAndPassword(auth, userInfo.email, userInfo.password);
-        //addUserProfile(newUser, userInfo);
-	    createUser(newUser.user.uid, userInfo); //calls to firestore and creates a new entry
-        navigateTo("/login");
-    } catch (error) {
-        console.log(error);
-    }
+export const createAccount = async (
+  userInfo,
+  navigateTo,
+  setError,
+  setErrorMessage
+) => {
+  try {
+    const newUser = await createUserWithEmailAndPassword(
+      auth,
+      userInfo.email,
+      userInfo.password
+    );
+    addUserProfile(newUser.user.uid, userInfo);
+    navigateTo("/login");
+  } catch (error) {
+    setError(true);
+    setErrorMessage(error.code.substr(5));
+  }
 };
 
 export const logOut = async (navigateTo) => {
-    try {
-        await signOut(auth);
-        navigateTo("/login");
-    } catch (error) {
-        console.log(error);
-    };
+  try {
+    await signOut(auth);
+  } catch (error) {}
 };
