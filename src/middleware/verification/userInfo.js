@@ -4,21 +4,16 @@ import { auth, firestore } from "../../firebase";
 /**
  * This function retrieves collection from the database
  * The collection is in form of a dictionary
- * that's why I chained it as userInfo.userType
- * The firestore uses noSQL databse
- * 
- * For example you have a dictionary like:
- * const myCollection = {
- *  name: "john",
- *  age: "20"
- * }
- * To retrieve the age we would type: myCollection.age.
  */
-export const getUserType = async () => {
+export const getUserInfo = async () => {
+  
+  
   const userUid = auth.currentUser.uid;
+  console.log(userUid);
+  
   const userDoc = await getDoc(doc(firestore, "newUsers", userUid));
   const userInfo = userDoc.data();
-  return userInfo.userType ? userInfo.userType : "none";
+  return userInfo;
 };
 
 /**
