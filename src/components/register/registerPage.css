@@ -31,36 +31,6 @@
   gap: 10px;
 }
 
-#input-container {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  min-height: 100%;
-  gap: 10px;
-}
-
-#contact-container {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  min-height: 100%;
-  gap: 20px;
-}
-
-#contact-info-container {
-  display: flex;
-  flex-direction: row;
-  width: 100%;
-  gap: 20px;
-}
-
-#login-info-container {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  gap: 20px;
-}
-
 #create-your-account-title {
   color: rgba(255, 0, 195, 0.868);
   text-align: center;
