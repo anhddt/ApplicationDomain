@@ -52,7 +52,7 @@ const passwordResetForm = () => {
 export default passwordResetForm;
    
 // const auth = getAuth();
-// sendPasswordResetEmail(auth, email, actionCodeSettings)
+// sendPasswordResetEmail(auth, email)
 //   .then(() => {
 //       // The link was successfully sent. Inform the user.
 //       // Save the email locally so you don't need to ask the user for it again

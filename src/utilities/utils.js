@@ -1,4 +1,5 @@
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from "firebase/auth";
+import { async } from "@firebase/util";
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, sendPasswordResetEmail } from "firebase/auth";
 import { auth } from "../firebase";
 export const signInEmailPassword = async (email, password,navigateTo) => {
     try {   
@@ -8,6 +9,14 @@ export const signInEmailPassword = async (email, password,navigateTo) => {
         console.log(error);
     }
 };
+
+export const sendPasswordReset =(email)=> {
+    try{
+        return sendPasswordResetEmail(auth, email);
+    } catch (error){
+        console.log(error)
+    }
+}
 
 export const createAccount = async (userInfo, navigateTo) => {
     try {

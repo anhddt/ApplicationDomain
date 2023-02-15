@@ -4,8 +4,7 @@ import { NavLink, useNavigate } from "react-router-dom";
 import { Box, Button, Grid, TextField, Typography } from "@mui/material";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import PersonOutlineOutlinedIcon from "@mui/icons-material/PersonOutlineOutlined";
-import { signInEmailPassword } from "../../utilities/utils";
-import { getAuth, sendPasswordResetEmail } from "firebase/auth"
+import { signInEmailPassword,sendPasswordReset } from "../../utilities/utils";
 
 
 const LoginForm = () => {
@@ -21,7 +20,8 @@ const LoginForm = () => {
   };
 
   const forgotPW =()=>{
-    sendPasswordResetEmail(email)
+    sendPasswordReset(email)
+    console.log('email sent')
   }
 
   return (
@@ -70,7 +70,7 @@ const LoginForm = () => {
         </Button>
         <Grid container>
           <Grid item xs={6}>
-            <NavLink component="button" underline="hover" variant="subtitle1" onClick={()=>forgotPW}>
+            <NavLink component="button" underline="hover" variant="subtitle1" onClick={()=>forgotPW()}>
               Forgot Password
             </NavLink>
           </Grid>
