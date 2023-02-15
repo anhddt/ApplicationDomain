@@ -9,6 +9,10 @@ const LoginForm = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
+  /**
+   * Check if either the username or password is empty
+   * disable the login button 
+   */
   const isDisabled = useMemo(() => {
     return username === "" || password === "";
   }, [username, password]);

@@ -19,6 +19,13 @@ const LoginForm = () => {
   const handleLogin = () => {
     signInEmailPassword(email, password, navigateTo, setErrorMessage);
   };
+
+  /**
+   * This allows the user to press enter
+   * after typing in the password
+   * so that don't has to lift up the hand
+   * and click login
+   */
   const handleKeyDown = (keyDown) => {
     if (keyDown.key === "Enter") {
       handleLogin();
