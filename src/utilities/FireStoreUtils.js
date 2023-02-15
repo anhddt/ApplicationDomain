@@ -67,7 +67,7 @@ export const getUsers = async () => {
 		const querySnapshot = await getDocs(collection(db, "newUsers"));
 		console.log("query just passed");
 		querySnapshot.forEach(function(doc) {
-			userMap.set(doc.data().username, doc.data());
+			userMap.set(doc.data().userName, doc.data());
 		});
 		console.log("set data values into map");
 		return userMap;
