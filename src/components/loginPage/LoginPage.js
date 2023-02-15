@@ -5,6 +5,8 @@ import { Box, Button, Grid, TextField, Typography } from "@mui/material";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import PersonOutlineOutlinedIcon from "@mui/icons-material/PersonOutlineOutlined";
 import { signInEmailPassword } from "../../utilities/utils";
+import { getAuth, sendPasswordResetEmail } from "firebase/auth"
+
 
 const LoginForm = () => {
   const [email, setEmail] = useState("");
@@ -17,6 +19,10 @@ const LoginForm = () => {
   const handleLogin = () => {
     signInEmailPassword(email, password, navigateTo);
   };
+
+  const forgotPW =()=>{
+    sendPasswordResetEmail(email)
+  }
 
   return (
     <Box className="screen">
@@ -64,7 +70,7 @@ const LoginForm = () => {
         </Button>
         <Grid container>
           <Grid item xs={6}>
-            <NavLink component="button" underline="hover" variant="subtitle1">
+            <NavLink component="button" underline="hover" variant="subtitle1" onClick={()=>forgotPW}>
               Forgot Password
             </NavLink>
           </Grid>
