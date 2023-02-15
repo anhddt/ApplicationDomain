@@ -8,7 +8,6 @@ const AdminPage = () => {
       <Box className="screen">
         <Header />
         <Box className="adminBody">
-
         </Box>
       </Box>
     );
