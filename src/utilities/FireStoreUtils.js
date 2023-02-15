@@ -1,15 +1,19 @@
-import { collection, doc , setDoc, getDocs, updateDoc, deleteDoc, query, where } from 'firebase/firestore';
+import { collection, doc , setDoc, getDocs, getDoc, updateDoc, deleteDoc, query, where } from 'firebase/firestore';
 const {firestore} = require("../firebase.js");
 const db = firestore;
 
 //a function to add data of new users into the database
-//titles user docs based on usernames for easy search/sorting
 export const createUser = async (uid, userInfo) => {
 	const userName = getUserName(userInfo);
-	userInfo.username = userName;
-	userInfo.role = "user";
+
 	try {
-		await setDoc(doc(db, "newUsers", uid), userInfo);
+		await setDoc(doc(db, "newUsers", uid), {
+			firstName: userInfo.firstName,
+			lastName: userInfo.lastName,
+			userName: userName,
+			email: userInfo.email,
+			password: userInfo.password,
+			role: "users"});
 		console.log("created doc");
 	} catch (error) {
 		console.log(error);
@@ -33,22 +37,38 @@ function getUserName(userInfo) {
 	return name;
 }
 
-//a function to retrieve the data of current users
-//returns a map with the generated username as the key
+
+//a function to get a users role
+export const getUserRole = async (uid) => {
+	try {
+	const docSnap = await getDoc(doc(db, "newUsers", uid));
+	const role = docSnap.data().role;
+	return role;
+	} catch (error) {
+		console.log(error);
+	}
+}
+
+//returns the UID of a user based on their username
+export const getUIDByUserName = async (username) => {
+	try {
+		const q = query(collection(db, "newUsers"), where("username", "==", username));
+		const querySnapshot = await getDocs(q);
+		return querySnapshot[0].id;
+	} catch (error) {
+		console.log(error);
+	}
+}
+
+//a function to return a collection of users as a map
 export const getUsers = async () => {
 	try {
 		let userMap = new Map();
 		const querySnapshot = await getDocs(collection(db, "newUsers"));
 		console.log("query just passed");
-		let docs = querySnapshot.docs();
-		docs.forEach(function(doc) {
-			userMap.set(doc.username, doc);
-		})
-		/*
-		querySnapshot.forEach((doc) => {
-				userMap.set(doc.data.username, doc.data());		
+		querySnapshot.forEach(function(doc) {
+			userMap.set(doc.data().userName, doc.data());
 		});
-		*/
 		console.log("set data values into map");
 		return userMap;
 	} catch (error) {

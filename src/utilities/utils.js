@@ -4,26 +4,28 @@ import {
   signOut,
 } from "firebase/auth";
 import { auth } from "../firebase";
-import { addUserProfile } from "../middleware/data/addUserData";
+//import { addUserProfile } from "../middleware/data/addUserData";
+import { createUser } from "./FireStoreUtils";
 
 /**
  * What this function does is sign helping the user
  * to sign in with the email and passsword
  * then redirect to the index page, which is "/".
  * 
- * It takes in the email, password, a function, and another function
+ * It takes in a dictionary collection of email and password,
+ * a function, and another function
  */
 export const signInEmailPassword = async (
-  email,
-  password,
+  inputs,
+  setError,
   navigateTo,
-  setErrorMessage
+  location
 ) => {
   try {
-    await signInWithEmailAndPassword(auth, email, password);
-    navigateTo("/");
+    await signInWithEmailAndPassword(auth, inputs.email, inputs.password);
+    navigateTo(location.state?.from || "/");
   } catch (error) {
-    setErrorMessage(error.code.substr(5));
+    setError(true);
   }
 };
 
@@ -38,8 +40,7 @@ export const signInEmailPassword = async (
 export const createAccount = async (
   userInfo,
   navigateTo,
-  setError,
-  setErrorMessage
+  setError
 ) => {
   try {
     const newUser = await createUserWithEmailAndPassword(
@@ -47,11 +48,18 @@ export const createAccount = async (
       userInfo.email,
       userInfo.password
     );
-    addUserProfile(newUser.user.uid, userInfo);
-    navigateTo("/login");
+
+    //addUserProfile(newUser.user.uid, userInfo);
+    createUser(newUser.user.uid, userInfo);
+    
+    try {
+      await signInEmailPassword(auth, userInfo.email, userInfo.password);
+    } catch (error) { 
+    }
+    navigateTo("/");
+
   } catch (error) {
     setError(true);
-    setErrorMessage(error.code.substr(5));
   }
 };
 
