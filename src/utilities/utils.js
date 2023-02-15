@@ -4,7 +4,8 @@ import {
   signOut,
 } from "firebase/auth";
 import { auth } from "../firebase";
-import { addUserProfile } from "../middleware/data/addUserData";
+//import { addUserProfile } from "../middleware/data/addUserData";
+import { createUser } from "./FireStoreUtils";
 
 export const signInEmailPassword = async (
   email,
@@ -32,7 +33,8 @@ export const createAccount = async (
       userInfo.email,
       userInfo.password
     );
-    addUserProfile(newUser.user.uid, userInfo);
+    //addUserProfile(newUser.user.uid, userInfo);
+    createUser(newUser.user.uid, userInfo);
     navigateTo("/login");
   } catch (error) {
     setError(true);
