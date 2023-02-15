@@ -3,7 +3,6 @@ const {firestore} = require("../firebase.js");
 const db = firestore;
 
 //a function to add data of new users into the database
-//titles user docs based on usernames for easy search/sorting
 export const createUser = async (uid, userInfo) => {
 	const userName = getUserName(userInfo);
 
@@ -12,6 +11,7 @@ export const createUser = async (uid, userInfo) => {
 			firstName: userInfo.firstName,
 			lastName: userInfo.lastName,
 			userName: userName,
+			email: userInfo.email,
 			password: userInfo.password,
 			role: "users"});
 		console.log("created doc");
@@ -42,7 +42,7 @@ function getUserName(userInfo) {
 export const getUserRole = async (uid) => {
 	try {
 	const docSnap = await getDoc(doc(db, "newUsers", uid));
-	const role = docSnap.data.role;
+	const role = docSnap.data().role;
 	return role;
 	} catch (error) {
 		console.log(error);
@@ -66,7 +66,6 @@ export const getUsers = async () => {
 		let userMap = new Map();
 		const querySnapshot = await getDocs(collection(db, "newUsers"));
 		console.log("query just passed");
-		//let docs = querySnapshot.docs();
 		querySnapshot.forEach(function(doc) {
 			userMap.set(doc.data().username, doc.data());
 		});

@@ -11,9 +11,7 @@ const UsersPage = () => {
     const printUsers = () => {
         try{
             data = getUsers();
-            console.log(data.size);
-            const itr = data.keys();
-            console.log(itr.next().value);
+            console.log(data);
         } catch (error) {
             console.log(error);
         }
