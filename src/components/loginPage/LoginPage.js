@@ -1,6 +1,6 @@
 import "./loginPage.css";
 import { useMemo, useState } from "react";
-import { NavLink, useNavigate } from "react-router-dom";
+import { NavLink, useNavigate, useLocation } from "react-router-dom";
 import { Box, Button, TextField, Typography } from "@mui/material";
 import { showIf } from "../utils/conditionalRendering";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
@@ -10,14 +10,21 @@ import { signInEmailPassword } from "../../utilities/utils";
 const LoginForm = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [errorMessage, setErrorMessage] = useState("");
+  const [error, setError] = useState(false);
   const navigateTo = useNavigate();
+  const location = useLocation();
   const isDisabled = useMemo(() => {
     return email === "" || password === "";
   }, [email, password]);
 
+  /**
+   * This function handle the login mechanism
+   * send in the email and password
+   * a navigation function
+   * and a previous location so that the navgation can navigate
+   */
   const handleLogin = () => {
-    signInEmailPassword(email, password, navigateTo, setErrorMessage);
+    signInEmailPassword(email, password, setError, navigateTo, location);
   };
 
   /**
@@ -46,9 +53,8 @@ const LoginForm = () => {
             Create Account
           </NavLink>
         </Box>
-        {showIf(
-          errorMessage.length > 0,
-          <Typography color="red">{errorMessage}</Typography>
+        {showIf( error,
+          <Typography color="red">Wrong email or password, try again.</Typography>
         )}
         <Box className="field-container">
           <PersonOutlineOutlinedIcon sx={{ fontSize: 50 }} />

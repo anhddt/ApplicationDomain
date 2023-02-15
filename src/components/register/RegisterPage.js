@@ -22,7 +22,6 @@ const RegisterPage = () => {
   const [country, setCountry] = useState("");
   const [phone, setPhone] = useState("");
   const [error, setError] = useState(false);
-  const [errorMessage, setErrorMessage] = useState("");
   const navigateTo = useNavigate();
 
   const handleSubmit = async () => {
@@ -38,7 +37,7 @@ const RegisterPage = () => {
       country: country,
       phone: phone,
     };
-    createAccount(userInfo, navigateTo, setError, setErrorMessage);
+    createAccount(userInfo, navigateTo, setError);
   };
 
   /**
@@ -179,7 +178,7 @@ const RegisterPage = () => {
                 setEmail(e.target.value);
               }}
               error={error}
-              helperText={errorMessage}
+              helperText={"Email invalid or already in use"}
             />
             <TextField
               fullWidth
