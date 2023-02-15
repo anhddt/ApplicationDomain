@@ -15,6 +15,11 @@ const LoginForm = () => {
   const [error, setError] = useState(false);
   const navigateTo = useNavigate();
   const location = useLocation();
+
+  /**
+   * Check if either the username or password is empty
+   * disable the login button 
+   */
   const isDisabled = useMemo(() => {
     return inputs.email === "" || inputs.password === "";
   }, [inputs.email, inputs.password]);
