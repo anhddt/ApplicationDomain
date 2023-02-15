@@ -34,11 +34,26 @@ function getUserName(userInfo) {
 }
 
 
-//a function to get a users roloe
+//a function to get a users role
 export const getUserRole = async (uid) => {
+	try {
 	const docSnap = await getDoc(doc(db, "newUsers", uid));
 	const role = docSnap.data.role;
 	return role;
+	} catch (error) {
+		console.log(error);
+	}
+}
+
+//returns the UID of a user based on their username
+export const getUIDByUserName = async (username) => {
+	try {
+		const q = query(collection(db, "newUsers"), where("username", "==", username));
+		const querySnapshot = await getDocs(q);
+		return querySnapShot[0].id;
+	} catch (error) {
+		console.log(error);
+	}
 }
 
 //a function to retrieve the data of current users
