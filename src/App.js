@@ -10,12 +10,14 @@ const App = () => {
   return (
     <AuthProvider>
       <BrowserRouter>
+
         <Routes>
           <Route index element={<HomePage />}/>
           <Route exact path="/admin" element={<PrivateRoute><AdminPage /></PrivateRoute>} />
           <Route exact path="/login" element={<LoginPage />} />
           <Route exact path="/register" element={<RegisterPage />} />
         </Routes>
+
       </BrowserRouter>
     </AuthProvider>
   );

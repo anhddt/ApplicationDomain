@@ -2,21 +2,22 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
     match /newUsers/{newUsers} {
-
-      function userIsAdmin() {
-        return  get(/databases/documents/newUsers/$(request.auth.uid)).data.role == "admin";
-      }
-
-      function isValidUsersData() {
-        return request.auth.uid == newUsers;
-      }
-
-      allow read: if request.auth != null && (userIsAdmin() || isValidUsersData());
+      allow read,write;
+      //function userIsAdmin() {
+       // return  get(/databases/documents/newUsers/$(request.auth.uid)).data.role == "admin";
+      //}
       
+
+      //function isValidUsersData() {
+        //return request.auth.uid == newUsers;
+      //}
+
+      //allow read: if request.auth != null && (userIsAdmin() || isValidUsersData());
+      allow read;
       //write permissions
-      allow update: if request.auth != null && (userIsAdmin() || isValidUsersData());
-      allow create; 
-      allow delete: if userIsAdmin();
+      //allow update: if request.auth != null && (userIsAdmin() || isValidUsersData());
+      //allow create; 
+      //allow delete: if userIsAdmin();
     }
   }
 }

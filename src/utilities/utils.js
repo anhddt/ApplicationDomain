@@ -4,7 +4,8 @@ import {
   signOut,
 } from "firebase/auth";
 import { auth } from "../firebase";
-import { addUserProfile } from "../middleware/data/addUserData";
+//import { addUserProfile } from "../middleware/data/addUserData";
+import { createUser } from "./FireStoreUtils";
 
 /**
  * What this function does is sign helping the user
@@ -47,12 +48,16 @@ export const createAccount = async (
       userInfo.email,
       userInfo.password
     );
-    addUserProfile(newUser.user.uid, userInfo);
+
+    //addUserProfile(newUser.user.uid, userInfo);
+    createUser(newUser.user.uid, userInfo);
+    
     try {
       await signInEmailPassword(auth, userInfo.email, userInfo.password);
     } catch (error) { 
     }
     navigateTo("/");
+
   } catch (error) {
     setError(true);
   }
