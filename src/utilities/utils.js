@@ -13,7 +13,7 @@ import { addUserProfile } from "../middleware/data/addUserData";
  * which is this page -> "/" if the previous page is
  * the same as the current page.
  * 
- * It takes in the email, password, and a function
+ * It takes in the email, password, and 3 functions
  */
 export const signInEmailPassword = async (
   email,
@@ -31,9 +31,8 @@ export const signInEmailPassword = async (
 };
 
 /**
- * What this function does is sign helping the user
- * to create an account with the email and passsword
- * then redirect back to the index page,
+ * This functions creates an account with the email and passsword.
+ * Then login, and redirect back to the index page,
  * which is this page -> "/".
  * 
  * It takes in the email, password, and a function
