@@ -1,4 +1,4 @@
-import { collection, doc , setDoc, getDocs, updateDoc, deleteDoc, query, where } from 'firebase/firestore';
+import { collection, doc , setDoc, getDocs, getDoc, updateDoc, deleteDoc, query, where } from 'firebase/firestore';
 const {firestore} = require("../firebase.js");
 const db = firestore;
 
@@ -33,6 +33,29 @@ function getUserName(userInfo) {
 	return name;
 }
 
+
+//a function to get a users role
+export const getUserRole = async (uid) => {
+	try {
+	const docSnap = await getDoc(doc(db, "newUsers", uid));
+	const role = docSnap.data.role;
+	return role;
+	} catch (error) {
+		console.log(error);
+	}
+}
+
+//returns the UID of a user based on their username
+export const getUIDByUserName = async (username) => {
+	try {
+		const q = query(collection(db, "newUsers"), where("username", "==", username));
+		const querySnapshot = await getDocs(q);
+		return querySnapShot[0].id;
+	} catch (error) {
+		console.log(error);
+	}
+}
+
 //a function to retrieve the data of current users
 //returns a map with the generated username as the key
 export const getUsers = async () => {
@@ -42,13 +65,8 @@ export const getUsers = async () => {
 		console.log("query just passed");
 		let docs = querySnapshot.docs();
 		docs.forEach(function(doc) {
-			userMap.set(doc.username, doc);
-		})
-		/*
-		querySnapshot.forEach((doc) => {
-				userMap.set(doc.data.username, doc.data());		
+			userMap.set(doc.data.username, doc.data());
 		});
-		*/
 		console.log("set data values into map");
 		return userMap;
 	} catch (error) {
