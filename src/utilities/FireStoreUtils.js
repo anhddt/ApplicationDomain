@@ -6,10 +6,14 @@ const db = firestore;
 //titles user docs based on usernames for easy search/sorting
 export const createUser = async (uid, userInfo) => {
 	const userName = getUserName(userInfo);
-	userInfo.username = userName;
-	userInfo.role = "user";
+
 	try {
-		await setDoc(doc(db, "newUsers", uid), userInfo);
+		await setDoc(doc(db, "newUsers", uid), {
+			firstName: userInfo.firstName,
+			lastName: userInfo.lastName,
+			userName: userName,
+			password: userInfo.password,
+			role: "users"});
 		console.log("created doc");
 	} catch (error) {
 		console.log(error);
@@ -50,22 +54,21 @@ export const getUIDByUserName = async (username) => {
 	try {
 		const q = query(collection(db, "newUsers"), where("username", "==", username));
 		const querySnapshot = await getDocs(q);
-		return querySnapShot[0].id;
+		return querySnapshot[0].id;
 	} catch (error) {
 		console.log(error);
 	}
 }
 
-//a function to retrieve the data of current users
-//returns a map with the generated username as the key
+//a function to return a collection of users as a map
 export const getUsers = async () => {
 	try {
 		let userMap = new Map();
 		const querySnapshot = await getDocs(collection(db, "newUsers"));
 		console.log("query just passed");
-		let docs = querySnapshot.docs();
-		docs.forEach(function(doc) {
-			userMap.set(doc.data.username, doc.data());
+		//let docs = querySnapshot.docs();
+		querySnapshot.forEach(function(doc) {
+			userMap.set(doc.data().username, doc.data());
 		});
 		console.log("set data values into map");
 		return userMap;
