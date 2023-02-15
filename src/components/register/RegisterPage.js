@@ -41,6 +41,13 @@ const RegisterPage = () => {
     createAccount(userInfo, navigateTo, setError, setErrorMessage);
   };
 
+  /**
+   * the useMemo keeeps track for anychange with the
+   * email, password, fName, and lName
+   * inside of the [email, password, firstName, lastName]
+   * everytime it detects a change the stuffs inside trigger
+   * the entire return statement resolves to either true or false
+   */
   const isDisabled = useMemo(() => {
     return (
       email === "" ||
