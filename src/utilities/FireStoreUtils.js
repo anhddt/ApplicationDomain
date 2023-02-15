@@ -65,7 +65,7 @@ export const getUsers = async () => {
 		console.log("query just passed");
 		let docs = querySnapshot.docs();
 		docs.forEach(function(doc) {
-			userMap.set(doc.username, doc.data());
+			userMap.set(doc.data.username, doc.data());
 		});
 		console.log("set data values into map");
 		return userMap;
