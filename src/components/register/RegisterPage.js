@@ -1,7 +1,7 @@
 import "./registerPage.css";
 import { useMemo, useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
-import { Box, Button, TextField, Typography } from "@mui/material";
+import { Box, Button, Grid, TextField, Typography } from "@mui/material";
 import { createAccount } from "../../utilities/utils";
 import {
   checkPwLength,
@@ -11,33 +11,56 @@ import {
 } from "../../middleware/verification/userInfo";
 
 const RegisterPage = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [street, setStreet] = useState("");
-  const [city, setCity] = useState("");
-  const [state, setState] = useState("");
-  const [zip, setZip] = useState("");
-  const [country, setCountry] = useState("");
-  const [phone, setPhone] = useState("");
+  const [inputs, setInputs] = useState({
+    firstName: "",
+    lastName: "",
+    email: "",
+    password: "",
+    street: "",
+    city: "",
+    state: "",
+    zip:"",
+    country: "",
+    phone: ""
+  });
+  const [confirmPw, setConfirmPw] = useState("");
   const [error, setError] = useState(false);
+  const [confirmPwError, setConfirmPwError] = useState(false);
   const navigateTo = useNavigate();
 
+  /**
+   * Handle the change in the textField's value
+   * Everytime the textField is changed,
+   * it fires an event. The event is a packet with a bunch
+   * of properties like target, name, value
+   * The event is handled here. The function takes in
+   * the event and modify the inputs variable that is defined above.
+   * The input variable is a dictionary.
+   * The prev is a previous state of the inputs.
+   * The curly brackets inside setInputs is dictionary contains key:value
+   * Inside the curly brackets, the change includes whatever
+   * the previous state was and in coming change.
+   */
+  const handleChange = (e) => {
+    setInputs((prev) => ({
+      ...prev,
+      [e.target.name] : e.target.value
+    }))
+  };
+  
+  /**
+   * Every time the password and confirm password trigger
+   * This function fire and set the error oppose to the result of the
+   * comparison.
+   */
+  useMemo(() => {
+    if (inputs.password && confirmPw){
+      setConfirmPwError(!(inputs.password === confirmPw));
+    }
+  }, [inputs.password, confirmPw]);
+
   const handleSubmit = async () => {
-    const userInfo = {
-      firstName: firstName,
-      lastName: lastName,
-      email: email,
-      password: password,
-      street: street,
-      city: city,
-      state: state,
-      zip,
-      country: country,
-      phone: phone,
-    };
-    createAccount(userInfo, navigateTo, setError);
+    createAccount(inputs, navigateTo, setError);
   };
 
   /**
@@ -49,21 +72,21 @@ const RegisterPage = () => {
    */
   const isDisabled = useMemo(() => {
     return (
-      email === "" ||
-      firstName === "" ||
-      lastName === "" ||
+      inputs.email === "" ||
+      inputs.firstName === "" ||
+      inputs.lastName === "" ||
       !(
-        checkPwFirstChar(password) &&
-        checkPwForNumbers(password) &&
-        checkPwLength(password) &&
-        checkPwForSpecialChar(password)
+        checkPwFirstChar(inputs.password) &&
+        checkPwForNumbers(inputs.password) &&
+        checkPwLength(inputs.password) &&
+        checkPwForSpecialChar(inputs.password)
       )
     );
-  }, [email, password, firstName, lastName]);
+  }, [inputs]);
 
   return (
     <Box className="container">
-      <Box className="userInfo-form">
+      <form className="userInfo-form">
         <Typography id="create-your-account-title" variant="h4">
           Create your account
         </Typography>
@@ -76,167 +99,219 @@ const RegisterPage = () => {
             Login instead
           </NavLink>
         </Box>
-        <Box id="input-container">
-          <Typography textAlign="left" variant="h6">
-            Contact info:
-          </Typography>
-          <Box id="contact-container">
-            <Box id="contact-info-container">
-              <TextField
-                fullWidth
-                required
-                label="First Name"
-                size="small"
-                variant="outlined"
-                onChange={(e) => {
-                  setFirstName(e.target.value);
-                }}
-              />
-              <TextField
-                fullWidth
-                required
-                label="Last Name"
-                size="small"
-                variant="outlined"
-                onChange={(e) => {
-                  setLastName(e.target.value);
-                }}
-              />
-            </Box>
-            <Box id="contact-info-container">
-              <TextField
-                fullWidth
-                label="Phone number"
-                size="small"
-                variant="outlined"
-                onChange={(e) => {
-                  setPhone(e.target.value);
-                }}
-              />
-              <TextField
-                fullWidth
-                label="Street"
-                size="small"
-                variant="outlined"
-                onChange={(e) => {
-                  setStreet(e.target.value);
-                }}
-              />
-            </Box>
-            <Box id="contact-info-container">
-              <TextField
-                fullWidth
-                label="City"
-                size="small"
-                variant="outlined"
-                onChange={(e) => {
-                  setCity(e.target.value);
-                }}
-              />
-              <TextField
-                fullWidth
-                label="State"
-                size="small"
-                variant="outlined"
-                onChange={(e) => {
-                  setState(e.target.value);
-                }}
-              />
-            </Box>
-            <Box id="contact-info-container">
-              <TextField
-                fullWidth
-                label="Zip"
-                size="small"
-                variant="outlined"
-                onChange={(e) => {
-                  setZip(e.target.value);
-                }}
-              />
-              <TextField
-                fullWidth
-                label="Country"
-                size="small"
-                variant="outlined"
-                onChange={(e) => {
-                  setCountry(e.target.value);
-                }}
-              />
-            </Box>
-          </Box>
-          <Typography textAlign="left" variant="h6">
-            Login info:
-          </Typography>
-          <Box id="login-info-container">
+        <Grid spacing={2} container>
+          <Grid item xs={12}>
+            <Typography textAlign="left" variant="h6">
+              Contact info:
+            </Typography>
+          </Grid>
+          <Grid item xs={6}>
             <TextField
+              name="firstName"
+              label="First Name"
+              value={inputs.firstName}
               fullWidth
               required
-              label="Email"
               size="small"
               variant="outlined"
               onChange={(e) => {
-                setEmail(e.target.value);
+                handleChange(e);
               }}
-              error={error}
-              helperText={"Email invalid or already in use"}
             />
+          </Grid>
+          <Grid item xs={6}>
             <TextField
+              name="lastName"
+              label="Last Name"
+              value={inputs.lastName}
               fullWidth
               required
+              size="small"
+              variant="outlined"
+              onChange={(e) => {
+                handleChange(e);
+              }}
+            />
+          </Grid>
+          <Grid item xs={6}>
+            <TextField
+              name="phone"
+              label="Phone number"
+              value={inputs.phone}
+              fullWidth
+              size="small"
+              variant="outlined"
+              onChange={(e) => {
+                handleChange(e);
+              }}
+            />
+          </Grid>
+          <Grid item xs={6}>
+            <TextField
+              name="street"
+              label="Street"
+              value={inputs.street}
+              fullWidth
+              size="small"
+              variant="outlined"
+              onChange={(e) => {
+                handleChange(e);
+              }}
+            />
+          </Grid>
+          <Grid item xs={6}>
+            <TextField
+              name="city"
+              label="City"
+              value={inputs.city}
+              fullWidth
+              size="small"
+              variant="outlined"
+              onChange={(e) => {
+                handleChange(e);
+              }}
+            />
+          </Grid>
+          <Grid item xs={6}>
+            <TextField
+              name="state"
+              label="State"
+              value={inputs.state}
+              fullWidth
+              size="small"
+              variant="outlined"
+              onChange={(e) => {
+                handleChange(e);
+              }}
+            />
+          </Grid>
+          <Grid item xs={6}>
+            <TextField
+              name="zip"
+              label="Zip"
+              value={inputs.zip}
+              fullWidth
+              size="small"
+              variant="outlined"
+              onChange={(e) => {
+                handleChange(e);
+              }}
+            />
+          </Grid>
+          <Grid item xs={6}>
+            <TextField
+              name="country"
+              label="Country"
+              value={inputs.country}
+              fullWidth
+              size="small"
+              variant="outlined"
+              onChange={(e) => {
+                handleChange(e);
+              }}
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <Typography textAlign="left" variant="h6">
+              Login info:
+            </Typography>
+          </Grid>
+          <Grid item xs={12}>
+            <TextField
+              name="email"
+              label="Email"
+              value={inputs.email}
+              required
+              fullWidth
+              size="small"
+              variant="outlined"
+              onChange={(e) => {
+                handleChange(e);
+              }}
+              error={error}
+              helperText={error && "Email invalid or already in use"}
+            />
+          </Grid>
+          <Grid item xs={6}>
+            <TextField
+              name="password"
               label="Password"
+              value={inputs.password}
+              required
+              fullWidth
               size="small"
               variant="outlined"
               type="password"
               onChange={(e) => {
-                setPassword(e.target.value);
+                handleChange(e);
               }}
             />
+          </Grid>
+          <Grid item xs={6}>
+            <TextField
+              label="Confirm Password"
+              required
+              fullWidth
+              size="small"
+              variant="outlined"
+              type="password"
+              error={confirmPwError}
+              helperText={confirmPwError && "Password does not match"}
+              onChange={(e) => {
+                setConfirmPw(e.target.value);
+              }}
+            />
+          </Grid>
+          <Grid item xs={12}>
             <Box id="password-constrains">
               <Typography
-                color={checkPwLength(password) ? "green" : "black"}
+                color={checkPwLength(inputs.password) ? "green" : "black"}
                 display="block"
                 textAlign="left"
                 variant="contained"
-              >
+                >
                 Must be at least 8 characters.
               </Typography>
               <Typography
-                color={checkPwFirstChar(password) ? "green" : "black"}
+                color={checkPwFirstChar(inputs.password) ? "green" : "black"}
                 display="block"
                 textAlign="left"
                 variant="contained"
-              >
+                >
                 Must start with a letter.
               </Typography>
               <Typography
-                color={checkPwForNumbers(password) ? "green" : "black"}
+                color={checkPwForNumbers(inputs.password) ? "green" : "black"}
                 display="block"
                 textAlign="left"
                 variant="contained"
-              >
+                >
                 Must have a number.
               </Typography>
               <Typography
-                color={checkPwForSpecialChar(password) ? "green" : "black"}
+                color={checkPwForSpecialChar(inputs.password) ? "green" : "black"}
                 display="block"
                 textAlign="left"
                 variant="contained"
-              >
+                >
                 Must have a special character (!, @, #, $, %, *, etc.).{" "}
               </Typography>
             </Box>
+          </Grid>
+          <Grid item xs={12}>
             <Button
+              fullWidth
               variant="contained"
               disabled={isDisabled}
               onClick={() => {
                 handleSubmit();
               }}
-            >
+              >
               Submit
             </Button>
-          </Box>
-        </Box>
-      </Box>
+          </Grid>
+        </Grid>
+      </form>
     </Box>
   );
 };

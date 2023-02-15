@@ -1,22 +1,42 @@
 import "./loginPage.css";
 import { useMemo, useState } from "react";
 import { NavLink, useNavigate, useLocation } from "react-router-dom";
-import { Box, Button, TextField, Typography } from "@mui/material";
+import { Box, Button, InputAdornment, TextField, Typography } from "@mui/material";
 import { showIf } from "../utils/conditionalRendering";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import PersonOutlineOutlinedIcon from "@mui/icons-material/PersonOutlineOutlined";
 import { signInEmailPassword } from "../../utilities/utils";
 
 const LoginForm = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [inputs, setInputs] = useState({
+    email: "",
+    password: ""
+  })
   const [error, setError] = useState(false);
   const navigateTo = useNavigate();
   const location = useLocation();
   const isDisabled = useMemo(() => {
-    return email === "" || password === "";
-  }, [email, password]);
+    return inputs.email === "" || inputs.password === "";
+  }, [inputs.email, inputs.password]);
 
+  /**
+   * Handle the change in the textField's value
+   * Everytime the textField is changed,
+   * it fires an event. The event is a packet with a bunch
+   * of properties like target, name, value
+   * The event is handled here. The function takes in
+   * the event and modify the inputs variable that is defined above.
+   * The input variable is a dictionary.
+   * The prev is a previous state of the inputs.
+   * The curly brackets inside setInputs is dictionary contains key:value
+   * Inside the curly brackets, the change includes whatever
+   * the previous state was and in coming change.
+   */
+  const handleChange = (e) => {
+    setInputs((prev) => ({
+      ...prev,
+      [e.target.name] : e.target.value
+    }))};
   /**
    * This function handle the login mechanism
    * send in the email and password
@@ -24,9 +44,8 @@ const LoginForm = () => {
    * and a previous location so that the navgation can navigate
    */
   const handleLogin = () => {
-    signInEmailPassword(email, password, setError, navigateTo, location);
+    signInEmailPassword(inputs, setError, navigateTo, location);
   };
-
   /**
    * This allows the user to press enter
    * after typing in the password
@@ -40,8 +59,8 @@ const LoginForm = () => {
   };
   return (
     <Box className="screen">
-      <Box className="login-form">
-        <Typography id="login-form-message" variant="h4">
+      <form className="login-form">
+        <Typography  id="login-form-message" variant="h4">
           Welcome
         </Typography>
         <Box>
@@ -56,32 +75,42 @@ const LoginForm = () => {
         {showIf( error,
           <Typography color="red">Wrong email or password, try again.</Typography>
         )}
-        <Box className="field-container">
-          <PersonOutlineOutlinedIcon sx={{ fontSize: 50 }} />
-          <TextField
-            fullWidth
-            label="Email"
-            variant="outlined"
-            onChange={(e) => {
-              setEmail(e.target.value);
-            }}
-            required
-          />
-        </Box>
-        <Box className="field-container">
-          <LockOutlinedIcon sx={{ fontSize: 50 }} />
-          <TextField
-            fullWidth
-            type="password"
-            label="Password"
-            variant="outlined"
-            onKeyDown={(key) => {handleKeyDown(key)}}
-            onChange={(e) => {
-              setPassword(e.target.value);
-            }}
-            required
-          />
-        </Box>
+        <TextField
+          name="email"
+          label="Email"
+          value={inputs.email}
+          required
+          fullWidth
+          variant="outlined"
+          placeholder="Email (required)"
+          onChange={(e) => {handleChange(e)}}
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start">
+                <PersonOutlineOutlinedIcon  />
+              </InputAdornment>
+            )
+          }}
+        />
+        <TextField
+          name="password"
+          label="Password"
+          type="password"
+          value={inputs.password}
+          required
+          fullWidth
+          variant="outlined"
+          placeholder="Password (required)"
+          onKeyDown={(key) => {handleKeyDown(key)}}
+          onChange={(e) => {handleChange(e)}}
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start">
+                <LockOutlinedIcon />
+              </InputAdornment>
+            )
+          }}
+        />
         <Button
           variant="contained"
           disabled={isDisabled}
@@ -92,7 +121,7 @@ const LoginForm = () => {
         <NavLink className="nav-link">
           Forgot Password
         </NavLink>
-      </Box>
+      </form>
     </Box>
   );
 };

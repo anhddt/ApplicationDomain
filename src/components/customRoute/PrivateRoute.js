@@ -13,7 +13,6 @@ export const PrivateRoute = ({ children }) => {
   const user = useAuth();
   const location = useLocation();
   if (user) {
-    console.log("user");
     return children;
   }else {
     return <Navigate to="/login" replace state={{from: location}} />;
