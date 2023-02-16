@@ -102,7 +102,7 @@ const LoginForm = () => {
         <TextField
           name="email"
           label="Email"
-          value={inputs.uername}
+          value={inputs.email}
           required
           fullWidth
           variant="outlined"
