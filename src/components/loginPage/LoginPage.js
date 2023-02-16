@@ -1,33 +1,47 @@
 import "./loginPage.css";
 import { useMemo, useState } from "react";
 import { NavLink, useNavigate, useLocation } from "react-router-dom";
-import { Box, Button, InputAdornment, TextField, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  IconButton,
+  InputAdornment,
+  TextField,
+  Typography,
+} from "@mui/material";
 import { showIf } from "../utils/conditionalRendering";
+import Visibility from "@mui/icons-material/Visibility";
+import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import PersonOutlineOutlinedIcon from "@mui/icons-material/PersonOutlineOutlined";
-import { signInEmailPassword,sendPasswordReset } from "../../utilities/utils";
+import { signInEmailPassword, sendPasswordReset } from "../../utilities/utils";
 
 const LoginForm = () => {
   const [inputs, setInputs] = useState({
     email: "",
-    password: ""
-  })
+    password: "",
+  });
   const [error, setError] = useState(false);
   const navigateTo = useNavigate();
   const location = useLocation();
+  const [showPassword, setShowPassword] = useState(false);
 
+  const handleClickShowPassword = () => setShowPassword((show) => !show);
+  const handleMouseDownPassword = (e) => {
+    e.preventDefault();
+  };
   /**
    * Check if either the username or password is empty
-   * disable the login button 
+   * disable the login button
    */
   const isDisabled = useMemo(() => {
     return inputs.email === "" || inputs.password === "";
-  }, [inputs.email, inputs.password]);
+  }, [inputs]);
 
-  const passwordReset = () =>{
+  const passwordReset = () => {
     sendPasswordReset(inputs.email);
-    console.log('email sent')
-  }
+    console.log("email sent");
+  };
   /**
    * Handle the change in the textField's value
    * Everytime the textField is changed,
@@ -44,8 +58,9 @@ const LoginForm = () => {
   const handleChange = (e) => {
     setInputs((prev) => ({
       ...prev,
-      [e.target.name] : e.target.value
-    }))};
+      [e.target.name]: e.target.value,
+    }));
+  };
   /**
    * This function handle the login mechanism
    * send in the email and password
@@ -69,55 +84,73 @@ const LoginForm = () => {
   return (
     <Box className="screen">
       <form className="login-form">
-        <Typography  id="login-form-message" variant="h4">
+        <Typography id="login-form-message" variant="h4">
           Welcome
         </Typography>
         <Box>
           Not a member?{" "}
-          <NavLink
-            to="/register"
-            className="nav-link"
-          >
+          <NavLink to="/register" className="nav-link">
             Create Account
           </NavLink>
         </Box>
-        {showIf( error,
-          <Typography color="red">Wrong email or password, try again.</Typography>
+        {showIf(
+          error,
+          <Typography color="red">
+            Wrong email or password, try again.
+          </Typography>
         )}
         <TextField
           name="email"
           label="Email"
-          value={inputs.email}
+          value={inputs.uername}
           required
           fullWidth
           variant="outlined"
           placeholder="Email (required)"
-          onChange={(e) => {handleChange(e)}}
+          onChange={(e) => {
+            handleChange(e);
+          }}
           InputProps={{
             startAdornment: (
               <InputAdornment position="start">
-                <PersonOutlineOutlinedIcon  />
+                <PersonOutlineOutlinedIcon />
               </InputAdornment>
-            )
+            ),
           }}
         />
         <TextField
           name="password"
           label="Password"
-          type="password"
+          type={showPassword ? "text" : "password"}
           value={inputs.password}
           required
           fullWidth
           variant="outlined"
           placeholder="Password (required)"
-          onKeyDown={(key) => {handleKeyDown(key)}}
-          onChange={(e) => {handleChange(e)}}
+          onKeyDown={(key) => {
+            handleKeyDown(key);
+          }}
+          onChange={(e) => {
+            handleChange(e);
+          }}
           InputProps={{
             startAdornment: (
               <InputAdornment position="start">
                 <LockOutlinedIcon />
               </InputAdornment>
-            )
+            ),
+            endAdornment: (
+              <InputAdornment position="end">
+                <IconButton
+                  aria-label="toggle password visibility"
+                  onClick={handleClickShowPassword}
+                  onMouseDown={handleMouseDownPassword}
+                  edge="end"
+                >
+                  {showPassword ? <VisibilityOff /> : <Visibility />}
+                </IconButton>
+              </InputAdornment>
+            ),
           }}
         />
         <Button
@@ -127,8 +160,9 @@ const LoginForm = () => {
         >
           Login
         </Button>
-        <NavLink className="nav-link"
-        onClick={() => passwordReset(inputs.email)}
+        <NavLink
+          className="nav-link"
+          onClick={() => passwordReset(inputs.email)}
         >
           Forgot Password
         </NavLink>

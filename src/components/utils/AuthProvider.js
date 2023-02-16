@@ -1,4 +1,3 @@
-
 import { createContext, useContext, useEffect, useState } from "react";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "../../firebase";
@@ -30,8 +29,8 @@ import { auth } from "../../firebase";
  */
 const Context = createContext();
 
-export const useAuth = () =>{
-    return useContext(Context);
+export const useAuth = () => {
+  return useContext(Context);
 };
 
 /**
@@ -41,19 +40,19 @@ export const useAuth = () =>{
  */
 export function AuthProvider({ children }) {
   const [currentUser, setCurrentUser] = useState();
-  const [isSignedIn, setIsSignedIn]= useState(false);
+  const [isSignedIn, setIsSignedIn] = useState(false);
 
   useEffect(() => {
-      const unsubscribe = onAuthStateChanged(auth, user => {
-          setCurrentUser(user);
-          setIsSignedIn(true);
-      });
-      return unsubscribe;    
-  },[]);
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      setCurrentUser(user);
+      setIsSignedIn(true);
+    });
+    return unsubscribe;
+  }, []);
 
   return (
     <Context.Provider value={currentUser}>
       {isSignedIn && children}
     </Context.Provider>
-  )
+  );
 }

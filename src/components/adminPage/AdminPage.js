@@ -1,10 +1,6 @@
-import './adminpage.css';
+import "./adminpage.css";
 import Box from "@mui/material/Box";
 import { Header } from "../common";
-
-
-
-
 
 const AdminPage = () => {
   // const getUsers = async () => {
@@ -26,24 +22,53 @@ const AdminPage = () => {
   //   }
   // }
   // getUsers();
-  
-    
-    const users2 = [
-      { firstName: "Jack", lastName: "Smith", email: "22@22.com", password: "********"},
-      { firstName: "Meghan", lastName: "Dee", email: "22@22.com", password: "********" },
-      { firstName: "John", lastName: "Doe", email: "22@22.com", password: "********"},
-      { firstName: "Sierra", lastName: "Brown", email: "22@22.com", password: "********"},
-      { firstName: "Evan", lastName: "Jackson", email: "22@22.com", password: "********" },
-      { firstName: "Katie", lastName: "Kat", email: "22@22.com", password: "********"},
-    ]
 
-    return (
-      <Box className="screen">
-        <Header />
-        <Box className="adminBody">
-          <div className='userTable'>
-            <table>
-              <tbody>
+  const users2 = [
+    {
+      firstName: "Jack",
+      lastName: "Smith",
+      email: "22@22.com",
+      password: "********",
+    },
+    {
+      firstName: "Meghan",
+      lastName: "Dee",
+      email: "22@22.com",
+      password: "********",
+    },
+    {
+      firstName: "John",
+      lastName: "Doe",
+      email: "22@22.com",
+      password: "********",
+    },
+    {
+      firstName: "Sierra",
+      lastName: "Brown",
+      email: "22@22.com",
+      password: "********",
+    },
+    {
+      firstName: "Evan",
+      lastName: "Jackson",
+      email: "22@22.com",
+      password: "********",
+    },
+    {
+      firstName: "Katie",
+      lastName: "Kat",
+      email: "22@22.com",
+      password: "********",
+    },
+  ];
+
+  return (
+    <Box className="screen">
+      <Header />
+      <Box className="adminBody">
+        <div className="userTable">
+          <table>
+            <tbody>
               <tr>
                 <th>First Name</th>
                 <th>Last Name</th>
@@ -54,24 +79,28 @@ const AdminPage = () => {
               </tr>
               {users2.map((val, key) => {
                 return (
-                  <tr key = {key}>
+                  <tr key={key}>
                     <td>{val.firstName}</td>
                     <td>{val.lastName}</td>
-                    <td>{val.email} <button onClick={'/'}>Contact User</button></td>
+                    <td>
+                      {val.email} <button onClick={"/"}>Contact User</button>
+                    </td>
                     <td>{val.password}</td>
-                    <td><button onClick={'/'}>Edit</button></td>
-                    <td><button onClick={'/'}>Delete</button></td>
+                    <td>
+                      <button onClick={"/"}>Edit</button>
+                    </td>
+                    <td>
+                      <button onClick={"/"}>Delete</button>
+                    </td>
                   </tr>
-                )              
+                );
               })}
-              </tbody>
-            </table>
-          </div>
-
-        </Box>
+            </tbody>
+          </table>
+        </div>
       </Box>
-    );
-  };
-  
-  export default AdminPage;
-  
+    </Box>
+  );
+};
+
+export default AdminPage;

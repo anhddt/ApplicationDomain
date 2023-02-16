@@ -5,6 +5,4 @@ import Navbar from "./navbar";
  * is currently inside common and should only be used for
  * reused elements such as headers/sidebars/etc.
  * */
-export {
-    Header, Navbar
-}
+export { Header, Navbar };

@@ -1,29 +1,29 @@
 .navbar {
-    display: flex;
-    position: relative;
-    justify-content: center;
+  display: flex;
+  position: relative;
+  justify-content: center;
 }
 
 .navbar-item {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-left: 50px;
-    color: inherit;
-    text-decoration: inherit;
-    text-transform: uppercase;
-    outline: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-left: 50px;
+  color: inherit;
+  text-decoration: inherit;
+  text-transform: uppercase;
+  outline: none;
 }
 
 #navbar-logout-button {
-    background: none!important;
-    border: none;
-    padding: 0!important;
-    cursor: pointer;
-    font-size: medium;
+  background: none !important;
+  border: none;
+  padding: 0 !important;
+  cursor: pointer;
+  font-size: medium;
 }
 
 #navbar-logout-button:hover {
-    text-decoration: underline;
-    color: rgb(27, 191, 220);
+  text-decoration: underline;
+  color: rgb(27, 191, 220);
 }

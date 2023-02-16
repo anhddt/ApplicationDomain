@@ -5,15 +5,11 @@ import { auth, firestore } from "../../firebase";
  * This function retrieves collection from the database
  * The collection is in form of a dictionary
  */
-export const getUserInfo = async () => {
-  
-  
+export const getUserName = async () => {
   const userUid = auth.currentUser.uid;
-  console.log(userUid);
-  
   const userDoc = await getDoc(doc(firestore, "newUsers", userUid));
   const userInfo = userDoc.data();
-  return userInfo;
+  return userInfo.username;
 };
 
 /**
