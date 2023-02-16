@@ -37,8 +37,8 @@ const RegisterPage = () => {
     phone: "",
   });
   const [confirmPw, setConfirmPw] = useState("");
-  const [error, setError] = useState(false);
   const [confirmPwError, setConfirmPwError] = useState(true);
+  const [error, setError] = useState(false);
   const [focus, setFocus] = useState(false);
   const date = new Date();
   const day = date.getDate() < 10 ? `0${date.getDate()}` : `${date.getDate()}`;
@@ -313,7 +313,9 @@ const RegisterPage = () => {
               label="Confirm Password"
               required
               fullWidth
-              onFocus={() => {handleFocus()}}
+              onFocus={() => {
+                handleFocus();
+              }}
               size="small"
               variant="outlined"
               type={showPassword ? "text" : "password"}

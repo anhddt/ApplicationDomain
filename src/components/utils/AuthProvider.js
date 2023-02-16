@@ -1,5 +1,10 @@
 import { createContext, useContext, useEffect, useState } from "react";
-import { createUserWithEmailAndPassword, onAuthStateChanged, signInWithEmailAndPassword, signOut } from "firebase/auth";
+import {
+  createUserWithEmailAndPassword,
+  onAuthStateChanged,
+  signInWithEmailAndPassword,
+  signOut,
+} from "firebase/auth";
 import { auth } from "../../firebase";
 import { addUserProfile } from "../../middleware/data/addUserData";
 
@@ -43,7 +48,7 @@ export function AuthProvider({ children }) {
   const [currentUser, setCurrentUser] = useState();
   const [isSignedIn, setIsSignedIn] = useState(false);
 
-    /**
+  /**
    * What this function does is sign helping the user
    * to sign in with the email and passsword
    * then redirect to the index page, which is "/".
@@ -99,7 +104,7 @@ export function AuthProvider({ children }) {
       await signOut(auth);
     } catch (error) {}
   };
-  
+
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       setCurrentUser(user);
@@ -113,11 +118,9 @@ export function AuthProvider({ children }) {
     createAccount,
     signInEmailPassword,
     logOut,
-  }
+  };
 
   return (
-    <Context.Provider value={values}>
-      {isSignedIn && children}
-    </Context.Provider>
+    <Context.Provider value={values}>{isSignedIn && children}</Context.Provider>
   );
 }

@@ -12,7 +12,7 @@ function Header() {
       const userName = await getUserName();
       setUsername(userName);
     };
-    if(currentUser) gettingUsername();
+    if (currentUser) gettingUsername();
   }, [currentUser]);
 
   return (
@@ -31,7 +31,7 @@ function Header() {
         <section className="header-top_right">
           {" "}
           {/* Log On button location  */}
-          {currentUser? `Welcome ${username}` : "Welcome"}
+          {currentUser ? `Welcome ${username}` : "Welcome"}
         </section>
       </section>
 
