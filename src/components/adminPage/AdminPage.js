@@ -1,8 +1,7 @@
 import './adminpage.css';
 import Box from "@mui/material/Box";
 import { Header } from "../common";
-import { firestore } from '../../firebase';
-import { getDocs, collection } from 'firebase/firestore';
+
 
 
 
