@@ -1,10 +1,22 @@
 import "./navbar.css";
+import { useEffect, useState } from "react";
 import { showIf } from "../../utils/conditionalRendering";
 import { useAuth } from "../../utils/AuthProvider";
 import { logOut } from "../../../utilities/utils";
+import { getUserRole } from "../../../middleware/verification/userInfo";
 
 function Navbar() {
   const user = useAuth();
+  const [userRole, setUserRole] = useState("user");
+
+  useEffect(() => {
+    const getRole = async () => {
+      const role = await getUserRole();
+      setUserRole(role);
+    };
+    getRole();
+  }, []);
+
   return (
     <section className="navbar">
       {" "}
@@ -19,9 +31,11 @@ function Navbar() {
       <a href="/" className="navbar-item">
         Accounting
       </a>
-      <a href="admin" className="navbar-item">
-        Admin
-      </a>
+      {showIf(userRole === "admin",
+        <a href="admin" className="navbar-item">
+          Admin
+        </a>
+      )}
       <a href="/" className="navbar-item">
         Contact
       </a>

@@ -12,6 +12,13 @@ export const getUserName = async () => {
   return userInfo.username;
 };
 
+export const getUserRole = async () => {
+  const userUid = auth.currentUser.uid;
+  const userDoc = await getDoc(doc(firestore, "newUsers", userUid));
+  const userInfo = userDoc.data();
+  return userInfo.role;
+};
+
 /**
  * This function chaecks for length of the string argument
  * It returns true or false
