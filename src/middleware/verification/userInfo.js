@@ -7,16 +7,20 @@ import { auth, firestore } from "../../firebase";
  */
 export const getUserName = async () => {
   const userUid = auth.currentUser.uid;
-  const userDoc = await getDoc(doc(firestore, "newUsers", userUid));
-  const userInfo = userDoc.data();
-  return userInfo.username;
+  try {
+    const userDoc = await getDoc(doc(firestore, "newUsers", userUid));
+    const userInfo = userDoc.data();
+    return userInfo.username;
+  } catch (error) {}
 };
 
 export const getUserRole = async () => {
   const userUid = auth.currentUser.uid;
-  const userDoc = await getDoc(doc(firestore, "newUsers", userUid));
-  const userInfo = userDoc.data();
-  return userInfo.role;
+  try {
+    const userDoc = await getDoc(doc(firestore, "newUsers", userUid));
+    const userInfo = userDoc.data();
+    return userInfo.role;
+  } catch (error) {}
 };
 
 /**
