@@ -3,7 +3,9 @@
 1. Clone the main branch
 2. Make sure that you installed nodejs
 3. Run `npm i` and wait for the process to finish
-4. Run `npm start` and wait for the process to finish
+4. Checkout a new branch using `git checkout -b yourBranchName`.
+   Doing it this way prevent messing up the main branch.
+5. Run `npm start` and wait for the process to finish
 This command runs the app in the development mode.\
 Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
 The page will reload when you make changes.\
@@ -16,17 +18,26 @@ Example: `firebase emulators:start --only auth`
 Check your `firebase.json` for a list of ports numbers that associated with the corespoding emulator.\
 Import `connectAuthEmulator`, or `connectFirestoreEmulator` if you want to run the local emulators.\
 ### `firebase serve` 
-Run this command after running `npm run build` to build the local deployment
-Open [http://localhost:5000](http://localhost:5000) to view the firebase project.
+1. Run this command after running `npm run build` to build the local deployment
+2. Run `firebase serve`.
+3. Open [http://localhost:5000](http://localhost:5000) to view the firebase project.
 
-## Before pushing
-Make sure to run `npx prettier --write`
-Example: `npx prettier --write /src`
-This handle any indentation error and delete unused variables from the modifed code.
-## Before merging
-* Make sure there is no merge conflict otherwise the pull request will fail.
-* To resolve merge conflicts, run `git rebase main yourBranchName`. Update any conflicting changes if there is any conflict. Run `git commit -m "commit message"` to make a commit. Finally run `git commit --continue` to finish the rebase process.
-* If there is no conflict then simply set the local branch upstream and proceed to merge reqest.
+## Before pushing to your remote branch
+1. After committing on your local branch, go back to the main branch.
+2. Do a `git pull --rebase` on main, if there are any conflicts, resolve them.
+3. Go back to your branch.
+4. Do a `git merge main`
+   This updates all the change from main to your branch.
+   Resolves any conflicts.
+5. Make sure to run `npx prettier --write` after step 4.
+   Example: `npx prettier --write /src`
+   This handle any indentation error and make your code looks prettier.
+6. Push.
+
+These steps are to enture that your pull request will success everytime you push
+up the stream. Failing to do these steps might result in trouble shootings your
+pull request.
+
 ## Other commands
 ### `npm run test`
 Launches the test runner in the interactive watch mode.\
