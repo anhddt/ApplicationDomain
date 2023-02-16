@@ -15,9 +15,11 @@ const RegisterPage = () => {
     firstName: "",
     lastName: "",
     email: "",
+    username: "",
     password: "",
     street: "",
     city: "",
+    role: "user",
     state: "",
     zip:"",
     country: "",
@@ -26,6 +28,9 @@ const RegisterPage = () => {
   const [confirmPw, setConfirmPw] = useState("");
   const [error, setError] = useState(false);
   const [confirmPwError, setConfirmPwError] = useState(false);
+  const date = new Date();
+  const [day, setDay] = useState(date.getDate());
+  const [month, setMonth] = useState(date.getMonth());
   const navigateTo = useNavigate();
 
   /**
@@ -42,12 +47,12 @@ const RegisterPage = () => {
    * the previous state was and in coming change.
    */
   const handleChange = (e) => {
-    setInputs((prev) => ({
-      ...prev,
-      [e.target.name] : e.target.value
-    }))
+    setInputs( existing => ({
+      ...existing, 
+      [e.target.name]: e.target.value
+    }));
   };
-  
+
   /**
    * Every time the password and confirm password trigger
    * This function fire and set the error oppose to the result of the
@@ -57,9 +62,25 @@ const RegisterPage = () => {
     if (inputs.password && confirmPw){
       setConfirmPwError(!(inputs.password === confirmPw));
     }
-  }, [inputs.password, confirmPw]);
+    if (inputs.firstName && inputs.lastName){
+      const setUsername =() => {
+        if (day < 10) {
+          setDay("0" + day);
+        }
+        if (month < 10) {
+          setMonth("0" + (month+1));
+        }
+        setInputs(existing => ({
+          ...existing,
+          username: inputs.firstName.charAt(0) + inputs.lastName + day + month
+        }));
+      }
+      setUsername();
+    };
+    },[inputs.password, inputs.firstName, inputs.lastName, confirmPw, day, month]);
 
-  const handleSubmit = async () => {
+  const handleSubmit = () => {
+    console.log(inputs.username);
     createAccount(inputs, navigateTo, setError);
   };
 
@@ -216,7 +237,18 @@ const RegisterPage = () => {
               Login info:
             </Typography>
           </Grid>
-          <Grid item xs={12}>
+          <Grid item xs={6}>
+            <TextField
+              name="username"
+              label="Assigned Username"
+              value={inputs.username}
+              required
+              fullWidth
+              size="small"
+              variant="outlined"
+            />
+          </Grid>
+          <Grid item xs={6}>
             <TextField
               name="email"
               label="Email"

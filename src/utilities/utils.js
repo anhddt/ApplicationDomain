@@ -32,7 +32,7 @@ export const signInEmailPassword = async (
   location
 ) => {
   try {
-    await signInWithEmailAndPassword(auth, inputs.email, inputs.password);
+    await signInWithEmailAndPassword(auth, inputs.username, inputs.password);
     navigateTo(location.state?.from || "/");
   } catch (error) {
     setError(true);

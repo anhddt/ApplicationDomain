@@ -9,7 +9,7 @@ import { signInEmailPassword,sendPasswordReset } from "../../utilities/utils";
 
 const LoginForm = () => {
   const [inputs, setInputs] = useState({
-    email: "",
+    username: "",
     password: ""
   })
   const [error, setError] = useState(false);
@@ -21,8 +21,8 @@ const LoginForm = () => {
    * disable the login button 
    */
   const isDisabled = useMemo(() => {
-    return inputs.email === "" || inputs.password === "";
-  }, [inputs.email, inputs.password]);
+    return inputs.username === "" || inputs.password === "";
+  }, [inputs.username, inputs.password]);
 
   const passwordReset = () =>{
     sendPasswordReset(inputs.email);
@@ -85,13 +85,13 @@ const LoginForm = () => {
           <Typography color="red">Wrong email or password, try again.</Typography>
         )}
         <TextField
-          name="email"
-          label="Email"
-          value={inputs.email}
+          name="username"
+          label="Username"
+          value={inputs.uername}
           required
           fullWidth
           variant="outlined"
-          placeholder="Email (required)"
+          placeholder="Username (required)"
           onChange={(e) => {handleChange(e)}}
           InputProps={{
             startAdornment: (
