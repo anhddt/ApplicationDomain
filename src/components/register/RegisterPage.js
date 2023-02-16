@@ -1,9 +1,17 @@
 import "./registerPage.css";
 import { useMemo, useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
-import { Box, Button, Grid, IconButton, InputAdornment, TextField, Typography } from "@mui/material";
-import Visibility from '@mui/icons-material/Visibility';
-import VisibilityOff from '@mui/icons-material/VisibilityOff';
+import {
+  Box,
+  Button,
+  Grid,
+  IconButton,
+  InputAdornment,
+  TextField,
+  Typography,
+} from "@mui/material";
+import Visibility from "@mui/icons-material/Visibility";
+import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import { createAccount } from "../../utilities/utils";
 import {
   checkPwLength,
@@ -23,16 +31,17 @@ const RegisterPage = () => {
     city: "",
     role: "user",
     state: "",
-    zip:"",
+    zip: "",
     country: "",
-    phone: ""
+    phone: "",
   });
   const [confirmPw, setConfirmPw] = useState("");
   const [error, setError] = useState(false);
   const [confirmPwError, setConfirmPwError] = useState(false);
   const date = new Date();
-  const day = (date.getDate() < 10) ? `0${date.getDate()}`: `${date.getDate()}`;
-  const month = (date.getMonth() < 10) ? `0${date.getMonth() + 1}`: `${date.getMonth()}`;
+  const day = date.getDate() < 10 ? `0${date.getDate()}` : `${date.getDate()}`;
+  const month =
+    date.getMonth() < 10 ? `0${date.getMonth() + 1}` : `${date.getMonth()}`;
   const navigateTo = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const handleClickShowPassword = () => setShowPassword((show) => !show);
@@ -53,9 +62,9 @@ const RegisterPage = () => {
    * the previous state was and in coming change.
    */
   const handleChange = (e) => {
-    setInputs( existing => ({
-      ...existing, 
-      [e.target.name]: e.target.value
+    setInputs((existing) => ({
+      ...existing,
+      [e.target.name]: e.target.value,
     }));
   };
 
@@ -65,19 +74,26 @@ const RegisterPage = () => {
    * comparison.
    */
   useMemo(() => {
-    if (inputs.password && confirmPw){
+    if (inputs.password && confirmPw) {
       setConfirmPwError(!(inputs.password === confirmPw));
-    };
-    if (inputs.firstName && inputs.lastName){
-      const setUsername =() => {
-        setInputs(existing => ({
+    }
+    if (inputs.firstName && inputs.lastName) {
+      const setUsername = () => {
+        setInputs((existing) => ({
           ...existing,
-          username: inputs.firstName.charAt(0) + inputs.lastName + day + month
+          username: inputs.firstName.charAt(0) + inputs.lastName + day + month,
         }));
-      }
+      };
       setUsername();
-    };
-  },[inputs.password, inputs.firstName, inputs.lastName, confirmPw, day, month]);
+    }
+  }, [
+    inputs.password,
+    inputs.firstName,
+    inputs.lastName,
+    confirmPw,
+    day,
+    month,
+  ]);
 
   const handleSubmit = () => {
     createAccount(inputs, navigateTo, setError);
@@ -112,10 +128,7 @@ const RegisterPage = () => {
         </Typography>
         <Box>
           Already have an account?{" "}
-          <NavLink
-            to="/login"
-            className="nav-link"
-          >
+          <NavLink to="/login" className="nav-link">
             Login instead
           </NavLink>
         </Box>
@@ -276,16 +289,16 @@ const RegisterPage = () => {
               InputProps={{
                 endAdornment: (
                   <InputAdornment position="end">
-                  <IconButton
-                    aria-label="toggle password visibility"
-                    onClick={handleClickShowPassword}
-                    onMouseDown={handleMouseDownPassword}
-                    edge="end"
-                  >
-                    {showPassword ? <VisibilityOff /> : <Visibility />}
-                  </IconButton>
-                </InputAdornment>
-                )
+                    <IconButton
+                      aria-label="toggle password visibility"
+                      onClick={handleClickShowPassword}
+                      onMouseDown={handleMouseDownPassword}
+                      edge="end"
+                    >
+                      {showPassword ? <VisibilityOff /> : <Visibility />}
+                    </IconButton>
+                  </InputAdornment>
+                ),
               }}
               onChange={(e) => {
                 handleChange(e);
@@ -305,16 +318,16 @@ const RegisterPage = () => {
               InputProps={{
                 endAdornment: (
                   <InputAdornment position="end">
-                  <IconButton
-                    aria-label="toggle password visibility"
-                    onClick={handleClickShowPassword}
-                    onMouseDown={handleMouseDownPassword}
-                    edge="end"
-                  >
-                    {showPassword ? <VisibilityOff /> : <Visibility />}
-                  </IconButton>
-                </InputAdornment>
-                )
+                    <IconButton
+                      aria-label="toggle password visibility"
+                      onClick={handleClickShowPassword}
+                      onMouseDown={handleMouseDownPassword}
+                      edge="end"
+                    >
+                      {showPassword ? <VisibilityOff /> : <Visibility />}
+                    </IconButton>
+                  </InputAdornment>
+                ),
               }}
               onChange={(e) => {
                 setConfirmPw(e.target.value);
@@ -328,7 +341,7 @@ const RegisterPage = () => {
                 display="block"
                 textAlign="left"
                 variant="contained"
-                >
+              >
                 Must be at least 8 characters.
               </Typography>
               <Typography
@@ -336,7 +349,7 @@ const RegisterPage = () => {
                 display="block"
                 textAlign="left"
                 variant="contained"
-                >
+              >
                 Must start with a letter.
               </Typography>
               <Typography
@@ -344,15 +357,17 @@ const RegisterPage = () => {
                 display="block"
                 textAlign="left"
                 variant="contained"
-                >
+              >
                 Must have a number.
               </Typography>
               <Typography
-                color={checkPwForSpecialChar(inputs.password) ? "green" : "black"}
+                color={
+                  checkPwForSpecialChar(inputs.password) ? "green" : "black"
+                }
                 display="block"
                 textAlign="left"
                 variant="contained"
-                >
+              >
                 Must have a special character (!, @, #, $, %, *, etc.).{" "}
               </Typography>
             </Box>
@@ -365,7 +380,7 @@ const RegisterPage = () => {
               onClick={() => {
                 handleSubmit();
               }}
-              >
+            >
               Submit
             </Button>
           </Grid>
