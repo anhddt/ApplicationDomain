@@ -1,7 +1,9 @@
 import "./registerPage.css";
 import { useMemo, useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
-import { Box, Button, Grid, TextField, Typography } from "@mui/material";
+import { Box, Button, Grid, IconButton, InputAdornment, TextField, Typography } from "@mui/material";
+import Visibility from '@mui/icons-material/Visibility';
+import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import { createAccount } from "../../utilities/utils";
 import {
   checkPwLength,
@@ -29,10 +31,14 @@ const RegisterPage = () => {
   const [error, setError] = useState(false);
   const [confirmPwError, setConfirmPwError] = useState(false);
   const date = new Date();
-  const [day, setDay] = useState(date.getDate());
-  const [month, setMonth] = useState(date.getMonth());
+  const day = (date.getDate() < 10) ? `0${date.getDate()}`: `${date.getDate()}`;
+  const month = (date.getMonth() < 10) ? `0${date.getMonth() + 1}`: `${date.getMonth()}`;
   const navigateTo = useNavigate();
-
+  const [showPassword, setShowPassword] = useState(false);
+  const handleClickShowPassword = () => setShowPassword((show) => !show);
+  const handleMouseDownPassword = (e) => {
+    e.preventDefault();
+  };
   /**
    * Handle the change in the textField's value
    * Everytime the textField is changed,
@@ -61,15 +67,9 @@ const RegisterPage = () => {
   useMemo(() => {
     if (inputs.password && confirmPw){
       setConfirmPwError(!(inputs.password === confirmPw));
-    }
+    };
     if (inputs.firstName && inputs.lastName){
       const setUsername =() => {
-        if (day < 10) {
-          setDay("0" + day);
-        }
-        if (month < 10) {
-          setMonth("0" + (month+1));
-        }
         setInputs(existing => ({
           ...existing,
           username: inputs.firstName.charAt(0) + inputs.lastName + day + month
@@ -77,10 +77,9 @@ const RegisterPage = () => {
       }
       setUsername();
     };
-    },[inputs.password, inputs.firstName, inputs.lastName, confirmPw, day, month]);
+  },[inputs.password, inputs.firstName, inputs.lastName, confirmPw, day, month]);
 
   const handleSubmit = () => {
-    console.log(inputs.username);
     createAccount(inputs, navigateTo, setError);
   };
 
@@ -273,7 +272,21 @@ const RegisterPage = () => {
               fullWidth
               size="small"
               variant="outlined"
-              type="password"
+              type={showPassword ? "text" : "password"}
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">
+                  <IconButton
+                    aria-label="toggle password visibility"
+                    onClick={handleClickShowPassword}
+                    onMouseDown={handleMouseDownPassword}
+                    edge="end"
+                  >
+                    {showPassword ? <VisibilityOff /> : <Visibility />}
+                  </IconButton>
+                </InputAdornment>
+                )
+              }}
               onChange={(e) => {
                 handleChange(e);
               }}
@@ -286,9 +299,23 @@ const RegisterPage = () => {
               fullWidth
               size="small"
               variant="outlined"
-              type="password"
+              type={showPassword ? "text" : "password"}
               error={confirmPwError}
               helperText={confirmPwError && "Password does not match"}
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">
+                  <IconButton
+                    aria-label="toggle password visibility"
+                    onClick={handleClickShowPassword}
+                    onMouseDown={handleMouseDownPassword}
+                    edge="end"
+                  >
+                    {showPassword ? <VisibilityOff /> : <Visibility />}
+                  </IconButton>
+                </InputAdornment>
+                )
+              }}
               onChange={(e) => {
                 setConfirmPw(e.target.value);
               }}

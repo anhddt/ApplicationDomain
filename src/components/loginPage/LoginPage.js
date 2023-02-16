@@ -1,28 +1,35 @@
 import "./loginPage.css";
 import { useMemo, useState } from "react";
 import { NavLink, useNavigate, useLocation } from "react-router-dom";
-import { Box, Button, InputAdornment, TextField, Typography } from "@mui/material";
+import { Box, Button, IconButton, InputAdornment, TextField, Typography } from "@mui/material";
 import { showIf } from "../utils/conditionalRendering";
+import Visibility from '@mui/icons-material/Visibility';
+import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import PersonOutlineOutlinedIcon from "@mui/icons-material/PersonOutlineOutlined";
 import { signInEmailPassword,sendPasswordReset } from "../../utilities/utils";
 
 const LoginForm = () => {
   const [inputs, setInputs] = useState({
-    username: "",
+    email: "",
     password: ""
   })
   const [error, setError] = useState(false);
   const navigateTo = useNavigate();
   const location = useLocation();
+  const [showPassword, setShowPassword] = useState(false);
 
+  const handleClickShowPassword = () => setShowPassword((show) => !show);
+  const handleMouseDownPassword = (e) => {
+    e.preventDefault();
+  };
   /**
    * Check if either the username or password is empty
    * disable the login button 
    */
   const isDisabled = useMemo(() => {
-    return inputs.username === "" || inputs.password === "";
-  }, [inputs.username, inputs.password]);
+    return inputs.email === "" || inputs.password === "";
+  }, [inputs]);
 
   const passwordReset = () =>{
     sendPasswordReset(inputs.email);
@@ -85,13 +92,13 @@ const LoginForm = () => {
           <Typography color="red">Wrong email or password, try again.</Typography>
         )}
         <TextField
-          name="username"
-          label="Username"
+          name="email"
+          label="Email"
           value={inputs.uername}
           required
           fullWidth
           variant="outlined"
-          placeholder="Username (required)"
+          placeholder="Email (required)"
           onChange={(e) => {handleChange(e)}}
           InputProps={{
             startAdornment: (
@@ -104,7 +111,7 @@ const LoginForm = () => {
         <TextField
           name="password"
           label="Password"
-          type="password"
+          type={showPassword ? "text" : "password"}
           value={inputs.password}
           required
           fullWidth
@@ -117,6 +124,18 @@ const LoginForm = () => {
               <InputAdornment position="start">
                 <LockOutlinedIcon />
               </InputAdornment>
+            ),
+            endAdornment: (
+              <InputAdornment position="end">
+              <IconButton
+                aria-label="toggle password visibility"
+                onClick={handleClickShowPassword}
+                onMouseDown={handleMouseDownPassword}
+                edge="end"
+              >
+                {showPassword ? <VisibilityOff /> : <Visibility />}
+              </IconButton>
+            </InputAdornment>
             )
           }}
         />

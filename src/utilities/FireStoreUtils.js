@@ -14,7 +14,6 @@ export const createUser = async (uid, userInfo) => {
 			email: userInfo.email,
 			password: userInfo.password,
 			role: "users"});
-		console.log("created doc");
 	} catch (error) {
 		console.log(error);
 	}		

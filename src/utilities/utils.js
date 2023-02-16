@@ -5,8 +5,8 @@ import {
   sendPasswordResetEmail
 } from "firebase/auth";
 import { auth } from "../firebase";
-//import { addUserProfile } from "../middleware/data/addUserData";
-import { createUser } from "./FireStoreUtils";
+import { addUserProfile } from "../middleware/data/addUserData";
+// import { createUser } from "./FireStoreUtils";
 
 
 
@@ -60,8 +60,8 @@ export const createAccount = async (
       userInfo.password
     );
 
-    //addUserProfile(newUser.user.uid, userInfo);
-    createUser(newUser.user.uid, userInfo);
+    addUserProfile(newUser.user.uid, userInfo);
+    // createUser(newUser.user.uid, userInfo);
     
     try {
       await signInEmailPassword(auth, userInfo.email, userInfo.password);
