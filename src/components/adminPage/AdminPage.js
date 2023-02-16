@@ -1,67 +1,24 @@
 import "./adminpage.css";
+import { useEffect, useRef, useState } from "react";
 import Box from "@mui/material/Box";
 import { Header } from "../common";
+import { getAllUsers } from "../../utilities/FireStoreUtils";
 
 const AdminPage = () => {
-  // const getUsers = async () => {
-  //   try {
-  //       let userMap = new Map();
-  //       const querySnapshot = await getDocs(collection(firestore, "newUsers"));
-  //       querySnapshot.forEach(function(doc) {
-  //           console.log(doc.data().userName);
-  //           console.log(doc.data());
-  //           userMap.set(doc.data().userName, doc.data());
-  //       });
-
-  //       for (let [key, value] of userMap) {
-  //         console.log(key + " = " + value.map((key, value) => value));
-  //         }
-  //       return userMap;
-  //   } catch (error) {
-  //       console.log(error);
-  //   }
-  // }
-  // getUsers();
-
-  const users2 = [
-    {
-      firstName: "Jack",
-      lastName: "Smith",
-      email: "22@22.com",
-      password: "********",
-    },
-    {
-      firstName: "Meghan",
-      lastName: "Dee",
-      email: "22@22.com",
-      password: "********",
-    },
-    {
-      firstName: "John",
-      lastName: "Doe",
-      email: "22@22.com",
-      password: "********",
-    },
-    {
-      firstName: "Sierra",
-      lastName: "Brown",
-      email: "22@22.com",
-      password: "********",
-    },
-    {
-      firstName: "Evan",
-      lastName: "Jackson",
-      email: "22@22.com",
-      password: "********",
-    },
-    {
-      firstName: "Katie",
-      lastName: "Kat",
-      email: "22@22.com",
-      password: "********",
-    },
-  ];
-
+  const [profiles, setProfiles] = useState([]);
+  const refState = useRef(false);
+  useEffect(() => {
+    if (refState.current) return;
+    refState.current = true;
+    const allUsers = async () => {
+      const users = await getAllUsers();
+      const allDocs = users.docs;
+      for (const item of allDocs) {
+        setProfiles((rest) => [...rest, item.data()]);
+      }
+    };
+    allUsers();
+  }, []);
   return (
     <Box className="screen">
       <Header />
@@ -77,20 +34,20 @@ const AdminPage = () => {
                 <th>Edit</th>
                 <th>Delete</th>
               </tr>
-              {users2.map((val, key) => {
+              {profiles.map((val, key) => {
                 return (
                   <tr key={key}>
                     <td>{val.firstName}</td>
                     <td>{val.lastName}</td>
                     <td>
-                      {val.email} <button onClick={"/"}>Contact User</button>
+                      {val.email} <button>Contact User</button>
                     </td>
                     <td>{val.password}</td>
                     <td>
-                      <button onClick={"/"}>Edit</button>
+                      <button>Edit</button>
                     </td>
                     <td>
-                      <button onClick={"/"}>Delete</button>
+                      <button>Delete</button>
                     </td>
                   </tr>
                 );

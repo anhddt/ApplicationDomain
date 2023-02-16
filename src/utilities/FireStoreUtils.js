@@ -77,14 +77,20 @@ export const getUsers = async () => {
   try {
     let userMap = new Map();
     const querySnapshot = await getDocs(collection(db, "newUsers"));
-    console.log("query just passed");
     querySnapshot.forEach(function (doc) {
       userMap.set(doc.data().userName, doc.data());
     });
-    console.log("set data values into map");
     return userMap;
   } catch (error) {
-    console.log("called from inside getUsers error");
+    console.log(error);
+  }
+};
+
+export const getAllUsers = async () => {
+  try {
+    const querySnapshot = await getDocs(collection(db, "newUsers"));
+    return querySnapshot;
+  } catch (error) {
     console.log(error);
   }
 };
