@@ -2,11 +2,21 @@ import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   signOut,
+  sendPasswordResetEmail
 } from "firebase/auth";
 import { auth } from "../firebase";
 //import { addUserProfile } from "../middleware/data/addUserData";
 import { createUser } from "./FireStoreUtils";
 
+
+
+export const sendPasswordReset =(email)=> {
+  try{
+       sendPasswordResetEmail(auth, email);
+  } catch (error){
+      console.log(error)
+  }
+}
 /**
  * What this function does is sign helping the user
  * to sign in with the email and passsword
@@ -28,6 +38,7 @@ export const signInEmailPassword = async (
     setError(true);
   }
 };
+
 
 /**
  * What this function does is sign helping the user
@@ -62,6 +73,7 @@ export const createAccount = async (
     setError(true);
   }
 };
+
 
 /**
  * This functions logs the user out of the system

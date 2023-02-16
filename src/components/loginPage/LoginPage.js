@@ -5,7 +5,7 @@ import { Box, Button, InputAdornment, TextField, Typography } from "@mui/materia
 import { showIf } from "../utils/conditionalRendering";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import PersonOutlineOutlinedIcon from "@mui/icons-material/PersonOutlineOutlined";
-import { signInEmailPassword } from "../../utilities/utils";
+import { signInEmailPassword,sendPasswordReset } from "../../utilities/utils";
 
 const LoginForm = () => {
   const [inputs, setInputs] = useState({
@@ -24,6 +24,10 @@ const LoginForm = () => {
     return inputs.email === "" || inputs.password === "";
   }, [inputs.email, inputs.password]);
 
+  const passwordReset = () =>{
+    sendPasswordReset(inputs.email);
+    console.log('email sent')
+  }
   /**
    * Handle the change in the textField's value
    * Everytime the textField is changed,
@@ -123,7 +127,9 @@ const LoginForm = () => {
         >
           Login
         </Button>
-        <NavLink className="nav-link">
+        <NavLink className="nav-link"
+        onClick={() => passwordReset(inputs.email)}
+        >
           Forgot Password
         </NavLink>
       </form>
