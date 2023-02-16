@@ -14,7 +14,8 @@ import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import PersonOutlineOutlinedIcon from "@mui/icons-material/PersonOutlineOutlined";
-import { signInEmailPassword, sendPasswordReset } from "../../utilities/utils";
+import { sendPasswordReset } from "../../utilities/utils";
+import { useAuth } from "../utils/AuthProvider";
 
 const LoginForm = () => {
   const [inputs, setInputs] = useState({
@@ -25,7 +26,7 @@ const LoginForm = () => {
   const navigateTo = useNavigate();
   const location = useLocation();
   const [showPassword, setShowPassword] = useState(false);
-
+  const { signInEmailPassword } = useAuth();
   const handleClickShowPassword = () => setShowPassword((show) => !show);
   const handleMouseDownPassword = (e) => {
     e.preventDefault();
