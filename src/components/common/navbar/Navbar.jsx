@@ -13,7 +13,7 @@ function Navbar() {
       const role = await getUserRole();
       setUserRole(role);
     };
-    if(currentUser) getRole();
+    if (currentUser) getRole();
   }, [currentUser]);
 
   return (
