@@ -109,7 +109,7 @@ const RegisterPage = () => {
    */
   const isDisabled = useMemo(() => {
     return (
-      inputs.email === "" ||
+      (inputs.email === "" ||
       inputs.firstName === "" ||
       inputs.lastName === "" ||
       !(
@@ -117,7 +117,7 @@ const RegisterPage = () => {
         checkPwForNumbers(inputs.password) &&
         checkPwLength(inputs.password) &&
         checkPwForSpecialChar(inputs.password)
-      )
+      ))
     );
   }, [inputs]);
 
@@ -377,7 +377,7 @@ const RegisterPage = () => {
             <Button
               fullWidth
               variant="contained"
-              disabled={isDisabled}
+              disabled={isDisabled || confirmPwError}
               onClick={() => {
                 handleSubmit();
               }}
