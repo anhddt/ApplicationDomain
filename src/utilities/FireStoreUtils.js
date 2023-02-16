@@ -20,7 +20,7 @@ export const createUser = async (uid, userInfo) => {
     await setDoc(doc(db, "newUsers", uid), {
       firstName: userInfo.firstName,
       lastName: userInfo.lastName,
-      userName: userName,
+      username: userName,
       email: userInfo.email,
       password: userInfo.password,
       role: "users",

@@ -10,7 +10,7 @@ export const getUserName = async () => {
   try {
     const userDoc = await getDoc(doc(firestore, "newUsers", userUid));
     const userInfo = userDoc.data();
-    return userInfo.userName;
+    return userInfo.username;
   } catch (error) {}
 };
 
