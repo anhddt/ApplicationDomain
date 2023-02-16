@@ -7,16 +7,16 @@ import { getAllUsers } from "../../utilities/FireStoreUtils";
 const AdminPage = () => {
   const [profiles, setProfiles] = useState([]);
   const refState = useRef(false);
-  useEffect (() => { 
+  useEffect(() => {
     if (refState.current) return;
     refState.current = true;
-    const allUsers = async () => { 
+    const allUsers = async () => {
       const users = await getAllUsers();
       const allDocs = users.docs;
-      for(const item of allDocs){
-        setProfiles(rest => [...rest, item.data()]);
+      for (const item of allDocs) {
+        setProfiles((rest) => [...rest, item.data()]);
       }
-    }
+    };
     allUsers();
   }, []);
   return (
@@ -40,14 +40,14 @@ const AdminPage = () => {
                     <td>{val.firstName}</td>
                     <td>{val.lastName}</td>
                     <td>
-                      {val.email} <button >Contact User</button>
+                      {val.email} <button>Contact User</button>
                     </td>
                     <td>{val.password}</td>
                     <td>
-                      <button >Edit</button>
+                      <button>Edit</button>
                     </td>
                     <td>
-                      <button >Delete</button>
+                      <button>Delete</button>
                     </td>
                   </tr>
                 );

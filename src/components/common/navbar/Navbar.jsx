@@ -31,7 +31,8 @@ function Navbar() {
       <a href="/" className="navbar-item">
         Accounting
       </a>
-      {showIf(userRole === "admin",
+      {showIf(
+        userRole === "admin",
         <a href="admin" className="navbar-item">
           Admin
         </a>
