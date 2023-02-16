@@ -38,7 +38,8 @@ const RegisterPage = () => {
   });
   const [confirmPw, setConfirmPw] = useState("");
   const [error, setError] = useState(false);
-  const [confirmPwError, setConfirmPwError] = useState(false);
+  const [confirmPwError, setConfirmPwError] = useState(true);
+  const [focus, setFocus] = useState(false);
   const date = new Date();
   const day = date.getDate() < 10 ? `0${date.getDate()}` : `${date.getDate()}`;
   const month =
@@ -68,7 +69,6 @@ const RegisterPage = () => {
       [e.target.name]: e.target.value,
     }));
   };
-
   /**
    * Every time the password and confirm password trigger
    * This function fire and set the error oppose to the result of the
@@ -95,7 +95,9 @@ const RegisterPage = () => {
     day,
     month,
   ]);
-
+  const handleFocus = () => {
+    setFocus(true);
+  };
   const handleSubmit = () => {
     createAccount(inputs, navigateTo, setError);
   };
@@ -311,11 +313,12 @@ const RegisterPage = () => {
               label="Confirm Password"
               required
               fullWidth
+              onFocus={() => {handleFocus()}}
               size="small"
               variant="outlined"
               type={showPassword ? "text" : "password"}
-              error={confirmPwError}
-              helperText={confirmPwError && "Password does not match"}
+              error={confirmPwError && focus}
+              helperText={focus && confirmPwError && "Password does not match"}
               InputProps={{
                 endAdornment: (
                   <InputAdornment position="end">
