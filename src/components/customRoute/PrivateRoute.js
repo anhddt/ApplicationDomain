@@ -10,9 +10,9 @@ import { useAuth } from "../utils/AuthProvider";
  * back to login page if they are not authorized
  */
 export const PrivateRoute = ({ children }) => {
-  const user = useAuth();
+  const { currentUser } = useAuth();
   const location = useLocation();
-  if (user) {
+  if (currentUser) {
     return children;
   } else {
     return <Navigate to="/login" replace state={{ from: location }} />;

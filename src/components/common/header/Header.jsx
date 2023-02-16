@@ -2,17 +2,18 @@ import { useEffect, useState } from "react";
 import "./header.css";
 import { Navbar } from "../../common";
 import { getUserName } from "../../../middleware/verification/userInfo";
+import { useAuth } from "../../utils/AuthProvider";
 
 function Header() {
   const [username, setUsername] = useState("");
-
+  const { currentUser } = useAuth();
   useEffect(() => {
     const gettingUsername = async () => {
       const userName = await getUserName();
       setUsername(userName);
     };
-    gettingUsername();
-  });
+    if(currentUser) gettingUsername();
+  }, [currentUser]);
 
   return (
     <section className="header">
@@ -30,7 +31,7 @@ function Header() {
         <section className="header-top_right">
           {" "}
           {/* Log On button location  */}
-          {`Welcome ${username}`}
+          {currentUser? `Welcome ${username}` : "Welcome"}
         </section>
       </section>
 

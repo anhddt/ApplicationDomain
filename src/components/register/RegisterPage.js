@@ -12,7 +12,7 @@ import {
 } from "@mui/material";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
-import { createAccount } from "../../utilities/utils";
+import { useAuth } from "../utils/AuthProvider";
 import {
   checkPwLength,
   checkPwFirstChar,
@@ -21,6 +21,7 @@ import {
 } from "../../middleware/verification/userInfo";
 
 const RegisterPage = () => {
+  const { createAccount } = useAuth();
   const [inputs, setInputs] = useState({
     firstName: "",
     lastName: "",

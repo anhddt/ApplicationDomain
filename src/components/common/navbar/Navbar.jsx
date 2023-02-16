@@ -2,11 +2,10 @@ import "./navbar.css";
 import { useEffect, useState } from "react";
 import { showIf } from "../../utils/conditionalRendering";
 import { useAuth } from "../../utils/AuthProvider";
-import { logOut } from "../../../utilities/utils";
 import { getUserRole } from "../../../middleware/verification/userInfo";
 
 function Navbar() {
-  const user = useAuth();
+  const { currentUser, logOut } = useAuth();
   const [userRole, setUserRole] = useState("user");
 
   useEffect(() => {
@@ -14,8 +13,8 @@ function Navbar() {
       const role = await getUserRole();
       setUserRole(role);
     };
-    getRole();
-  }, []);
+    if(currentUser) getRole();
+  }, [currentUser]);
 
   return (
     <section className="navbar">
@@ -32,7 +31,7 @@ function Navbar() {
         Accounting
       </a>
       {showIf(
-        userRole === "admin",
+        currentUser && userRole === "admin",
         <a href="admin" className="navbar-item">
           Admin
         </a>
@@ -41,13 +40,13 @@ function Navbar() {
         Contact
       </a>
       {showIf(
-        !user,
+        !currentUser,
         <a href="/login" className="navbar-item">
           Log On
         </a>
       )}
       {showIf(
-        user,
+        currentUser,
         <button
           onClick={() => logOut()}
           className="navbar-item"
