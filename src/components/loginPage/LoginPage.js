@@ -13,7 +13,7 @@ import { showIf } from "../utils/conditionalRendering";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
-import PersonOutlineOutlinedIcon from "@mui/icons-material/PersonOutlineOutlined";
+import MailOutlineIcon from '@mui/icons-material/MailOutline';
 import { sendPasswordReset } from "../../utilities/utils";
 import { useAuth } from "../utils/AuthProvider";
 
@@ -114,7 +114,7 @@ const LoginForm = () => {
           InputProps={{
             startAdornment: (
               <InputAdornment position="start">
-                <PersonOutlineOutlinedIcon />
+                <MailOutlineIcon />
               </InputAdornment>
             ),
           }}
