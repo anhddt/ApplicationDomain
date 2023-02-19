@@ -1,5 +1,5 @@
 import { doc, setDoc } from "firebase/firestore";
-import { firestore } from "../../firebase";
+import { firestore } from "../firebase/firebase";
 
 /**
  * This function takes in a user ID, and a collection of information.

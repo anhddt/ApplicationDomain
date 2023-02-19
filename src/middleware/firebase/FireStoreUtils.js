@@ -9,7 +9,7 @@ import {
   query,
   where,
 } from "firebase/firestore";
-const { firestore } = require("../../firebase.js");
+import { firestore } from "./firebase";
 const db = firestore;
 
 //a function to add data of new users into the database
