@@ -5,7 +5,7 @@ import {
   signInWithEmailAndPassword,
   signOut,
 } from "firebase/auth";
-import { auth } from "../../firebase";
+import { auth } from "../../middleware/firebase/firebase";
 import { addUserProfile } from "../../middleware/data/addUserData";
 
 /**

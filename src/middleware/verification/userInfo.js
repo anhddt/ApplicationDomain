@@ -1,5 +1,5 @@
 import { doc, getDoc } from "firebase/firestore";
-import { auth, firestore } from "../../firebase";
+import { auth, firestore } from "../firebase/firebase";
 
 /**
  * This function retrieves collection from the database
