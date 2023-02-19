@@ -2,7 +2,7 @@ import "./adminpage.css";
 import { useEffect, useRef, useState } from "react";
 import Box from "@mui/material/Box";
 import { Header } from "../common";
-import { getAllUsers } from "../../utilities/FireStoreUtils";
+import { getAllUsers } from "../../middleware/firebase/FireStoreUtils";
 
 const AdminPage = () => {
   const [profiles, setProfiles] = useState([]);

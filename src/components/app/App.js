@@ -1,10 +1,10 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import { AuthProvider } from "./components/utils/AuthProvider";
-import { PrivateRoute } from "./components/customRoute/PrivateRoute";
-import LoginPage from "./components/loginPage/LoginPage";
-import RegisterPage from "./components/register/RegisterPage";
-import HomePage from "./components/homePage/Home";
-import AdminPage from "./components/adminPage/AdminPage";
+import { AuthProvider } from "../utils/AuthProvider";
+import { PrivateRoute } from "../customRoute/PrivateRoute";
+import LoginPage from "../loginPage/LoginPage";
+import RegisterPage from "../register/RegisterPage";
+import HomePage from "../homePage/Home";
+import AdminPage from "../adminPage/AdminPage";
 
 const App = () => {
   return (

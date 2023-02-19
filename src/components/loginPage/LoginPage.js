@@ -14,7 +14,7 @@ import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import MailOutlineIcon from '@mui/icons-material/MailOutline';
-import { sendPasswordReset } from "../../utilities/utils";
+import { sendPasswordReset } from "../../middleware/firebase/utils";
 import { useAuth } from "../utils/AuthProvider";
 
 const LoginForm = () => {
