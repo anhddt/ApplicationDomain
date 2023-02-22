@@ -1,28 +1,3 @@
-import { doc, getDoc } from "firebase/firestore";
-import { auth, firestore } from "../firebase/firebase";
-
-/**
- * This function retrieves collection from the database
- * The collection is in form of a dictionary
- */
-export const getUserName = async () => {
-  const userUid = auth.currentUser.uid;
-  try {
-    const userDoc = await getDoc(doc(firestore, "newUsers", userUid));
-    const userInfo = userDoc.data();
-    return userInfo.username;
-  } catch (error) {}
-};
-
-export const getUserRole = async () => {
-  const userUid = auth.currentUser.uid;
-  try {
-    const userDoc = await getDoc(doc(firestore, "newUsers", userUid));
-    const userInfo = userDoc.data();
-    return userInfo.role;
-  } catch (error) {}
-};
-
 /**
  * This function chaecks for length of the string argument
  * It returns true or false

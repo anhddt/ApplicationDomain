@@ -1,61 +1,39 @@
 import {
   collection,
   doc,
-  setDoc,
   getDocs,
   getDoc,
+  setDoc,
   updateDoc,
   deleteDoc,
   query,
   where,
 } from "firebase/firestore";
-import { firestore } from "./firebase";
-const db = firestore;
+import { firestore as db } from "./firebase";
 
-//a function to add data of new users into the database
-export const createUser = async (uid, userInfo) => {
-  const userName = getUserName(userInfo);
-
+/**
+ * This function takes in a user ID, and a collection of information.
+ * The collection is inform of a dictionary type of data.
+ * It passes the collection to firestore
+ * the setDoc function is an asyncronous function it has to be called with
+ * await.
+ * an async is placed at the top of the funciton like so.
+ */
+export const setUserProfile = async (uid, userInfo) => {
   try {
-    await setDoc(doc(db, "newUsers", uid), {
-      firstName: userInfo.firstName,
-      lastName: userInfo.lastName,
-      username: userName,
-      email: userInfo.email,
-      password: userInfo.password,
-      role: "users",
-    });
+    await setDoc(doc(db, "newUsers", uid), userInfo);
   } catch (error) {
     console.log(error);
   }
 };
 
-//a function to generate the username for new users
-function getUserName(userInfo) {
-  const date = new Date();
-  let day = date.getDate();
-  if (day < 10) {
-    day = "0" + day;
-  }
-  let month = date.getMonth();
-  if (month < 10) {
-    month = "0" + month;
-  }
-  let firstLetter = userInfo.firstName.charAt(0);
-  let name = firstLetter + userInfo.lastName;
-  name += day + month;
-  return name;
-}
-
-//a function to get a users role
-export const getUserRole = async (uid) => {
+// This function gets the entire user profile
+export const getUserProfile = async (uid) => {
   try {
-    const docSnap = await getDoc(doc(db, "newUsers", uid));
-    const role = docSnap.data().role;
-    return role;
-  } catch (error) {
-    console.log(error);
-  }
+    const userDoc = await getDoc(doc(db, "newUsers", uid));
+    const userInfo = userDoc.data();
+    return userInfo;
+  } catch (error) {}
 };
 
 //returns the UID of a user based on their username
@@ -86,6 +64,8 @@ export const getUsers = async () => {
   }
 };
 
+// This function return the users profile as a package of objects
+// used in the AdminPage component
 export const getAllUsers = async () => {
   try {
     const querySnapshot = await getDocs(collection(db, "newUsers"));
