@@ -6,7 +6,8 @@ import {
   signOut,
 } from "firebase/auth";
 import { auth } from "../../middleware/firebase/firebase";
-import { addUserProfile } from "../../middleware/data/addUserData";
+import { setUserProfile } from "../../middleware/firebase/FireStoreUtils";
+import { getUserProfile } from "../../middleware/firebase/FireStoreUtils";
 
 /**
  * The whole purpose of this file is allowing
@@ -47,7 +48,7 @@ export const useAuth = () => {
 export function AuthProvider({ children }) {
   const [currentUser, setCurrentUser] = useState();
   const [isSignedIn, setIsSignedIn] = useState(false);
-
+  const [userInfo, setUserInfo] = useState({});
   /**
    * What this function does is sign helping the user
    * to sign in with the email and passsword
@@ -85,7 +86,7 @@ export function AuthProvider({ children }) {
         userInfo.email,
         userInfo.password
       );
-      addUserProfile(newUser.user.uid, userInfo);
+      setUserProfile(newUser.user.uid, userInfo);
       try {
         await signInEmailPassword(auth, userInfo.email, userInfo.password);
       } catch (error) {}
@@ -105,15 +106,45 @@ export function AuthProvider({ children }) {
     } catch (error) {}
   };
 
+  //useEffects triggers everytime the user logs in or out
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
       setCurrentUser(user);
       setIsSignedIn(true);
+      try {
+        setUserInfo(await getUserProfile(auth.currentUser.uid));
+      } catch (error) {}
     });
     return unsubscribe;
   }, []);
 
+  const firstName = userInfo.firstName;
+  const lastName = userInfo.lastName;
+  const phone = userInfo.phone;
+  const street = userInfo.street;
+  const city = userInfo.city;
+  const state = userInfo.state;
+  const zip = userInfo.zip;
+  const country = userInfo.country;
+  const role = userInfo.role;
+  const username = userInfo.username;
+  const email = userInfo.email;
+  const passsword = userInfo.passsword;
+
   const values = {
+    userInfo,
+    firstName,
+    lastName,
+    phone,
+    street,
+    city,
+    state,
+    zip,
+    country,
+    role,
+    username,
+    email,
+    passsword,
     currentUser,
     createAccount,
     signInEmailPassword,
