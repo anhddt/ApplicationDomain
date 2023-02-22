@@ -2,6 +2,7 @@ import { createContext, useContext, useEffect, useState } from "react";
 import {
   createUserWithEmailAndPassword,
   onAuthStateChanged,
+  sendEmailVerification,
   signInWithEmailAndPassword,
   signOut,
 } from "firebase/auth";
@@ -48,6 +49,7 @@ export function AuthProvider({ children }) {
   const [currentUser, setCurrentUser] = useState();
   const [isSignedIn, setIsSignedIn] = useState(false);
   const [userInfo, setUserInfo] = useState({});
+
   /**
    * What this function does is sign helping the user
    * to sign in with the email and passsword
@@ -64,6 +66,9 @@ export function AuthProvider({ children }) {
   ) => {
     try {
       await signInWithEmailAndPassword(auth, inputs.email, inputs.password);
+      if(!auth.currentUser.emailVerified){
+        throw new Error();
+      }
       navigateTo(location.state?.from || "/");
     } catch (error) {
       setError(true);
@@ -78,7 +83,7 @@ export function AuthProvider({ children }) {
    *
    * It takes in the email, password, a function, and another function
    */
-  const createAccount = async (userInfo, navigateTo, setError) => {
+  const createAccount = async (userInfo, setError) => {
     try {
       const newUser = await createUserWithEmailAndPassword(
         auth,
@@ -87,9 +92,12 @@ export function AuthProvider({ children }) {
       );
       setUserProfile(newUser.user.uid, userInfo);
       try {
-        await signInEmailPassword(auth, userInfo.email, userInfo.password);
+        await signInWithEmailAndPassword(auth, userInfo.email, userInfo.password);
+        try {
+          await sendEmailVerification(auth.currentUser);
+          signOut(auth);
+        } catch (error) {}
       } catch (error) {}
-      navigateTo("/");
     } catch (error) {
       setError(true);
     }
@@ -104,11 +112,15 @@ export function AuthProvider({ children }) {
       await signOut(auth);
     } catch (error) {}
   };
-
+  
   //useEffects triggers everytime the user logs in or out
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
-      setCurrentUser(user);
+      try {
+        if(user.emailVerified) setCurrentUser(user);
+      } catch (error) {
+        setCurrentUser();
+      } 
       setIsSignedIn(true);
       try {
         setUserInfo(await getUserProfile(user.uid));
@@ -129,6 +141,7 @@ export function AuthProvider({ children }) {
   const username = userInfo.username;
   const email = userInfo.email;
   const passsword = userInfo.passsword;
+  const dateCreated = userInfo.dateCreated;
 
   const values = {
     userInfo,
@@ -145,6 +158,7 @@ export function AuthProvider({ children }) {
     email,
     passsword,
     currentUser,
+    dateCreated,
     createAccount,
     signInEmailPassword,
     logOut,

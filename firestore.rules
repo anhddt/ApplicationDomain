@@ -13,7 +13,7 @@ service cloud.firestore {
       }
 
       allow read: if request.auth != null && (userIsAdmin() || isValidUsersData());
-      write permissions
+      //write permissions
       allow update: if request.auth != null && (userIsAdmin() || isValidUsersData());
       allow create; 
       allow delete: if userIsAdmin();
