@@ -6,8 +6,7 @@ import {
   signOut,
 } from "firebase/auth";
 import { auth } from "../../middleware/firebase/firebase";
-import { setUserProfile } from "../../middleware/firebase/FireStoreUtils";
-import { getUserProfile } from "../../middleware/firebase/FireStoreUtils";
+import { getUserProfile, setUserProfile } from "../../middleware/firebase/FireStoreUtils";
 
 /**
  * The whole purpose of this file is allowing
@@ -112,7 +111,7 @@ export function AuthProvider({ children }) {
       setCurrentUser(user);
       setIsSignedIn(true);
       try {
-        setUserInfo(await getUserProfile(auth.currentUser.uid));
+        setUserInfo(await getUserProfile(user.uid));
       } catch (error) {}
     });
     return unsubscribe;
