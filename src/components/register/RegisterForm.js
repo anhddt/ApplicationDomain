@@ -40,7 +40,8 @@ const RegisterForm = () => {
     zip: "",
     country: "",
     phone: "",
-    dateCreated: `${month}/${day}/${date.getFullYear()}`
+    dateCreated: `${month}/${day}/${date.getFullYear()}`,
+    isDisabled: true
   });
   const [confirmPw, setConfirmPw] = useState("");
   const [confirmPwError, setConfirmPwError] = useState(false);

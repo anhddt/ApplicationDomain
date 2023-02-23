@@ -199,3 +199,14 @@ export const updateUserRole = async (userID, newValue) => {
     console.log(error);
   }
 };
+
+//a function to update the user disable status
+export const updateUserIsDisabled= async (userID, newValue) => {
+  try {
+    await updateDoc(doc(db, "newUsers", userID), {
+      isDisabled: newValue,
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};

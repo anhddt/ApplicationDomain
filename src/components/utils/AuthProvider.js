@@ -47,7 +47,7 @@ export const useAuth = () => {
  */
 export function AuthProvider({ children }) {
   const [currentUser, setCurrentUser] = useState();
-  const [isSignedIn, setIsSignedIn] = useState(false);
+  const [isNotSignedIn, setIsNotSignedIn] = useState(true);
   const [userInfo, setUserInfo] = useState({});
 
   /**
@@ -65,11 +65,20 @@ export function AuthProvider({ children }) {
     location
   ) => {
     try {
-      await signInWithEmailAndPassword(auth, inputs.email, inputs.password);
+      const loginToken = await signInWithEmailAndPassword(auth, inputs.email, inputs.password);
       if(!auth.currentUser.emailVerified){
         throw new Error();
       }
-      navigateTo(location.state?.from || "/");
+      try {
+        const profile = await getUserProfile(loginToken.user.uid);
+        if (!profile.isDisabled){
+          navigateTo(location.state?.from || "/")
+        } else {
+          throw new Error();
+        }
+      } catch (error) {
+        setError(true);
+      }
     } catch (error) {
       setError(true);
     }
@@ -117,14 +126,16 @@ export function AuthProvider({ children }) {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       try {
-        if(user.emailVerified) setCurrentUser(user);
+        const userProfile = await getUserProfile(user.uid);
+        if(user.emailVerified && !userProfile.isDisabled) {
+          setCurrentUser(user)
+          setUserInfo(userProfile);
+        } else throw new Error();
       } catch (error) {
+        logOut(auth);
         setCurrentUser();
       } 
-      setIsSignedIn(true);
-      try {
-        setUserInfo(await getUserProfile(user.uid));
-      } catch (error) {}
+      setIsNotSignedIn(false);
     });
     return unsubscribe;
   }, []);
@@ -142,6 +153,7 @@ export function AuthProvider({ children }) {
   const email = userInfo.email;
   const passsword = userInfo.passsword;
   const dateCreated = userInfo.dateCreated;
+  const isDisabled = userInfo.isDisabled;
 
   const values = {
     userInfo,
@@ -159,12 +171,13 @@ export function AuthProvider({ children }) {
     passsword,
     currentUser,
     dateCreated,
+    isDisabled,
     createAccount,
     signInEmailPassword,
     logOut,
   };
 
   return (
-    <Context.Provider value={values}>{isSignedIn && children}</Context.Provider>
+    <Context.Provider value={values}>{!isNotSignedIn && children}</Context.Provider>
   );
 }
