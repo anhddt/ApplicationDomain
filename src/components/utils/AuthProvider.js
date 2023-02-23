@@ -1,13 +1,18 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import {
+  browserSessionPersistence,
   createUserWithEmailAndPassword,
   onAuthStateChanged,
   sendEmailVerification,
+  setPersistence,
   signInWithEmailAndPassword,
   signOut,
 } from "firebase/auth";
 import { auth } from "../../middleware/firebase/firebase";
-import { getUserProfile, setUserProfile } from "../../middleware/firebase/FireStoreUtils";
+import {
+  getUserProfile,
+  setUserProfile,
+} from "../../middleware/firebase/FireStoreUtils";
 
 /**
  * The whole purpose of this file is allowing
@@ -65,14 +70,19 @@ export function AuthProvider({ children }) {
     location
   ) => {
     try {
-      const loginToken = await signInWithEmailAndPassword(auth, inputs.email, inputs.password);
-      if(!auth.currentUser.emailVerified){
+      setPersistence(auth, browserSessionPersistence);
+      const loginToken = await signInWithEmailAndPassword(
+        auth,
+        inputs.email,
+        inputs.password
+      );
+      if (!auth.currentUser.emailVerified) {
         throw new Error();
       }
       try {
         const profile = await getUserProfile(loginToken.user.uid);
-        if (!profile.isDisabled){
-          navigateTo(location.state?.from || "/")
+        if (!profile.isDisabled) {
+          navigateTo(location.state?.from || "/");
         } else {
           throw new Error();
         }
@@ -101,7 +111,11 @@ export function AuthProvider({ children }) {
       );
       setUserProfile(newUser.user.uid, userInfo);
       try {
-        await signInWithEmailAndPassword(auth, userInfo.email, userInfo.password);
+        await signInWithEmailAndPassword(
+          auth,
+          userInfo.email,
+          userInfo.password
+        );
         try {
           await sendEmailVerification(auth.currentUser);
           signOut(auth);
@@ -121,20 +135,20 @@ export function AuthProvider({ children }) {
       await signOut(auth);
     } catch (error) {}
   };
-  
+
   //useEffects triggers everytime the user logs in or out
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       try {
         const userProfile = await getUserProfile(user.uid);
-        if(user.emailVerified && !userProfile.isDisabled) {
-          setCurrentUser(user)
+        if (user.emailVerified && !userProfile.isDisabled) {
+          setCurrentUser(user);
           setUserInfo(userProfile);
         } else throw new Error();
       } catch (error) {
         logOut(auth);
         setCurrentUser();
-      } 
+      }
       setIsNotSignedIn(false);
     });
     return unsubscribe;
@@ -178,6 +192,8 @@ export function AuthProvider({ children }) {
   };
 
   return (
-    <Context.Provider value={values}>{!isNotSignedIn && children}</Context.Provider>
+    <Context.Provider value={values}>
+      {!isNotSignedIn && children}
+    </Context.Provider>
   );
 }
