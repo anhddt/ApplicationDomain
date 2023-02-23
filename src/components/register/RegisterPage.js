@@ -6,7 +6,7 @@ const RegisterPage = () => {
   return (
     <Box>
       <Homebar />
-      <RegisterForm />  
+      <RegisterForm />
     </Box>
   );
 };

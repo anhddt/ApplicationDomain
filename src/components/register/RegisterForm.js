@@ -41,7 +41,7 @@ const RegisterForm = () => {
     country: "",
     phone: "",
     dateCreated: `${month}/${day}/${date.getFullYear()}`,
-    isDisabled: true
+    isDisabled: true,
   });
   const [confirmPw, setConfirmPw] = useState("");
   const [confirmPwError, setConfirmPwError] = useState(false);
@@ -128,13 +128,37 @@ const RegisterForm = () => {
 
   return (
     <Box className="container">
-      {showIf(isEmailSent,
-        <Box sx={{backgroundColor: "white", borderRadius: "20px", padding: "20px"}} display="flex" flexDirection="column" alignItems="center">
-          <Typography textAlign="center" variant="subtitle1"> A verification email has been sent to <br/>{inputs.email}<br/>Please verify your email to login.</Typography>
-          <Button variant="contained" onClick={() => {navigateTo("/login")}}>OK</Button>
+      {showIf(
+        isEmailSent,
+        <Box
+          sx={{
+            backgroundColor: "white",
+            borderRadius: "20px",
+            padding: "20px",
+          }}
+          display="flex"
+          flexDirection="column"
+          alignItems="center"
+        >
+          <Typography textAlign="center" variant="subtitle1">
+            {" "}
+            A verification email has been sent to <br />
+            {inputs.email}
+            <br />
+            Please verify your email to login.
+          </Typography>
+          <Button
+            variant="contained"
+            onClick={() => {
+              navigateTo("/login");
+            }}
+          >
+            OK
+          </Button>
         </Box>
       )}
-      {showIf(!isEmailSent,
+      {showIf(
+        !isEmailSent,
         <form className="userInfo-form">
           <Typography id="create-your-account-title" variant="h4">
             Create your account
@@ -330,7 +354,9 @@ const RegisterForm = () => {
                 variant="outlined"
                 type={showPassword ? "text" : "password"}
                 error={confirmPwError && focus}
-                helperText={focus && confirmPwError && "Password does not match"}
+                helperText={
+                  focus && confirmPwError && "Password does not match"
+                }
                 InputProps={{
                   endAdornment: (
                     <InputAdornment position="end">

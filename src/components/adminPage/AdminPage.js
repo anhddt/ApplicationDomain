@@ -11,11 +11,13 @@ const AdminPage = () => {
     if (refState.current) return;
     refState.current = true;
     const allUsers = async () => {
-      const users = await getAllUsers();
-      const allDocs = users.docs;
-      for (const item of allDocs) {
-        setProfiles((rest) => [...rest, item.data()]);
-      }
+      try {
+        const users = await getAllUsers();
+        const allDocs = users.docs;
+        for (const item of allDocs) {
+          setProfiles((rest) => [...rest, item.data()]);
+        }
+      } catch (error) {}
     };
     allUsers();
   }, []);
