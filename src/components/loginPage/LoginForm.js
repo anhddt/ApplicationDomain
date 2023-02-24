@@ -98,6 +98,7 @@ const LoginForm = () => {
           name="email"
           label="Email"
           value={inputs.email}
+          error={error}
           required
           fullWidth
           variant="outlined"
@@ -118,6 +119,7 @@ const LoginForm = () => {
           label="Password"
           type={showPassword ? "text" : "password"}
           value={inputs.password}
+          error={error}
           required
           fullWidth
           variant="outlined"
