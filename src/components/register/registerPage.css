@@ -1,8 +1,8 @@
 .container {
   align-items: center;
-  background-image: url(../utils/assets/login-background.svg);
-  background-position: center;
   background-size: cover;
+  background: rgb(63,125,251);
+  background: linear-gradient(90deg, rgba(63,125,251,1) 0%, rgba(180,43,215,1) 100%);
   display: flex;
   gap: 20px;
   flex-direction: column;
@@ -13,7 +13,7 @@
 }
 
 .email-verify-box {
-  background-color: hsla(0, 0%, 100%, 0.857);
+  background-color: hsla(0, 0%, 100%, 0.94);
   box-shadow: 0 0 15px 0 rgba(0, 0, 0, 0.832);
   border-radius: 20px;
   padding: 20px;

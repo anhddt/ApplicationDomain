@@ -1,5 +1,5 @@
 import "./loginPage.css";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { NavLink, useNavigate, useLocation } from "react-router-dom";
 import {
   Box,
@@ -71,6 +71,10 @@ const LoginForm = () => {
   const handleLogin = () => {
     signInEmailPassword(inputs, setError, navigateTo, location);
   };
+
+  useEffect(() => {
+    
+  },[]);  
   /**
    * This allows the user to press enter
    * after typing in the password
@@ -84,6 +88,7 @@ const LoginForm = () => {
   };
   return (
     <Box className="screen">
+      {/* <CustomBgrd></CustomBgrd> */}
       <form className="login-form">
         <Typography id="login-form-message" variant="h4">
           Login
