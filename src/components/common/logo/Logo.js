@@ -1,10 +1,5 @@
+import { ReactComponent as CustomLogo } from "../../utils/assets/logo.svg";
 const Logo = () => {
-  return (
-    <img
-      src="https://i.imgur.com/R3761qO.png"
-      alt="Accountant's Friend"
-      width="500"
-    />
-  );
+  return <CustomLogo />;
 };
 export default Logo;

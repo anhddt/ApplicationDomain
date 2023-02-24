@@ -1,10 +1,10 @@
 import "./header.css";
 import { Navbar } from "../../common";
 import { useAuth } from "../../utils/AuthProvider";
-import Logo from "../logo/Logo";
+import LogoIcon from "../logo/LogoIcon";
 
 function Header() {
-  const { username, currentUser } = useAuth();
+  const { firstName, currentUser } = useAuth();
 
   return (
     <section className="header">
@@ -13,15 +13,14 @@ function Header() {
         <section className="header-top_logo">
           {" "}
           {/* Logo location */}
-          <Logo />
+          <LogoIcon />
         </section>
         <section className="header-top_right">
           {" "}
           {/* Log On button location  */}
-          {currentUser ? `Welcome ${username}` : "Welcome"}
+          {currentUser ? `Welcome ${firstName}` : "Welcome"}
         </section>
       </section>
-
       <section className="header-bottom">
         <section className="header-bottom_navbar">
           {/* <Navbar />*/}
