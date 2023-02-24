@@ -86,14 +86,8 @@ const LoginForm = () => {
     <Box className="screen">
       <form className="login-form">
         <Typography id="login-form-message" variant="h4">
-          Welcome
+          Login
         </Typography>
-        <Box>
-          Not a member?{" "}
-          <NavLink to="/register" className="nav-link">
-            Create Account
-          </NavLink>
-        </Box>
         {showIf(
           error,
           <Typography color="red">
@@ -161,6 +155,12 @@ const LoginForm = () => {
         >
           Login
         </Button>
+        <Box>
+          Not a member?{" "}
+          <NavLink to="/register" className="nav-link">
+            Create Account
+          </NavLink>
+        </Box>
         <NavLink
           className="nav-link"
           onClick={() => passwordReset(inputs.email)}

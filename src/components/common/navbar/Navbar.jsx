@@ -1,6 +1,7 @@
 import "./navbar.css";
 import { showIf } from "../../utils/conditionalRendering";
 import { useAuth } from "../../utils/AuthProvider";
+import { NavLink } from "react-router-dom";
 
 function Navbar() {
   const { currentUser, logOut, role } = useAuth();
@@ -10,39 +11,35 @@ function Navbar() {
       {" "}
       {/* These can be changed, added, or removed without issue.
         As of 2/13 not hooked up. */}
-      <a href="/" className="navbar-item">
+      <NavLink to="/" className="navbar-item">
         Home
-      </a>
-      <a href="/" className="navbar-item">
+      </NavLink>
+      <NavLink to="/" className="navbar-item">
         About
-      </a>
-      <a href="/" className="navbar-item">
+      </NavLink>
+      <NavLink to="/" className="navbar-item">
         Accounting
-      </a>
+      </NavLink>
       {showIf(
         currentUser && role === "admin",
-        <a href="admin" className="navbar-item">
+        <NavLink to="admin" className="navbar-item">
           Admin
-        </a>
+        </NavLink>
       )}
-      <a href="/" className="navbar-item">
+      <NavLink to="/" className="navbar-item">
         Contact
-      </a>
+      </NavLink>
       {showIf(
         !currentUser,
-        <a href="/login" className="navbar-item">
+        <NavLink to="/login" className="navbar-item">
           Log On
-        </a>
+        </NavLink>
       )}
       {showIf(
         currentUser,
-        <button
-          onClick={() => logOut()}
-          className="navbar-item"
-          id="navbar-logout-button"
-        >
+        <NavLink onClick={() => logOut()} className="navbar-item">
           Logout
-        </button>
+        </NavLink>
       )}
     </section>
   );

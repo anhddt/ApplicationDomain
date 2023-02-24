@@ -22,7 +22,7 @@ const AdminPage = () => {
     allUsers();
   }, []);
   return (
-    <Box className="screen">
+    <Box className="admin-screen">
       <Header />
       <Box className="adminBody">
         <div className="userTable">

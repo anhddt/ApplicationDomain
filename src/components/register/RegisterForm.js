@@ -130,16 +130,7 @@ const RegisterForm = () => {
     <Box className="container">
       {showIf(
         isEmailSent,
-        <Box
-          sx={{
-            backgroundColor: "white",
-            borderRadius: "20px",
-            padding: "20px",
-          }}
-          display="flex"
-          flexDirection="column"
-          alignItems="center"
-        >
+        <Box className="email-verify-box">
           <Typography textAlign="center" variant="subtitle1">
             {" "}
             A verification email has been sent to <br />
@@ -163,12 +154,6 @@ const RegisterForm = () => {
           <Typography id="create-your-account-title" variant="h4">
             Create your account
           </Typography>
-          <Box>
-            Already have an account?{" "}
-            <NavLink to="/login" className="nav-link">
-              Login instead
-            </NavLink>
-          </Box>
           <Grid spacing={2} container>
             <Grid item xs={12}>
               <Typography textAlign="left" variant="h6">
@@ -427,6 +412,12 @@ const RegisterForm = () => {
               </Button>
             </Grid>
           </Grid>
+          <Box>
+            Already have an account?{" "}
+            <NavLink to="/login" className="nav-link">
+              Login instead
+            </NavLink>
+          </Box>
         </form>
       )}
     </Box>
