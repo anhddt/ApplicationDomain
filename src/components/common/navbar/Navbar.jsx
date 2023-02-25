@@ -4,7 +4,7 @@ import { useAuth } from "../../utils/AuthProvider";
 import { NavLink } from "react-router-dom";
 
 function Navbar() {
-  const { currentUser, logOut, role } = useAuth();
+  const { currentUser, role } = useAuth();
 
   return (
     <section className="navbar">
@@ -29,18 +29,6 @@ function Navbar() {
       <NavLink to="/" className="navbar-item">
         Contact
       </NavLink>
-      {showIf(
-        !currentUser,
-        <NavLink to="/login" className="navbar-item">
-          Log On
-        </NavLink>
-      )}
-      {showIf(
-        currentUser,
-        <NavLink onClick={() => logOut()} className="navbar-item">
-          Logout
-        </NavLink>
-      )}
     </section>
   );
 }

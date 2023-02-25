@@ -5,6 +5,7 @@ import LoginPage from "../loginPage/LoginPage";
 import RegisterPage from "../register/RegisterPage";
 import HomePage from "../homePage/Home";
 import AdminPage from "../adminPage/AdminPage";
+import ProfilePage from "../profilePage/ProfilePage";
 
 const App = () => {
   return (
@@ -23,6 +24,7 @@ const App = () => {
           />
           <Route exact path="/login" element={<LoginPage />} />
           <Route exact path="/register" element={<RegisterPage />} />
+          <Route exact path="/userProfile" element={<PrivateRoute><ProfilePage /></PrivateRoute>} />
         </Routes>
       </BrowserRouter>
     </AuthProvider>
