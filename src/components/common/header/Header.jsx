@@ -1,6 +1,6 @@
 import "./header.css";
 import { Box, Button } from "@mui/material";
-import { useNavigate } from "react-router-dom"
+import { useNavigate } from "react-router-dom";
 import { Navbar } from "../../common";
 import { useAuth } from "../../utils/AuthProvider";
 import { showIf } from "../../utils/conditionalRendering";
@@ -21,14 +21,30 @@ function Header() {
         <section className="header-top_right">
           {/* Log On button location  */}
           {currentUser ? `Hello ${firstName}!` : "Welcome"}
-          {showIf(currentUser,
-            <CustomProfileIcon />
-          )}
-          {showIf(!currentUser,
-            <Box sx={{marginLeft: "1rem"}} display="flex" flexDirection="row">
-              <Button size="small" color="success" variant="contained" onClick={() => {navigateTo("/login")}}>Sign in</Button>
-              <Box sx={{marginLeft: "1rem"}}>
-                <Button size="small" variant="contained" onClick={() => {navigateTo("/register")}}>Register</Button>
+          {showIf(currentUser, <CustomProfileIcon />)}
+          {showIf(
+            !currentUser,
+            <Box sx={{ marginLeft: "1rem" }} display="flex" flexDirection="row">
+              <Button
+                size="small"
+                color="success"
+                variant="contained"
+                onClick={() => {
+                  navigateTo("/login");
+                }}
+              >
+                Sign in
+              </Button>
+              <Box sx={{ marginLeft: "1rem" }}>
+                <Button
+                  size="small"
+                  variant="contained"
+                  onClick={() => {
+                    navigateTo("/register");
+                  }}
+                >
+                  Register
+                </Button>
               </Box>
             </Box>
           )}
