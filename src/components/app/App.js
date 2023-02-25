@@ -24,7 +24,15 @@ const App = () => {
           />
           <Route exact path="/login" element={<LoginPage />} />
           <Route exact path="/register" element={<RegisterPage />} />
-          <Route exact path="/userProfile" element={<PrivateRoute><ProfilePage /></PrivateRoute>} />
+          <Route
+            exact
+            path="/userProfile"
+            element={
+              <PrivateRoute>
+                <ProfilePage />
+              </PrivateRoute>
+            }
+          />
         </Routes>
       </BrowserRouter>
     </AuthProvider>

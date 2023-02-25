@@ -70,7 +70,7 @@ const LoginForm = () => {
    */
   const handleLogin = () => {
     signInEmailPassword(inputs, setError, navigateTo, location);
-  }; 
+  };
   /**
    * This allows the user to press enter
    * after typing in the password

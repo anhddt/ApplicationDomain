@@ -1,8 +1,12 @@
 .container {
   align-items: center;
   background-size: cover;
-  background: rgb(63,125,251);
-  background: linear-gradient(90deg, rgba(63,125,251,1) 0%, rgba(180,43,215,1) 100%);
+  background: rgb(63, 125, 251);
+  background: linear-gradient(
+    90deg,
+    rgba(63, 125, 251, 1) 0%,
+    rgba(180, 43, 215, 1) 100%
+  );
   display: flex;
   gap: 20px;
   flex-direction: column;
