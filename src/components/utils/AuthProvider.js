@@ -118,7 +118,6 @@ export function AuthProvider({ children }) {
         );
         try {
           await sendEmailVerification(auth.currentUser);
-          signOut(auth);
         } catch (error) {}
       } catch (error) {}
     } catch (error) {
