@@ -140,6 +140,11 @@ export function AuthProvider({ children }) {
 
   //useEffects triggers everytime the user logs in or out
   useEffect(() => {
+    window.onpopstate = e => {
+      if(window.location.pathname === "/login" || window.location.pathname === "/register") {
+        logOut();
+      }
+    };
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       try {
         const userProfile = await getUserProfile(user.uid);
@@ -148,7 +153,7 @@ export function AuthProvider({ children }) {
           setUserInfo(userProfile);
         } else throw new Error();
       } catch (error) {
-        logOut(auth);
+        logOut();
         setCurrentUser();
       }
       setIsNotSignedIn(false);
