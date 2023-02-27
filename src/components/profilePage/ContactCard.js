@@ -21,14 +21,6 @@ import { showIf } from "../utils/conditionalRendering";
 const ContactCard = () => {
   const readOnly = true;
   const [isEdit, setIsEdit] = useState(false);
-  const [contactInfo, setContactInfo] = useState({
-    phone: "",
-    street: "",
-    city: "",
-    state: "",
-    zip: "",
-    country: "",
-  });
   const {
     currentUser,
     firstName,
@@ -40,6 +32,14 @@ const ContactCard = () => {
     zip,
     country,
   } = useAuth();
+  const [contactInfo, setContactInfo] = useState({
+    phone: phone,
+    street: street,
+    city: city,
+    state: state,
+    zip: zip,
+    country: country,
+  });
   const handleChange = (e) => {
     setContactInfo((existing) => ({
       ...existing,
@@ -47,6 +47,17 @@ const ContactCard = () => {
     }));
   };
   const handleEdit = () => {
+    setIsEdit(!isEdit);
+  };
+  const handleCancel = () => {
+    setContactInfo({
+      phone: phone,
+      street: street,
+      city: city,
+      state: state,
+      zip: zip,
+      country: country,
+    })
     setIsEdit(!isEdit);
   };
   const updateContact = async () => {
@@ -229,7 +240,7 @@ const ContactCard = () => {
                 <Button
                   variant="contained"
                   size="small"
-                  onClick={() => handleEdit()}
+                  onClick={() => handleCancel()}
                 >
                   Cancel
                 </Button>
@@ -248,7 +259,7 @@ const ContactCard = () => {
                 name="phone"
                 label="Phone#"
                 size="small"
-                placeholder={phone}
+                placeholder={contactInfo.phone}
                 onChange={(e) => {
                   handleChange(e);
                 }}
@@ -267,7 +278,7 @@ const ContactCard = () => {
                 name="street"
                 label="Street"
                 size="small"
-                placeholder={street}
+                placeholder={contactInfo.street}
                 onChange={(e) => {
                   handleChange(e);
                 }}
@@ -286,7 +297,7 @@ const ContactCard = () => {
                 name="city"
                 label="City"
                 size="small"
-                placeholder={city}
+                placeholder={contactInfo.city}
                 onChange={(e) => {
                   handleChange(e);
                 }}
@@ -305,7 +316,7 @@ const ContactCard = () => {
                 name="state"
                 label="State"
                 size="small"
-                placeholder={state}
+                placeholder={contactInfo.state}
                 onChange={(e) => {
                   handleChange(e);
                 }}
@@ -324,7 +335,7 @@ const ContactCard = () => {
                 name="zip"
                 label="Zip"
                 size="small"
-                placeholder={zip}
+                placeholder={contactInfo.zip}
                 onChange={(e) => {
                   handleChange(e);
                 }}
@@ -343,7 +354,7 @@ const ContactCard = () => {
                 name="country"
                 label="Country"
                 size="small"
-                placeholder={country}
+                placeholder={contactInfo.country}
                 onChange={(e) => {
                   handleChange(e);
                 }}
