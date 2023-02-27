@@ -82,7 +82,11 @@ export function AuthProvider({ children }) {
       }
       try {
         const profile = await getUserProfile(loginToken.user.uid);
-        await updateUserProperty(loginToken.user.uid, "email", loginToken.user.email);
+        await updateUserProperty(
+          loginToken.user.uid,
+          "email",
+          loginToken.user.email
+        );
         if (!profile.isDisabled) {
           navigateTo(location.state?.from || "/");
           window.location.reload();

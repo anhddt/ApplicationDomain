@@ -6,8 +6,6 @@
 .pnp.js
 # .github
 
-#firebase
-/src/middleware/firebase/firebase.js
 # testing
 /coverage
 
