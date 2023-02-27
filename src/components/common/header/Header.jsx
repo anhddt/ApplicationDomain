@@ -19,9 +19,12 @@ function Header() {
           <LogoIcon />
         </section>
         <section className="header-top_right">
-          {/* Log On button location  */}
+          {/* If the user is not logged in, show welcome.
+          If they logged in show Hello + their first name */}
           {currentUser ? `Hello ${firstName}!` : "Welcome"}
+          {/* Custom profile icon, show if user is logged in, or not*/}
           {showIf(currentUser, <CustomProfileIcon />)}
+          {/* If the user is not logged in show the below instead */}
           {showIf(
             !currentUser,
             <Box sx={{ marginLeft: "1rem" }} display="flex" flexDirection="row">

@@ -19,9 +19,11 @@ import {
   checkPwFirstChar,
   checkPwForNumbers,
   checkPwForSpecialChar,
+  isValidPw,
 } from "../../middleware/verification/userInfo";
 
 const RegisterForm = () => {
+  const [password, setPassword] = useState("");
   const date = new Date();
   const { createAccount } = useAuth();
   const day = date.getDate() < 10 ? `0${date.getDate()}` : `${date.getDate()}`;
@@ -32,7 +34,6 @@ const RegisterForm = () => {
     lastName: "",
     email: "",
     username: "",
-    password: "",
     street: "",
     city: "",
     role: "user",
@@ -41,7 +42,7 @@ const RegisterForm = () => {
     country: "",
     phone: "",
     dateCreated: `${month}/${day}/${date.getFullYear()}`,
-    isDisabled: true,
+    isDisabled: false,
   });
   const [confirmPw, setConfirmPw] = useState("");
   const [confirmPwError, setConfirmPwError] = useState(false);
@@ -79,7 +80,7 @@ const RegisterForm = () => {
    * comparison.
    */
   useMemo(() => {
-    setConfirmPwError(!(inputs.password === confirmPw));
+    setConfirmPwError(!(password === confirmPw));
     if (inputs.firstName && inputs.lastName) {
       const setUsername = () => {
         setInputs((existing) => ({
@@ -89,19 +90,12 @@ const RegisterForm = () => {
       };
       setUsername();
     }
-  }, [
-    inputs.password,
-    inputs.firstName,
-    inputs.lastName,
-    confirmPw,
-    day,
-    month,
-  ]);
+  }, [password, inputs.firstName, inputs.lastName, confirmPw, day, month]);
   const handleFocus = () => {
     setFocus(true);
   };
   const handleSubmit = () => {
-    createAccount(inputs, navigateTo, setError);
+    createAccount(inputs, password, setError);
     setIsEmailSent(!error);
   };
 
@@ -117,14 +111,9 @@ const RegisterForm = () => {
       inputs.email === "" ||
       inputs.firstName === "" ||
       inputs.lastName === "" ||
-      !(
-        checkPwFirstChar(inputs.password) &&
-        checkPwForNumbers(inputs.password) &&
-        checkPwLength(inputs.password) &&
-        checkPwForSpecialChar(inputs.password)
-      )
+      !isValidPw(password)
     );
-  }, [inputs]);
+  }, [inputs, password]);
 
   return (
     <Box className="container">
@@ -302,7 +291,7 @@ const RegisterForm = () => {
               <TextField
                 name="password"
                 label="Password"
-                value={inputs.password}
+                value={password}
                 required
                 fullWidth
                 size="small"
@@ -323,7 +312,7 @@ const RegisterForm = () => {
                   ),
                 }}
                 onChange={(e) => {
-                  handleChange(e);
+                  setPassword(e.target.value);
                 }}
               />
             </Grid>
@@ -364,7 +353,7 @@ const RegisterForm = () => {
             <Grid item xs={12}>
               <Box id="password-constrains">
                 <Typography
-                  color={checkPwLength(inputs.password) ? "green" : "black"}
+                  color={checkPwLength(password) ? "green" : "black"}
                   display="block"
                   textAlign="left"
                   variant="contained"
@@ -372,7 +361,7 @@ const RegisterForm = () => {
                   Must be at least 8 characters.
                 </Typography>
                 <Typography
-                  color={checkPwFirstChar(inputs.password) ? "green" : "black"}
+                  color={checkPwFirstChar(password) ? "green" : "black"}
                   display="block"
                   textAlign="left"
                   variant="contained"
@@ -380,7 +369,7 @@ const RegisterForm = () => {
                   Must start with a letter.
                 </Typography>
                 <Typography
-                  color={checkPwForNumbers(inputs.password) ? "green" : "black"}
+                  color={checkPwForNumbers(password) ? "green" : "black"}
                   display="block"
                   textAlign="left"
                   variant="contained"
@@ -388,9 +377,7 @@ const RegisterForm = () => {
                   Must have a number.
                 </Typography>
                 <Typography
-                  color={
-                    checkPwForSpecialChar(inputs.password) ? "green" : "black"
-                  }
+                  color={checkPwForSpecialChar(password) ? "green" : "black"}
                   display="block"
                   textAlign="left"
                   variant="contained"

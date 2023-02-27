@@ -102,23 +102,18 @@ export function AuthProvider({ children }) {
    *
    * It takes in the email, password, a function, and another function
    */
-  const createAccount = async (userInfo, setError) => {
+  const createAccount = async (userInfo, password, setError) => {
     try {
       const newUser = await createUserWithEmailAndPassword(
         auth,
         userInfo.email,
-        userInfo.password
+        password
       );
       setUserProfile(newUser.user.uid, userInfo);
       try {
-        await signInWithEmailAndPassword(
-          auth,
-          userInfo.email,
-          userInfo.password
-        );
+        await signInWithEmailAndPassword(auth, userInfo.email, password);
         try {
           await sendEmailVerification(auth.currentUser);
-          signOut(auth);
         } catch (error) {}
       } catch (error) {}
     } catch (error) {
@@ -165,7 +160,6 @@ export function AuthProvider({ children }) {
   const role = userInfo.role;
   const username = userInfo.username;
   const email = userInfo.email;
-  const passsword = userInfo.passsword;
   const dateCreated = userInfo.dateCreated;
   const isDisabled = userInfo.isDisabled;
 
@@ -182,7 +176,6 @@ export function AuthProvider({ children }) {
     role,
     username,
     email,
-    passsword,
     currentUser,
     dateCreated,
     isDisabled,
