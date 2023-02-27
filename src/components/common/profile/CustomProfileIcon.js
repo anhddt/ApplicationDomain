@@ -15,7 +15,7 @@ import { showIf } from "../../utils/conditionalRendering";
  * add nother MenuItem
  * and handle it's onOnclick
  */
-const CustomProfileIcon = (props) => {
+const CustomProfileIcon = () => {
   const navigateTo = useNavigate();
   const { logOut } = useAuth();
   const [expand, setExpand] = useState(false);

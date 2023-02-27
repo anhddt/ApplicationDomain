@@ -22,7 +22,7 @@ function Navbar() {
       </NavLink>
       {showIf(
         currentUser && role === "admin",
-        <NavLink to="admin" className="navbar-item">
+        <NavLink to="/admin" className="navbar-item">
           Admin
         </NavLink>
       )}
