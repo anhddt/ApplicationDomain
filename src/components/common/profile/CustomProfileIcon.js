@@ -8,6 +8,13 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ExpandLessIcon from "@mui/icons-material/ExpandLess";
 import { showIf } from "../../utils/conditionalRendering";
 
+/**
+ * An interactive icon used in the Header
+ *
+ * To add another menu,
+ * add nother MenuItem
+ * and handle it's onOnclick
+ */
 const CustomProfileIcon = (props) => {
   const navigateTo = useNavigate();
   const { logOut } = useAuth();

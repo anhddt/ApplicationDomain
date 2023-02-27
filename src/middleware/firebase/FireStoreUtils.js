@@ -10,6 +10,13 @@ import {
   where,
 } from "firebase/firestore";
 import { firestore as db } from "./firebase";
+import { auth } from "./firebase";
+import {
+  reauthenticateWithCredential,
+  EmailAuthProvider,
+  verifyBeforeUpdateEmail,
+  updatePassword,
+} from "firebase/auth";
 
 /**
  * This function takes in a user ID, and a collection of information.
@@ -101,6 +108,8 @@ export const removeUserbyName = async (userName) => {
 
 //functions to update properties of a use
 //a function to update the firstName of a user
+//CAN ONLY BE USED FOR ANYTHING OTHER THAN EMAIL AND PASSWORD
+//TO UPDATE EMAIL OR PASSWORD, Use updatUserEmail() and updateUserPassword()
 export const updateUserProperty = async (userID, key, newValue) => {
   try {
     await updateDoc(doc(db, "newUsers", userID), {
@@ -108,5 +117,54 @@ export const updateUserProperty = async (userID, key, newValue) => {
     });
   } catch (error) {
     console.log(error);
+  }
+};
+
+/**
+ * update multiple fields in the user's profile
+ */
+export const bulkUpdateUserProperty = async (userID, info) => {
+  try {
+    await updateDoc(doc(db, "newUsers", userID), info);
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+/**
+ * import and use this function inside an async function
+ * with try catch blocks
+ * the update user email function
+ * before updating the email, you have to
+ * reauthenticate the user because firebase
+ * requires recent login. If the user is logged in
+ * for a long time and then decide to change the email,
+ * the update email function will throw an error
+ */
+export const updateUserEmail = async (password, newEmail) => {
+  try {
+    const credential = EmailAuthProvider.credential(
+      auth.currentUser.email,
+      password
+    );
+    await reauthenticateWithCredential(auth.currentUser, credential);
+    await verifyBeforeUpdateEmail(auth.currentUser, newEmail);
+  } catch (error) {
+    throw new Error();
+  }
+};
+
+// The update user password function
+// explaination is simmilar to the one above
+export const updateUserPassword = async (password, newPassword) => {
+  try {
+    const credential = EmailAuthProvider.credential(
+      auth.currentUser.email,
+      password
+    );
+    await reauthenticateWithCredential(auth.currentUser, credential);
+    await updatePassword(auth.currentUser, newPassword);
+  } catch (error) {
+    throw new Error();
   }
 };
