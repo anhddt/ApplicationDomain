@@ -21,7 +21,7 @@ function Header() {
         <section className="header-top_right">
           {/* If the user is not logged in, show welcome.
           If they logged in show Hello + their first name */}
-          {currentUser ? `Hello ${firstName}!` : "Welcome"}
+          {currentUser ? `Hello ${firstName}!` : "Welcome!"}
           {/* Custom profile icon, show if user is logged in, or not*/}
           {showIf(currentUser, <CustomProfileIcon />)}
           {/* If the user is not logged in show the below instead */}
