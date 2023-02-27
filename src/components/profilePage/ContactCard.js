@@ -57,7 +57,7 @@ const ContactCard = () => {
       state: state,
       zip: zip,
       country: country,
-    })
+    });
     setIsEdit(!isEdit);
   };
   const updateContact = async () => {
