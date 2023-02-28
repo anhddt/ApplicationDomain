@@ -1,6 +1,6 @@
 import "./home.css";
 import { Header } from "../common";
-import MiniHeader from "../common/header/MiniHeader";
+import Homebar from "../common/header/Homebar";
 import { Box } from "@mui/material";
 
 const HomePage = () => {
@@ -10,7 +10,7 @@ const HomePage = () => {
         <Header />
       </Box>
       <Box className="home-page-mini-header">
-        <MiniHeader />
+        <Homebar />
       </Box>
     </Box>
   );

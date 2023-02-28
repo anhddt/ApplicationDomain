@@ -1,3 +1,4 @@
+import "./header.css";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../utils/AuthProvider";
@@ -11,6 +12,7 @@ import {
   Toolbar,
   Typography,
 } from "@mui/material";
+import LoginDropDownIcon from "../profile/LoginDropDownIcon";
 import CustomProfileIcon from "../profile/CustomProfileIcon";
 import MenuIcon from "@mui/icons-material/Menu";
 import LogoIcon from "../logo/LogoIcon";
@@ -20,20 +22,18 @@ import { showIf } from "../../utils/conditionalRendering";
 const Homebar = () => {
   const navigateTo = useNavigate();
   const { currentUser, firstName, role } = useAuth();
-  const [expand, setExpand] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
   const handleOpenNavMenu = (e) => {
-    setExpand(!expand);
     setAnchorEl(e.currentTarget);
   };
   const handleCloseNavMenu = () => {
-    setExpand(!expand);
     setAnchorEl(null);
   };
   return (
     <AppBar position="sticky" color="inherit">
       <Toolbar>
         <IconButton
+          id={anchorEl ? "lid-up-icon" : "menu-item"}
           size="medium"
           color="inherit"
           onClick={(e) => handleOpenNavMenu(e)}
@@ -42,34 +42,42 @@ const Homebar = () => {
           <MenuIcon fontSize="medium" />
         </IconButton>
         <Menu
-          open={expand}
+          open={anchorEl ? true : false}
           onClose={() => {
             handleCloseNavMenu();
           }}
           anchorEl={anchorEl}
         >
           <MenuItem
+            id="menu-item"
             onClick={() => {
               handleCloseNavMenu();
               navigateTo("/");
             }}
           >
-            Home
+            <Typography variant="subtitle1">Home</Typography>
           </MenuItem>
-          <MenuItem>About</MenuItem>
+          <MenuItem id="menu-item">
+            <Typography variant="subtitle1">About</Typography>
+          </MenuItem>
           {showIf(
             currentUser && role === "admin",
             <MenuItem
+              id="menu-item"
               onClick={() => {
                 handleCloseNavMenu();
                 navigateTo("/admin");
               }}
             >
-              Admin
+              <Typography variant="subtitle1">Admin</Typography>
             </MenuItem>
           )}
-          <MenuItem>Accounting</MenuItem>
-          <MenuItem>Contact</MenuItem>
+          <MenuItem id="menu-item">
+            <Typography variant="subtitle1">Accounting</Typography>
+          </MenuItem>
+          <MenuItem id="menu-item">
+            <Typography variant="subtitle1">Contact</Typography>
+          </MenuItem>
         </Menu>
         <ReactCalendarIcon size="medium" fontSize="medium" view="month" />
         <Box sx={{ ml: 2 }} flexGrow={1}>
@@ -81,6 +89,10 @@ const Homebar = () => {
               {currentUser ? `HELLO ${firstName.toUpperCase()}!` : "WELCOME!"}
             </Typography>
           </Box>
+          {showIf(
+            window.location.pathname === "/" && !currentUser,
+            <LoginDropDownIcon />
+          )}
           {showIf(currentUser, <CustomProfileIcon />)}
         </Stack>
       </Toolbar>

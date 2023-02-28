@@ -1,38 +1,43 @@
+import "./customProfileIcon.css";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Box, IconButton, Menu, MenuItem, Typography } from "@mui/material";
+import { showIf } from "../../utils/conditionalRendering";
 import LoginIcon from "@mui/icons-material/Login";
 import AppRegistrationIcon from "@mui/icons-material/AppRegistration";
-import ArrowDropDownCircleIcon from "@mui/icons-material/ArrowDropDownCircle";
+import ReadMoreIcon from "@mui/icons-material/ReadMore";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import ExpandLessIcon from "@mui/icons-material/ExpandLess";
 
 const LoginDropDownIcon = () => {
   const navigateTo = useNavigate();
-  const [expand, setExpand] = useState(false);
   const [anchorEl, setAnchorEl] = useState();
   const handleProfileClick = (e) => {
-    setExpand(!expand);
     setAnchorEl(e.currentTarget);
   };
   const handleClose = () => {
     setAnchorEl();
-    setExpand(!expand);
   };
   return (
     <Box>
       <IconButton
-        id="profile-expand-chevron"
+        color="inherit"
+        id={anchorEl ? "profile-icon" : "profile-expand-chevron"}
         onClick={(e) => handleProfileClick(e)}
       >
-        <ArrowDropDownCircleIcon />
+        <ReadMoreIcon />
+        {showIf(!anchorEl, <ExpandMoreIcon id="profile-expand-chevron" />)}
+        {showIf(anchorEl, <ExpandLessIcon />)}
       </IconButton>
       <Menu
-        open={expand}
+        open={anchorEl ? true : false}
         onClose={() => {
           handleClose();
         }}
         anchorEl={anchorEl}
       >
         <MenuItem
+          id="profile-expand-chevron"
           onClick={() => {
             handleClose();
             navigateTo("/login");
@@ -42,6 +47,7 @@ const LoginDropDownIcon = () => {
           <Typography variant="subtitle1">Sign in</Typography>
         </MenuItem>
         <MenuItem
+          id="profile-expand-chevron"
           onClick={() => {
             handleClose();
             navigateTo("/register");
