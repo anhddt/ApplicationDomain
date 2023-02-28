@@ -213,7 +213,7 @@ const AccountCard = () => {
           <Grid container spacing={2}>
             <Grid xs={6} item>
               <Typography variant="h6" textAlign="left">
-                Edit your email:
+                Update your email:
               </Typography>
             </Grid>
             <Grid xs={6} item>
