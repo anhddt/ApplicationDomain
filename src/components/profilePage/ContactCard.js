@@ -259,7 +259,7 @@ const ContactCard = () => {
                 name="phone"
                 label="Phone#"
                 size="small"
-                placeholder={contactInfo.phone}
+                value={contactInfo.phone}
                 onChange={(e) => {
                   handleChange(e);
                 }}
@@ -278,7 +278,7 @@ const ContactCard = () => {
                 name="street"
                 label="Street"
                 size="small"
-                placeholder={contactInfo.street}
+                value={contactInfo.street}
                 onChange={(e) => {
                   handleChange(e);
                 }}
@@ -297,7 +297,7 @@ const ContactCard = () => {
                 name="city"
                 label="City"
                 size="small"
-                placeholder={contactInfo.city}
+                value={contactInfo.city}
                 onChange={(e) => {
                   handleChange(e);
                 }}
@@ -316,7 +316,7 @@ const ContactCard = () => {
                 name="state"
                 label="State"
                 size="small"
-                placeholder={contactInfo.state}
+                value={contactInfo.state}
                 onChange={(e) => {
                   handleChange(e);
                 }}
@@ -335,7 +335,7 @@ const ContactCard = () => {
                 name="zip"
                 label="Zip"
                 size="small"
-                placeholder={contactInfo.zip}
+                value={contactInfo.zip}
                 onChange={(e) => {
                   handleChange(e);
                 }}
@@ -354,7 +354,7 @@ const ContactCard = () => {
                 name="country"
                 label="Country"
                 size="small"
-                placeholder={contactInfo.country}
+                value={contactInfo.country}
                 onChange={(e) => {
                   handleChange(e);
                 }}
