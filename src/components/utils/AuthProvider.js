@@ -140,8 +140,11 @@ export function AuthProvider({ children }) {
 
   //useEffects triggers everytime the user logs in or out
   useEffect(() => {
-    window.onpopstate = e => {
-      if(window.location.pathname === "/login" || window.location.pathname === "/register") {
+    window.onpopstate = (e) => {
+      if (
+        window.location.pathname === "/login" ||
+        window.location.pathname === "/register"
+      ) {
         logOut();
       }
     };
