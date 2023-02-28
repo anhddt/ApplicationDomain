@@ -7,6 +7,8 @@ import {
   Grid,
   InputAdornment,
   IconButton,
+  Menu,
+  MenuItem,
   TextField,
   Typography,
 } from "@mui/material";
@@ -45,6 +47,13 @@ const AccountCard = () => {
   const [focus, setFocus] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
+  const [anchorEl, setAnchorEl] = useState();
+  const handleAccountEdit = (e) => {
+    setAnchorEl(e.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl();
+  };
   const handleMouseDownPassword = (e) => {
     e.preventDefault();
   };
@@ -108,24 +117,40 @@ const AccountCard = () => {
                 <Button
                   variant="contained"
                   size="small"
-                  onClick={() => {
-                    setEditEmail(true);
-                    setIsEdit(true);
-                  }}
+                  onClick={(e) => handleAccountEdit(e)}
                 >
-                  Edit email
+                  {anchorEl ? "Cancel" : "Edit"}
                 </Button>
-                <Button
-                  color="success"
-                  variant="contained"
-                  size="small"
-                  onClick={() => {
-                    setEditPassword(true);
-                    setIsEdit(true);
+                <Menu
+                  open={anchorEl ? true : false}
+                  onClose={() => {
+                    handleClose();
                   }}
+                  anchorEl={anchorEl}
                 >
-                  Edit password
-                </Button>
+                  <MenuItem
+                    id="profile-expand-chevron"
+                    onClick={() => {
+                      handleClose();
+                      setEditEmail(true);
+                      setIsEdit(true);
+                    }}
+                  >
+                    <EmailIcon />
+                    <Typography variant="subtitle1">Email</Typography>
+                  </MenuItem>
+                  <MenuItem
+                    id="profile-expand-chevron"
+                    onClick={() => {
+                      handleClose();
+                      setEditPassword(true);
+                      setIsEdit(true);
+                    }}
+                  >
+                    <LockIcon />
+                    <Typography variant="subtitle1">Password</Typography>
+                  </MenuItem>
+                </Menu>
               </Box>
             </Grid>
             <Grid xs={6} item>

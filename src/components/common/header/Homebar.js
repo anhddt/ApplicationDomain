@@ -89,10 +89,7 @@ const Homebar = () => {
               {currentUser ? `HELLO ${firstName.toUpperCase()}!` : "WELCOME!"}
             </Typography>
           </Box>
-          {showIf(
-            window.location.pathname === "/" && !currentUser,
-            <LoginDropDownIcon />
-          )}
+          {showIf(!currentUser, <LoginDropDownIcon />)}
           {showIf(currentUser, <CustomProfileIcon />)}
         </Stack>
       </Toolbar>
