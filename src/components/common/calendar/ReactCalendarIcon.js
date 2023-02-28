@@ -14,19 +14,17 @@ import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 const ReactCalendarIcon = (props) => {
   const { size, fontSize, view } = { ...props };
   const date = new Date();
-  const [expandCalendar, setExpandCalendar] = useState(false);
   const [anchorElCalendar, setAnchorElCalendar] = useState(null);
   const handleOpenCalendar = (e) => {
-    setExpandCalendar(!expandCalendar);
     setAnchorElCalendar(e.currentTarget);
   };
   const handleCloseCalendar = () => {
-    setExpandCalendar(!expandCalendar);
     setAnchorElCalendar(null);
   };
   return (
     <Fragment>
       <IconButton
+        id={anchorElCalendar ? "lid-up-icon" : "menu-item"}
         onClick={(e) => handleOpenCalendar(e)}
         size={size}
         color="inherit"
@@ -34,7 +32,7 @@ const ReactCalendarIcon = (props) => {
         <CalendarMonthIcon fontSize={fontSize} />
       </IconButton>
       <Menu
-        open={expandCalendar}
+        open={anchorElCalendar ? true : false}
         onClose={() => {
           handleCloseCalendar();
         }}

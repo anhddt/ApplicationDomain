@@ -20,34 +20,33 @@ import { showIf } from "../../utils/conditionalRendering";
 const CustomProfileIcon = () => {
   const navigateTo = useNavigate();
   const { logOut } = useAuth();
-  const [expand, setExpand] = useState(false);
   const [anchorEl, setAnchorEl] = useState();
   const handleProfileClick = (e) => {
-    setExpand(!expand);
     setAnchorEl(e.currentTarget);
   };
   const handleClose = () => {
     setAnchorEl();
-    setExpand(!expand);
   };
   return (
     <Box>
       <IconButton
-        id="profile-expand-chevron"
+        color="inherit"
+        id={anchorEl ? "profile-icon" : "profile-expand-chevron"}
         onClick={(e) => handleProfileClick(e)}
       >
-        <AccountCircleIcon id="profile-icon" />
-        {showIf(!expand, <ExpandMoreIcon id="profile-expand-chevron" />)}
-        {showIf(expand, <ExpandLessIcon id="profile-icon" />)}
+        <AccountCircleIcon />
+        {showIf(!anchorEl, <ExpandMoreIcon id="profile-expand-chevron" />)}
+        {showIf(anchorEl, <ExpandLessIcon />)}
       </IconButton>
       <Menu
-        open={expand}
+        open={anchorEl ? true : false}
         onClose={() => {
           handleClose();
         }}
         anchorEl={anchorEl}
       >
         <MenuItem
+          id="profile-expand-chevron"
           onClick={() => {
             handleClose();
             navigateTo("/userProfile");
@@ -57,6 +56,7 @@ const CustomProfileIcon = () => {
           <Typography variant="subtitle1">Profile</Typography>
         </MenuItem>
         <MenuItem
+          id="profile-expand-chevron"
           onClick={() => {
             handleClose();
             logOut();
