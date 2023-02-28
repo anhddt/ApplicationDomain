@@ -70,7 +70,7 @@ const ContactCard = () => {
       <Grid container spacing={2}>
         <Grid xs={6} item>
           <Typography variant="h6" textAlign="left">
-            {isEdit ? "Update contact info" : "Contact info:"}
+            {isEdit ? "Update contact info:" : "Contact info:"}
           </Typography>
         </Grid>
         <Grid xs={6} item>
