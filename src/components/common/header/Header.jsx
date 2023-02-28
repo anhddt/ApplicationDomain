@@ -1,15 +1,14 @@
 import "./header.css";
-import { Box, Button, Typography } from "@mui/material";
-import { useNavigate } from "react-router-dom";
+import { Box, Typography } from "@mui/material";
 import { Navbar } from "../../common";
 import { useAuth } from "../../utils/AuthProvider";
 import { showIf } from "../../utils/conditionalRendering";
 import LogoIcon from "../logo/LogoIcon";
 import CustomProfileIcon from "../profile/CustomProfileIcon";
+import LoginDropDownIcon from "../profile/LoginDropDownIcon";
 
 function Header() {
   const { firstName, currentUser } = useAuth();
-  const navigateTo = useNavigate();
   return (
     <section className="header">
       {/* Logo and Name */}
@@ -26,32 +25,7 @@ function Header() {
         {/* Custom profile icon, show if user is logged in, or not*/}
         {showIf(currentUser, <CustomProfileIcon />)}
         {/* If the user is not logged in show the below instead */}
-        {showIf(
-          !currentUser,
-          <Box sx={{ marginLeft: "1rem" }} display="flex" flexDirection="row">
-            <Button
-              size="small"
-              color="success"
-              variant="contained"
-              onClick={() => {
-                navigateTo("/login");
-              }}
-            >
-              Sign in
-            </Button>
-            <Box sx={{ marginLeft: "1rem" }}>
-              <Button
-                size="small"
-                variant="contained"
-                onClick={() => {
-                  navigateTo("/register");
-                }}
-              >
-                Register
-              </Button>
-            </Box>
-          </Box>
-        )}
+        {showIf(!currentUser, <LoginDropDownIcon />)}
       </section>
       <section className="header-bottom_navbar">
         {/* <Navbar />*/}

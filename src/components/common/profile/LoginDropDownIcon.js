@@ -36,26 +36,32 @@ const LoginDropDownIcon = () => {
         }}
         anchorEl={anchorEl}
       >
-        <MenuItem
-          id="profile-expand-chevron"
-          onClick={() => {
-            handleClose();
-            navigateTo("/login");
-          }}
-        >
-          <LoginIcon />
-          <Typography variant="subtitle1">Sign in</Typography>
-        </MenuItem>
-        <MenuItem
-          id="profile-expand-chevron"
-          onClick={() => {
-            handleClose();
-            navigateTo("/register");
-          }}
-        >
-          <AppRegistrationIcon />
-          <Typography variant="subtitle1">Register</Typography>
-        </MenuItem>
+        {showIf(
+          window.location.pathname !== "/login",
+          <MenuItem
+            id="profile-expand-chevron"
+            onClick={() => {
+              handleClose();
+              navigateTo("/login");
+            }}
+          >
+            <LoginIcon />
+            <Typography variant="subtitle1">Sign in</Typography>
+          </MenuItem>
+        )}
+        {showIf(
+          window.location.pathname !== "/register",
+          <MenuItem
+            id="profile-expand-chevron"
+            onClick={() => {
+              handleClose();
+              navigateTo("/register");
+            }}
+          >
+            <AppRegistrationIcon />
+            <Typography variant="subtitle1">Register</Typography>
+          </MenuItem>
+        )}
       </Menu>
     </Box>
   );

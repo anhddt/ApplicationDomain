@@ -45,16 +45,19 @@ const CustomProfileIcon = () => {
         }}
         anchorEl={anchorEl}
       >
-        <MenuItem
-          id="profile-expand-chevron"
-          onClick={() => {
-            handleClose();
-            navigateTo("/userProfile");
-          }}
-        >
-          <AccountBoxIcon />
-          <Typography variant="subtitle1">Profile</Typography>
-        </MenuItem>
+        {showIf(
+          window.location.pathname !== "/userProfile",
+          <MenuItem
+            id="profile-expand-chevron"
+            onClick={() => {
+              handleClose();
+              navigateTo("/userProfile");
+            }}
+          >
+            <AccountBoxIcon />
+            <Typography variant="subtitle1">Profile</Typography>
+          </MenuItem>
+        )}
         <MenuItem
           id="profile-expand-chevron"
           onClick={() => {
