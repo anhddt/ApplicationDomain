@@ -14,7 +14,9 @@ import {
 import CustomProfileIcon from "../profile/CustomProfileIcon";
 import MenuIcon from "@mui/icons-material/Menu";
 import LogoIcon from "../logo/LogoIcon";
+import ReactCalendarIcon from "../calendar/ReactCalendarIcon";
 import { showIf } from "../../utils/conditionalRendering";
+
 const Homebar = () => {
   const navigateTo = useNavigate();
   const { currentUser, firstName, role } = useAuth();
@@ -32,12 +34,12 @@ const Homebar = () => {
     <AppBar position="sticky" color="inherit">
       <Toolbar>
         <IconButton
-          size="small"
+          size="medium"
           color="inherit"
           onClick={(e) => handleOpenNavMenu(e)}
           sx={{ mr: 2 }}
         >
-          <MenuIcon />
+          <MenuIcon fontSize="medium"/>
         </IconButton>
         <Menu
           open={expand}
@@ -46,16 +48,17 @@ const Homebar = () => {
           }}
           anchorEl={anchorEl}
         >
-          <MenuItem onClick={() => navigateTo("/")}>Home</MenuItem>
+          <MenuItem onClick={() => { handleCloseNavMenu(); navigateTo("/") }}>Home</MenuItem>
           <MenuItem>About</MenuItem>
           {showIf(
             role === "admin",
-            <MenuItem onClick={() => navigateTo("/admin")}>Admin</MenuItem>
+            <MenuItem onClick={() => { handleCloseNavMenu(); navigateTo("/admin") }}>Admin</MenuItem>
           )}
           <MenuItem>Accounting</MenuItem>
           <MenuItem>Contact</MenuItem>
         </Menu>
-        <Box flexGrow={1}>
+        <ReactCalendarIcon size="medium" fontSize="medium" view="month"/>
+        <Box  sx={{ml:2}} flexGrow={1}>
           <LogoIcon />
         </Box>
         <Stack direction="row" spacing={2}>
