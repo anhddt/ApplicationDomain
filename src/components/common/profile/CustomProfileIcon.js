@@ -1,8 +1,10 @@
 import "./customProfileIcon.css";
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { Box, IconButton, Menu, MenuItem } from "@mui/material";
+import { useState } from "react";
 import { useAuth } from "../../utils/AuthProvider";
+import { useNavigate } from "react-router-dom";
+import { Box, IconButton, Menu, MenuItem, Typography } from "@mui/material";
+import LogoutIcon from "@mui/icons-material/Logout";
+import AccountBoxIcon from '@mui/icons-material/AccountBox';
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ExpandLessIcon from "@mui/icons-material/ExpandLess";
@@ -45,8 +47,14 @@ const CustomProfileIcon = () => {
         }}
         anchorEl={anchorEl}
       >
-        <MenuItem onClick={() => navigateTo("/userProfile")}>Profile</MenuItem>
-        <MenuItem onClick={() => logOut()}>Sign out</MenuItem>
+        <MenuItem onClick={() =>{ handleClose(); navigateTo("/userProfile")}}>
+          <AccountBoxIcon/>
+          <Typography variant="subtitle1">Profile</Typography>
+        </MenuItem>
+        <MenuItem onClick={() => {handleClose(); logOut()}}>
+          <LogoutIcon/>
+          <Typography variant="subtitle1">Sign out</Typography>
+        </MenuItem>
       </Menu>
     </Box>
   );

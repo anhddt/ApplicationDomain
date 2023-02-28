@@ -1,10 +1,14 @@
-.home-page-homebar {
+.home-page-mini-header {
   display: none;
 }
 
 @media (max-width: 1000px) {
-  .home-page-header { display: none; }
-  .home-page-homebar { display: flex; }
+  .home-page-header {
+    display: none;
+  }
+  .home-page-mini-header {
+    display: flex;
+  }
 }
 .home-container {
   background-size: cover;

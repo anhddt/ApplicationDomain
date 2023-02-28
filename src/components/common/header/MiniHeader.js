@@ -12,12 +12,13 @@ import {
   Typography,
 } from "@mui/material";
 import CustomProfileIcon from "../profile/CustomProfileIcon";
+import LoginDropDownIcon from "../profile/LoginDropDownIcon";
 import MenuIcon from "@mui/icons-material/Menu";
 import LogoIcon from "../logo/LogoIcon";
 import ReactCalendarIcon from "../calendar/ReactCalendarIcon";
 import { showIf } from "../../utils/conditionalRendering";
 
-const Homebar = () => {
+const MiniHeader = () => {
   const navigateTo = useNavigate();
   const { currentUser, firstName, role } = useAuth();
   const [expand, setExpand] = useState(false);
@@ -81,6 +82,7 @@ const Homebar = () => {
               {currentUser ? `HELLO ${firstName.toUpperCase()}!` : "WELCOME!"}
             </Typography>
           </Box>
+          {showIf(!currentUser, <LoginDropDownIcon />)}
           {showIf(currentUser, <CustomProfileIcon />)}
         </Stack>
       </Toolbar>
@@ -88,4 +90,4 @@ const Homebar = () => {
   );
 };
 
-export default Homebar;
+export default MiniHeader;
