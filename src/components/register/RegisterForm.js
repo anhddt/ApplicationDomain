@@ -131,7 +131,7 @@ const RegisterForm = () => {
         >
           <Typography textAlign="center" variant="subtitle1">
             {" "}
-            A verification email has been sent to <br />
+            A verification has been sent to <br />
             {inputs.email}
             <br />
             Please verify your email to login.
@@ -365,7 +365,7 @@ const RegisterForm = () => {
             <Grid item xs={12}>
               <Box id="password-constrains">
                 <Typography
-                  color={checkPwLength(password) ? "green" : "black"}
+                  color={checkPwLength(password) ? (theme ==="dark"? "rgb(55, 239, 31)" : "green") : (theme ==="dark"? "rgba(255, 255, 255, 0.5)" : "inherit")}
                   display="block"
                   textAlign="left"
                   variant="contained"
@@ -373,7 +373,7 @@ const RegisterForm = () => {
                   Must be at least 8 characters.
                 </Typography>
                 <Typography
-                  color={checkPwFirstChar(password) ? "green" : "black"}
+                  color={checkPwFirstChar(password) ? (theme ==="dark"? "rgb(55, 239, 31)" : "green") : (theme ==="dark"? "rgba(255, 255, 255, 0.5)" : "inherit")}
                   display="block"
                   textAlign="left"
                   variant="contained"
@@ -381,7 +381,7 @@ const RegisterForm = () => {
                   Must start with a letter.
                 </Typography>
                 <Typography
-                  color={checkPwForNumbers(password) ? "green" : "black"}
+                  color={checkPwForNumbers(password) ? (theme ==="dark"? "rgb(55, 239, 31)" : "green") : (theme ==="dark"? "rgba(255, 255, 255, 0.5)" : "inherit")}
                   display="block"
                   textAlign="left"
                   variant="contained"
@@ -389,7 +389,7 @@ const RegisterForm = () => {
                   Must have a number.
                 </Typography>
                 <Typography
-                  color={checkPwForSpecialChar(password) ? "green" : "black"}
+                  color={checkPwForSpecialChar(password) ? (theme ==="dark"? "rgb(55, 239, 31)" : "green") : (theme ==="dark"? "rgba(255, 255, 255, 0.5)" : "inherit")}
                   display="block"
                   textAlign="left"
                   variant="contained"
