@@ -1,4 +1,5 @@
 import "./loginPage.css";
+import "../utils/themeProvider/themeProvider.css";
 import { useMemo, useState } from "react";
 import { NavLink, useNavigate, useLocation } from "react-router-dom";
 import {
@@ -6,6 +7,7 @@ import {
   Button,
   IconButton,
   InputAdornment,
+  Paper,
   TextField,
   Typography,
 } from "@mui/material";
@@ -16,8 +18,10 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import MailOutlineIcon from "@mui/icons-material/MailOutline";
 import { sendPasswordReset } from "../../middleware/firebase/utils";
 import { useAuth } from "../utils/AuthProvider";
+import { useThemeProvider } from "../utils/themeProvider/CustomThemeProvier";
 
 const LoginForm = () => {
+  const { theme } = useThemeProvider();
   const [inputs, setInputs] = useState({
     email: "",
     password: "",
@@ -83,8 +87,14 @@ const LoginForm = () => {
     }
   };
   return (
-    <Box className="screen">
-      <form className="login-form">
+    <Box
+      className="screen"
+      id={theme === "dark" ? "paper-dark" : "paper-light"}
+    >
+      <form
+        className="login-form"
+        id={theme === "dark" ? "box-dark" : "box-light"}
+      >
         <Typography id="login-form-message" variant="h4">
           Sign in
         </Typography>

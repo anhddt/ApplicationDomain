@@ -1,4 +1,6 @@
 import "./header.css";
+import "../../utils/themeProvider/themeProvider.css";
+import { useThemeProvider } from "../../utils/themeProvider/CustomThemeProvier";
 import { Box, Typography } from "@mui/material";
 import { Navbar } from "../../common";
 import { useAuth } from "../../utils/AuthProvider";
@@ -9,8 +11,12 @@ import LoginDropDownIcon from "../profile/LoginDropDownIcon";
 
 function Header() {
   const { firstName, currentUser } = useAuth();
+  const { theme } = useThemeProvider();
   return (
-    <section className="header">
+    <section
+      className="header"
+      id={theme === "dark" ? "bar-dark" : "bar-light"}
+    >
       {/* Logo and Name */}
       <section className="header-top_logo">
         {/* Logo location */}

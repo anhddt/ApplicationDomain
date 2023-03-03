@@ -1,0 +1,23 @@
+#box-light {
+  background-color: hsla(0, 0%, 100%, 0.94);
+}
+
+#box-dark {
+  background-color: rgba(255, 255, 255, 0.08);
+}
+
+#paper-light {
+  background-color: #032b43;
+}
+
+#paper-dark {
+  background-color: #121212;
+}
+
+#bar-dark {
+  background-color: rgba(255, 255, 255, 0.08);
+}
+
+#bar-light {
+  background-color: #fff;
+}

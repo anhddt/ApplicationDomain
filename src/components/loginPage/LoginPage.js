@@ -1,12 +1,12 @@
 import LoginForm from "./LoginForm";
 import Homebar from "../common/header/Homebar";
-import { Box } from "@mui/material";
+import { Paper } from "@mui/material";
 const LoginPage = () => {
   return (
-    <Box>
+    <Paper>
       <Homebar />
       <LoginForm />
-    </Box>
+    </Paper>
   );
 };
 

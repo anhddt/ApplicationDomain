@@ -1,4 +1,6 @@
 import "./profilePage.css";
+import "../utils/themeProvider/themeProvider.css";
+import { useThemeProvider } from "../utils/themeProvider/CustomThemeProvier";
 import { Fragment, useState } from "react";
 import { useAuth } from "../utils/AuthProvider";
 import {
@@ -18,7 +20,9 @@ import SendIcon from "@mui/icons-material/Send";
 import TravelExploreIcon from "@mui/icons-material/TravelExplore";
 import { bulkUpdateUserProperty } from "../../middleware/firebase/FireStoreUtils";
 import { showIf } from "../utils/conditionalRendering";
+
 const ContactCard = () => {
+  const { theme } = useThemeProvider();
   const readOnly = true;
   const [isEdit, setIsEdit] = useState(false);
   const {
@@ -66,7 +70,10 @@ const ContactCard = () => {
     window.location.reload();
   };
   return (
-    <form id="contact-info-block">
+    <form
+      className="contact-info-block"
+      id={theme === "dark" ? "box-dark" : "box-light"}
+    >
       <Grid container spacing={2}>
         <Grid xs={6} item>
           <Typography variant="h6" textAlign="left">

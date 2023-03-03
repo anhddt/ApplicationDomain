@@ -1,4 +1,6 @@
 import "./profilePage.css";
+import "../utils/themeProvider/themeProvider.css";
+import { useThemeProvider } from "../utils/themeProvider/CustomThemeProvier";
 import { Fragment, useMemo, useState } from "react";
 import { useAuth } from "../utils/AuthProvider";
 import {
@@ -32,6 +34,7 @@ import {
   isValidPw,
 } from "../../middleware/verification/userInfo";
 const AccountCard = () => {
+  const { theme } = useThemeProvider();
   const readOnly = true;
   const [isEdit, setIsEdit] = useState(false);
   const [editEmail, setEditEmail] = useState(false);
@@ -105,7 +108,10 @@ const AccountCard = () => {
     <Fragment>
       {showIf(
         !isEdit,
-        <form id="contact-info-block">
+        <form
+          className="contact-info-block"
+          id={theme === "dark" ? "box-dark" : "box-light"}
+        >
           <Grid container spacing={2}>
             <Grid xs={6} item>
               <Typography variant="h6" textAlign="left">
@@ -209,7 +215,10 @@ const AccountCard = () => {
       )}
       {showIf(
         editEmail,
-        <form id="contact-info-block">
+        <form
+          className="contact-info-block"
+          id={theme === "dark" ? "box-dark" : "box-light"}
+        >
           <Grid container spacing={2}>
             <Grid xs={6} item>
               <Typography variant="h6" textAlign="left">
@@ -330,7 +339,10 @@ const AccountCard = () => {
       )}
       {showIf(
         editPassword,
-        <form id="contact-info-block">
+        <form
+          className="contact-info-block"
+          id={theme === "dark" ? "box-dark" : "box-light"}
+        >
           <Grid container spacing={2}>
             <Grid xs={6} item>
               <Typography variant="h6" textAlign="left">
