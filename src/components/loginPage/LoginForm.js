@@ -7,7 +7,6 @@ import {
   Button,
   IconButton,
   InputAdornment,
-  Paper,
   TextField,
   Typography,
 } from "@mui/material";
