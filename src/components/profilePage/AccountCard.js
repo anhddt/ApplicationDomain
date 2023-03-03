@@ -48,6 +48,7 @@ const AccountCard = () => {
   const [pwNotMatch, setPwNotMatch] = useState(false);
   const [isEmailValid, setIsEmailValid] = useState(true);
   const [focus, setFocus] = useState(false);
+  const [show, setShow] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [anchorEl, setAnchorEl] = useState();
@@ -67,6 +68,7 @@ const AccountCard = () => {
     setPassword("");
     setShowPassword(false);
     setEditEmail(false);
+    setEditEmailError(false);
     setIsEdit(false);
   };
   const handlePasswordCancel = () => {
@@ -74,6 +76,7 @@ const AccountCard = () => {
     setShowPassword(false);
     setShowNewPassword(false);
     setEditPassword(false);
+    setEditPasswordError(false);
     setIsEdit(false);
   };
   const handleEmailVerify = (e) => {
@@ -83,7 +86,7 @@ const AccountCard = () => {
   const handleEmailUpdate = async () => {
     try {
       await updateUserEmail(password, newEmail);
-      handleEmailCancel();
+      setShow(true);
     } catch (error) {
       setEditEmailError(true);
     }
@@ -214,7 +217,7 @@ const AccountCard = () => {
         </form>
       )}
       {showIf(
-        editEmail,
+        editEmail && !show,
         <form
           className="contact-info-block"
           id={theme === "dark" ? "box-dark" : "box-light"}
@@ -236,16 +239,6 @@ const AccountCard = () => {
                 </Button>
               </Box>
             </Grid>
-            {showIf(
-              editEmailError,
-              <Grid xs={12} item>
-                <Box display="flex" justifyContent="center">
-                  <Typography color="red">
-                    Invalid new email or password
-                  </Typography>
-                </Box>
-              </Grid>
-            )}
             <Grid xs={6} item>
               <TextField
                 InputProps={{
@@ -289,6 +282,7 @@ const AccountCard = () => {
                 required
                 placeholder="Enter your password"
                 error={editEmailError}
+                helperText="Invalid password"
                 name="password"
                 label=" password"
                 type={showPassword ? "text" : "password"}
@@ -310,7 +304,7 @@ const AccountCard = () => {
                 fullWidth
                 required
                 placeholder="Enter new email"
-                error={(isEmailValid && newEmail.length > 0) || editEmailError}
+                error={isEmailValid && newEmail.length > 0}
                 helperText={
                   isEmailValid && newEmail.length > 0 && "Invalid email format"
                 }
@@ -336,6 +330,30 @@ const AccountCard = () => {
             Submit
           </Button>
         </form>
+      )}
+      {showIf(
+        show,
+        <Box
+          className="email-verify-box"
+          id={theme === "dark" ? "box-dark" : "box-light"}
+        >
+          <Typography textAlign="center" variant="subtitle1">
+            {" "}
+            A verification has been sent to <br />
+            {newEmail}
+            <br />
+            Please check your email inbox.
+          </Typography>
+          <Button
+            variant="contained"
+            onClick={() => {
+              setShow(false);
+              handleEmailCancel();
+            }}
+          >
+            OK
+          </Button>
+        </Box>
       )}
       {showIf(
         editPassword,
