@@ -1,4 +1,5 @@
 import "./customProfileIcon.css";
+import { useThemeProvider } from "../../utils/themeProvider/CustomThemeProvier";
 import { useState } from "react";
 import { useAuth } from "../../utils/AuthProvider";
 import { useNavigate } from "react-router-dom";
@@ -8,6 +9,8 @@ import AccountBoxIcon from "@mui/icons-material/AccountBox";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ExpandLessIcon from "@mui/icons-material/ExpandLess";
+import Brightness4Icon from "@mui/icons-material/Brightness4";
+import Brightness7Icon from "@mui/icons-material/Brightness7";
 import { showIf } from "../../utils/conditionalRendering";
 
 /**
@@ -18,6 +21,7 @@ import { showIf } from "../../utils/conditionalRendering";
  * and handle it's onOnclick
  */
 const CustomProfileIcon = () => {
+  const { theme, setTheme } = useThemeProvider();
   const navigateTo = useNavigate();
   const { logOut } = useAuth();
   const [anchorEl, setAnchorEl] = useState();
@@ -67,6 +71,16 @@ const CustomProfileIcon = () => {
         >
           <LogoutIcon />
           <Typography variant="subtitle1">Sign out</Typography>
+        </MenuItem>
+        <MenuItem
+          id="profile-expand-chevron"
+          onClick={() => {
+            handleClose();
+            theme === "dark" ? setTheme("light") : setTheme("dark");
+          }}
+        >
+          {theme === "dark" ? <Brightness7Icon /> : <Brightness4Icon />}
+          <Typography variant="subtitle1">Theme</Typography>
         </MenuItem>
       </Menu>
     </Box>

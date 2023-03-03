@@ -1,4 +1,6 @@
 import "./registerPage.css";
+import "../utils/themeProvider/themeProvider.css";
+import { useThemeProvider } from "../utils/themeProvider/CustomThemeProvier";
 import { useMemo, useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import {
@@ -23,6 +25,7 @@ import {
 } from "../../middleware/verification/userInfo";
 
 const RegisterForm = () => {
+  const { theme } = useThemeProvider();
   const [password, setPassword] = useState("");
   const date = new Date();
   const { createAccount } = useAuth();
@@ -116,10 +119,16 @@ const RegisterForm = () => {
   }, [inputs, password]);
 
   return (
-    <Box className="container">
+    <Box
+      className="container"
+      id={theme === "dark" ? "paper-dark" : "paper-light"}
+    >
       {showIf(
         isEmailSent,
-        <Box className="email-verify-box">
+        <Box
+          className="email-verify-box"
+          id={theme === "dark" ? "box-dark" : "box-light"}
+        >
           <Typography textAlign="center" variant="subtitle1">
             {" "}
             A verification email has been sent to <br />
@@ -139,7 +148,10 @@ const RegisterForm = () => {
       )}
       {showIf(
         !isEmailSent,
-        <form className="userInfo-form">
+        <form
+          className="userInfo-form"
+          id={theme === "dark" ? "box-dark" : "box-light"}
+        >
           <Typography id="create-your-account-title" variant="h4">
             Create your account
           </Typography>

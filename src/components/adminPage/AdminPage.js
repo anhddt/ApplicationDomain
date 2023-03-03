@@ -1,10 +1,13 @@
 import "./adminpage.css";
+import "../utils/themeProvider/themeProvider.css";
+import { useThemeProvider } from "../utils/themeProvider/CustomThemeProvier";
 import { useEffect, useRef, useState } from "react";
-import Box from "@mui/material/Box";
+import { Box, Paper } from "@mui/material";
 import Homebar from "../common/header/Homebar";
 import { getAllUsers } from "../../middleware/firebase/FireStoreUtils";
 
 const AdminPage = () => {
+  const { theme } = useThemeProvider();
   const [profiles, setProfiles] = useState([]);
   const refState = useRef(false);
   useEffect(() => {
@@ -22,10 +25,16 @@ const AdminPage = () => {
     allUsers();
   }, []);
   return (
-    <Box>
+    <Paper>
       <Homebar />
-      <Box className="admin-screen">
-        <Box className="adminBody">
+      <Box
+        className="admin-screen"
+        id={theme === "dark" ? "paper-dark" : "paper-light"}
+      >
+        <Box
+          className="adminBody"
+          id={theme === "dark" ? "box-dark" : "box-light"}
+        >
           <div className="userTable">
             <table>
               <tbody>
@@ -60,7 +69,7 @@ const AdminPage = () => {
           </div>
         </Box>
       </Box>
-    </Box>
+    </Paper>
   );
 };
 
