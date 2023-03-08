@@ -14,10 +14,9 @@ import DialogTitle from '@mui/material/DialogTitle';
 
 const AdminPage = () => {
 
-  let username = "";
-
   const [open, setOpen] = useState(false);
   const [userInfo, setUserInfo] = useState([]);
+  const [username, setUsername] = useState([]);
   const [UID, setUID] = useState([]);
 
   const renderEditButton = (params) => {
@@ -29,7 +28,7 @@ const AdminPage = () => {
                 size="small"
                 style={{ marginLeft: 16 }}
                 onClick={() => {
-                    username = params.row.id;
+                    setUsername(params.row.id);
                     console.log(username);
                     handleClickOpen();
                 }}
@@ -41,13 +40,6 @@ const AdminPage = () => {
 }
 
   const handleClickOpen = () => {
-      const getUser = useCallBack(async () => {
-        try {
-          const UID = await getUIDByUserName(username);
-          const user = await getUserProfile(UID);
-          setUserInfo((rest) => [...rest, user.data()]);
-        } catch (error) {}
-      })
     setOpen(true);
   };
 
@@ -61,6 +53,7 @@ const AdminPage = () => {
   const [profiles, setProfiles] = useState([]);
   const refState = useRef(false);
 
+  //sets table at page render
   useEffect(() => {
     if (refState.current) return;
     refState.current = true;
@@ -75,6 +68,19 @@ const AdminPage = () => {
     };
     allUsers();
   }, []);
+
+  //gets user info for selected user from table
+  useEffect(() => {
+    const getUser = async (username) => {
+      try {
+        const uid = await getUIDByUserName(username);
+        setUID(uid);
+        const user = await getUserProfile(UID);
+        setUserInfo(user.data());
+      } catch (error) {}
+    };
+    getUser(username);
+  }, [username]);
 
   let rows = profiles;
   Array.prototype.forEach.call(rows, (profile) => profile.id = profile.username)
