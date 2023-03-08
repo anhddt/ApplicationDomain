@@ -18,41 +18,22 @@ const AdminPage = () => {
   const [userInfo, setUserInfo] = useState([]);
   const [username, setUsername] = useState("");
   const [UID, setUID] = useState("");
+  const [profiles, setProfiles] = useState([]);
+  const refState = useRef(false);
 
-  const renderEditButton = (params) => {
-    return (
-        
-            <Button
-                variant="contained"
-                color="primary"
-                size="small"
-                style={{ marginLeft: 16 }}
-                onClick={() => {
-                    setUsername(params.row.id);
-                    //console.log(username);
-                    handleClickOpen();
-                }}
-            >
-                Edit
-            </Button>
-        
-    )
-}
-
+  //handles opening for dialouge
   const handleClickOpen = () => {
     setOpen(true);
   };
 
+  //handles closing for the dialouge
   const handleClose = (saveUser) => {
     if (saveUser) {
         console.log("user would be saved");
     }
     setOpen(false);
   };
-
-  const [profiles, setProfiles] = useState([]);
-  const refState = useRef(false);
-
+  
   //sets table at page render
   useEffect(() => {
     if (refState.current) return;
@@ -69,6 +50,10 @@ const AdminPage = () => {
     allUsers();
   }, []);
 
+  //sets rows to be profiles recieved during use effect
+  let rows = profiles;
+  Array.prototype.forEach.call(rows, (profile) => profile.id = profile.username)
+
   //gets user info for selected user from table
   useEffect(() => {
     if(open) {
@@ -84,11 +69,29 @@ const AdminPage = () => {
   }
   }, [username, open]);
 
-  let rows = profiles;
-  Array.prototype.forEach.call(rows, (profile) => profile.id = profile.username)
 
-  
 
+
+//a function to render edit buttons into the table
+const renderEditButton = (params) => {
+  return (
+        <Button
+          variant="contained"
+          color="primary"
+          size="small"
+          style={{ marginLeft: 16 }}
+          onClick={() => {
+            setUsername(params.row.id);
+            //console.log(username);
+            handleClickOpen();
+          }}
+        >
+        Edit
+        </Button>    
+  )
+}
+
+//a function to render delete buttons into the table
 const renderDeleteButton = (params) => {
   return (
       <strong>
@@ -107,6 +110,7 @@ const renderDeleteButton = (params) => {
   )
 }
 
+//defines the columns of the table
   const columns = [
     {
         field: 'id',
@@ -148,6 +152,7 @@ const renderDeleteButton = (params) => {
     },
 ];
 
+//returns the table of users and pop out dialouge for editing individual users
 return (
   <Box className="admin-screen">
       <Header />
