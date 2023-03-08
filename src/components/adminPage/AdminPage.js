@@ -4,7 +4,7 @@ import { DataGrid} from '@mui/x-data-grid';
 import { useEffect, useRef, useState } from "react";
 import Box from "@mui/material/Box";
 import { Header } from "../common";
-import { getAllUsers, getUIDByUserName, getUserProfile, bulkUpdateUserProperty } from "../../middleware/firebase/FireStoreUtils";
+import { getAllUsers, getUserByUserName, getUserProfile, bulkUpdateUserProperty } from "../../middleware/firebase/FireStoreUtils";
 import TextField from '@mui/material/TextField';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
@@ -16,8 +16,8 @@ const AdminPage = () => {
 
   const [open, setOpen] = useState(false);
   const [userInfo, setUserInfo] = useState([]);
-  const [username, setUsername] = useState([]);
-  const [UID, setUID] = useState([]);
+  const [username, setUsername] = useState("");
+  const [UID, setUID] = useState("");
 
   const renderEditButton = (params) => {
     return (
@@ -29,7 +29,7 @@ const AdminPage = () => {
                 style={{ marginLeft: 16 }}
                 onClick={() => {
                     setUsername(params.row.id);
-                    console.log(username);
+                    //console.log(username);
                     handleClickOpen();
                 }}
             >
@@ -71,16 +71,18 @@ const AdminPage = () => {
 
   //gets user info for selected user from table
   useEffect(() => {
+    if(open) {
     const getUser = async (username) => {
       try {
-        const uid = await getUIDByUserName(username);
-        setUID(uid);
-        const user = await getUserProfile(UID);
-        setUserInfo(user.data());
+        const query = await getUserByUserName(username);
+        const uid = query[0].id;
+        setUID((rest) => [...rest, uid]);
+        setUserInfo((rest) => [...rest, query[0].data()]);
       } catch (error) {}
     };
     getUser(username);
-  }, [username]);
+  }
+  }, [username, open]);
 
   let rows = profiles;
   Array.prototype.forEach.call(rows, (profile) => profile.id = profile.username)
