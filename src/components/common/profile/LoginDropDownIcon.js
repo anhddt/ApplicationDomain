@@ -22,6 +22,16 @@ const LoginDropDownIcon = () => {
   const handleClose = () => {
     setAnchorEl();
   };
+  const handleMenuClick = () => {
+    handleClose();
+    if (theme === "dark") {
+      setTheme("light");
+      sessionStorage.setItem("theme", "light");
+    } else {
+      setTheme("dark");
+      sessionStorage.setItem("theme", "dark");
+    }
+  };
   return (
     <Box>
       <IconButton
@@ -69,8 +79,7 @@ const LoginDropDownIcon = () => {
         <MenuItem
           id="profile-expand-chevron"
           onClick={() => {
-            handleClose();
-            theme === "dark" ? setTheme("light") : setTheme("dark");
+            handleMenuClick();
           }}
         >
           {theme === "dark" ? <Brightness7Icon /> : <Brightness4Icon />}

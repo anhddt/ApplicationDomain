@@ -4,6 +4,6 @@ import { useThemeProvider } from "../../utils/themeProvider/CustomThemeProvier";
 
 const Logo = () => {
   const { theme } = useThemeProvider();
-  return theme === "dark"? <CustomLogoDark/> : <CustomLogo />;
+  return theme === "dark" ? <CustomLogoDark /> : <CustomLogo />;
 };
 export default Logo;

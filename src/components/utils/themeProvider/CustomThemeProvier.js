@@ -6,7 +6,9 @@ export const useThemeProvider = () => {
   return useContext(Context);
 };
 const CustomThemeProvider = ({ children }) => {
-  const [theme, setTheme] = useState("light");
+  const [theme, setTheme] = useState(
+    sessionStorage.getItem("theme") ? sessionStorage.getItem("theme") : "light"
+  );
   const customTheme = createTheme({
     palette: {
       mode: theme,
