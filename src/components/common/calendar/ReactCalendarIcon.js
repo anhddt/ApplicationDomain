@@ -1,4 +1,5 @@
 import "react-calendar/dist/Calendar.css";
+import "./reactCalendar.css";
 import { Fragment, useState } from "react";
 import Calendar from "react-calendar";
 import { IconButton, Menu, MenuItem } from "@mui/material";
