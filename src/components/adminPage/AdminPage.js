@@ -1,10 +1,13 @@
+//window.location.reload;
+
+
 import "./adminpage.css";
 import Button from '@mui/material/Button';
 import { DataGrid} from '@mui/x-data-grid';
 import { useEffect, useRef, useState } from "react";
 import Box from "@mui/material/Box";
 import { Header } from "../common";
-import { getAllUsers, getUserByUserName, getUserProfile, bulkUpdateUserProperty } from "../../middleware/firebase/FireStoreUtils";
+import { getAllUsers, getUserByUserName, getUserProfile, bulkUpdateUserProperty, removeUser } from "../../middleware/firebase/FireStoreUtils";
 import TextField from '@mui/material/TextField';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
@@ -16,11 +19,22 @@ const AdminPage = () => {
 
   const [open, setOpen] = useState(false);
   const [userInfo, setUserInfo] = useState([]);
-  const [username, setUsername] = useState("");
+  const [username, setUsername] = useState("no selected user");
+  const [prevUsername, setPrevUsername] = useState("no selected user")
   const [UID, setUID] = useState("");
   const [profiles, setProfiles] = useState([]);
+  const [UIDS, setUIDS] = useState([]);
+  const [button, setButton] = useState("");
   const refState = useRef(false);
 
+  const getProfile = (_username) => {
+      for (let i = 0; i < profiles.length; i++) {
+          if (profiles[i].username == _username) {
+            setUserInfo(profiles[i]);
+            setUID(UIDS[i]);
+          }
+      }
+  }
   //handles opening for dialouge
   const handleClickOpen = () => {
     setOpen(true);
@@ -44,6 +58,7 @@ const AdminPage = () => {
         const allDocs = users.docs;
         for (const item of allDocs) {
           setProfiles((rest) => [...rest, item.data()]);
+          setUIDS((rest) => [...rest, item.id]);
         }
       } catch (error) {}
     };
@@ -56,18 +71,16 @@ const AdminPage = () => {
 
   //gets user info for selected user from table
   useEffect(() => {
-    if(open) {
-    const getUser = async (username) => {
-      try {
-        const query = await getUserByUserName(username);
-        const uid = query[0].id;
-        setUID((rest) => [...rest, uid]);
-        setUserInfo((rest) => [...rest, query[0].data()]);
-      } catch (error) {}
-    };
-    getUser(username);
-  }
-  }, [username, open]);
+    getProfile(username);
+    if (button == "edit") {
+      console.log("username: " + username, "prevUser: " + prevUsername);
+      handleClickOpen();
+    } else if (button == "delete") {
+      console.log(username);
+      console.log(UID);
+      //removeUser(UID);
+    }
+  }, [username]);
 
 
 
@@ -81,9 +94,10 @@ const renderEditButton = (params) => {
           size="small"
           style={{ marginLeft: 16 }}
           onClick={() => {
+            setButton("edit");
+            setPrevUsername(username);
+            console.log("username from table: " + params.row.id);
             setUsername(params.row.id);
-            //console.log(username);
-            handleClickOpen();
           }}
         >
         Edit
@@ -102,6 +116,8 @@ const renderDeleteButton = (params) => {
               style={{ marginLeft: 16 }}
               onClick={() => {
                 console.log("delete was clicked");
+                setButton("delete");
+                setUsername(params.row.id);
               }}
           >
               Delete
