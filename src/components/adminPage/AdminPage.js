@@ -7,7 +7,7 @@ import { DataGrid} from '@mui/x-data-grid';
 import { useEffect, useRef, useState } from "react";
 import Box from "@mui/material/Box";
 import { Header } from "../common";
-import { getAllUsers, getUserByUserName, getUserProfile, bulkUpdateUserProperty, removeUser } from "../../middleware/firebase/FireStoreUtils";
+import { getAllUsers, bulkUpdateUserProperty, removeUser } from "../../middleware/firebase/FireStoreUtils";
 import TextField from '@mui/material/TextField';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
@@ -44,6 +44,15 @@ const AdminPage = () => {
   const handleClose = () => {
     setOpen(false);
   };
+
+  const handleCancel = () => {
+    handleClose();
+  }
+
+  const handleSave = () => {
+    setButton("save");
+    handleClose();
+  }
   
   //sets table at page render
   useEffect(() => {
@@ -78,9 +87,10 @@ const AdminPage = () => {
       //removeUser(UID);
     }
 
-  if (button == "cancel") {
+  if (button == "save") {
       console.log("changes not saved");
   } else if (button == "save") {
+    bulkUpdateUserProperty(UID, userInfo);
     console.log("user would be saved");
   }
   }, [username, button]);
@@ -215,14 +225,8 @@ return (
               />
             </DialogContent>
             <DialogActions>
-              <Button onClick={function() {
-                setButton("cancel");
-                handleClose();
-              }}>Cancel</Button>
-              <Button onClick={function() {
-                setButton("save");
-                handleClose();
-              }}>Save</Button>
+              <Button onClick={handleCancel}>Cancel</Button>
+              <Button onClick={handleSave}>Save</Button>
             </DialogActions>
           </Dialog>
         </div>
