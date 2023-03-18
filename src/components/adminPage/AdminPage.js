@@ -1,19 +1,31 @@
-//window.location.reload;
-
-
 import "./adminpage.css";
-import Button from '@mui/material/Button';
-import { DataGrid} from '@mui/x-data-grid';
 import { useEffect, useRef, useState } from "react";
-import Box from "@mui/material/Box";
 import { Header } from "../common";
 import { getAllUsers, bulkUpdateUserProperty, removeUser } from "../../middleware/firebase/FireStoreUtils";
-import TextField from '@mui/material/TextField';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
-import DialogTitle from '@mui/material/DialogTitle';
+import { DataGrid} from '@mui/x-data-grid';
+import {
+  Box,
+  Button,
+  Grid,
+  InputAdornment,
+  TextField,
+  Typography,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  InputLabel,
+  Select,
+  MenuItem
+} from "@mui/material";
+import BadgeIcon from "@mui/icons-material/Badge";
+import SmartphoneIcon from "@mui/icons-material/Smartphone";
+import HomeIcon from "@mui/icons-material/Home";
+import LocationCityIcon from "@mui/icons-material/LocationCity";
+import AccountBalanceIcon from "@mui/icons-material/AccountBalance";
+import SendIcon from "@mui/icons-material/Send";
+import TravelExploreIcon from "@mui/icons-material/TravelExplore";
 
 const AdminPage = () => {
 
@@ -26,6 +38,25 @@ const AdminPage = () => {
   const [UIDS, setUIDS] = useState([]);
   const [button, setButton] = useState("");
   const refState = useRef(false);
+
+  const [tempInfo, setTempInfo] = useState({
+    phone: userInfo.phone,
+    street: userInfo.street,
+    city: userInfo.city,
+    state: userInfo.state,
+    zip: userInfo.zip,
+    country: userInfo.country,
+    role: userInfo.role
+  })
+
+
+
+  const handleChange = (e) => {
+    setTempInfo((existing) => ({
+      ...existing,
+      [e.target.name]: e.target.value,
+    }));
+  };
 
   const getProfile = (_username) => {
       for (let i = 0; i < profiles.length; i++) {
@@ -87,12 +118,9 @@ const AdminPage = () => {
       //removeUser(UID);
     }
 
-  if (button == "save") {
-      console.log("changes not saved");
-  } else if (button == "save") {
-    bulkUpdateUserProperty(UID, userInfo);
-    console.log("user would be saved");
-  }
+    if (button == "save") {
+    bulkUpdateUserProperty(UID, tempInfo);
+    }
   }, [username, button]);
 
 
@@ -150,19 +178,19 @@ const renderDeleteButton = (params) => {
     {
         field: 'firstName',
         headerName: 'First Name',
-        width: 300,
+        width: 150,
         disableClickEventBubbling: true,
     },
     {
         field: 'lastName',
         headerName: 'Last Name',
-        width: 300,
+        width: 150,
         disableClickEventBubbling: true,
     },
     {
         field: 'email',
         headerName: 'Email',
-        width: 100,
+        width: 250,
         disableClickEventBubbling: true,
     },
     {
@@ -181,6 +209,8 @@ const renderDeleteButton = (params) => {
     },
 ];
 
+//edit user contact and role, only view email, name, username
+
 //returns the table of users and pop out dialouge for editing individual users
 return (
   <Box className="admin-screen">
@@ -193,36 +223,173 @@ return (
             pageSize={10}
           />
           <Dialog open={open} onClose={handleClose}>
-            <DialogTitle>Edit User {userInfo.firstName + " " + userInfo.lastName} </DialogTitle>
+            <DialogTitle>Edit User {userInfo.username}</DialogTitle>
             <DialogContent>
-              <TextField
-                margin="dense"
-                id="email"
-                label="Email Address"
-                type="email"
-                fullWidth
-                variant="standard"
 
-                
-              />
+              <form id="user_info_block">
+                <Grid container spacing={2}>
+                  <Grid xs={6} item>
+                    <TextField
+                      InputProps={{
+                        startAdornment: (
+                          <InputAdornment position="start">
+                            <BadgeIcon />
+                          </InputAdornment>
+                        ),
+                      }}
+                      inputProps={{ readOnly: true }}
+                      fullWidth
+                      variant="standard"
+                      label="First name"
+                      size="small"
+                      value={userInfo.firstName}
+                    />
+                  </Grid>
+                  <Grid xs={6} item>
+                    <TextField
+                      InputProps={{
+                      startAdornment: (
+                          <InputAdornment position="start">
+                            <BadgeIcon />
+                          </InputAdornment>
+                        ),
+                      }}
+                      inputProps={{ readOnly: true }}
+                      fullWidth
+                      variant="standard"
+                      label="Last Name"
+                      size="small"
+                      value={userInfo.lastName}
+                    />
+                  </Grid>
+                  <Grid xs={6} item>
+                    <TextField
+                      InputProps={{
+                        startAdornment: (
+                          <InputAdornment position="start">
+                            <SmartphoneIcon />
+                          </InputAdornment>
+                        ),
+                      }}
+                    fullWidth
+                    name="phone"
+                    label="Phone#"
+                    size="small"
+                    placeholder={userInfo.phone}
+                    onChange={(e) => {
+                      handleChange(e);
+                    }}
+                    />
+                  </Grid>
+                  <Grid xs={6} item>
+                    <TextField
+                      InputProps={{
+                        startAdornment: (
+                          <InputAdornment position="start">
+                            <HomeIcon />
+                          </InputAdornment>
+                        ),
+                      }}
+                    fullWidth
+                    name="street"
+                    label="Street"
+                    size="small"
+                    placeholder={userInfo.street}
+                    onChange={(e) => {
+                      handleChange(e);
+                    }}
+                    />
+                  </Grid>
+            <Grid xs={6} item>
               <TextField
-                margin="dense"
-                id="FirstName"
-                label="First Name"
-                type="string"
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <LocationCityIcon />
+                    </InputAdornment>
+                  ),
+                }}
                 fullWidth
-                variant="standard"
-                value = {userInfo.firstName}
+                name="city"
+                label="City"
+                size="small"
+                placeholder={userInfo.city}
+                onChange={(e) => {
+                  handleChange(e);
+                }}
               />
+            </Grid>
+            <Grid xs={6} item>
               <TextField
-                margin="dense"
-                id="LastName"
-                label="Last Name"
-                type="string"
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <AccountBalanceIcon />
+                    </InputAdornment>
+                  ),
+                }}
                 fullWidth
-                variant="standard"
-                value = {userInfo.lastName}
+                name="state"
+                label="State"
+                size="small"
+                placeholder={userInfo.state}
+                onChange={(e) => {
+                  handleChange(e);
+                }}
               />
+            </Grid>
+            <Grid xs={6} item>
+              <TextField
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <SendIcon />
+                    </InputAdornment>
+                  ),
+                }}
+                fullWidth
+                name="zip"
+                label="Zip"
+                size="small"
+                placeholder={userInfo.zip}
+                onChange={(e) => {
+                  handleChange(e);
+                }}
+              />
+            </Grid>
+            <Grid xs={6} item>
+              <TextField
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <TravelExploreIcon />
+                    </InputAdornment>
+                  ),
+                }}
+                fullWidth
+                name="country"
+                label="Country"
+                size="small"
+                placeholder={userInfo.country}
+                onChange={(e) => {
+                  handleChange(e);
+                }}
+              />
+            </Grid>
+            <Grid xs={6} item>
+              <InputLabel>Role</InputLabel>
+              <Select
+                label="Role"
+                value={userInfo.role}
+              >
+                <MenuItem value={"user"}>User</MenuItem>
+                <MenuItem value={"manager"}>Manager</MenuItem>
+                <MenuItem value={"admin"}>Admin</MenuItem>
+              </Select>
+            </Grid>
+                </Grid>
+              </form>
+
             </DialogContent>
             <DialogActions>
               <Button onClick={handleCancel}>Cancel</Button>
