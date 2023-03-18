@@ -41,10 +41,7 @@ const AdminPage = () => {
   };
 
   //handles closing for the dialouge
-  const handleClose = (saveUser) => {
-    if (saveUser) {
-        console.log("user would be saved");
-    }
+  const handleClose = () => {
     setOpen(false);
   };
   
@@ -80,7 +77,13 @@ const AdminPage = () => {
       console.log(UID);
       //removeUser(UID);
     }
-  }, [username]);
+
+  if (button == "cancel") {
+      console.log("changes not saved");
+  } else if (button == "save") {
+    console.log("user would be saved");
+  }
+  }, [username, button]);
 
 
 
@@ -212,8 +215,14 @@ return (
               />
             </DialogContent>
             <DialogActions>
-              <Button onClick={handleClose}>Cancel</Button>
-              <Button onClick={handleClose}>Save</Button>
+              <Button onClick={function() {
+                setButton("cancel");
+                handleClose();
+              }}>Cancel</Button>
+              <Button onClick={function() {
+                setButton("save");
+                handleClose();
+              }}>Save</Button>
             </DialogActions>
           </Dialog>
         </div>
