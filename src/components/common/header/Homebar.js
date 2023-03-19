@@ -30,7 +30,11 @@ const Homebar = () => {
     setAnchorEl(null);
   };
   return (
-    <AppBar position="sticky" color="inherit">
+    <AppBar
+      position="sticky"
+      color="inherit"
+      sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}
+    >
       <Toolbar>
         <IconButton
           id={anchorEl ? "lid-up-icon" : "menu-item"}
@@ -72,9 +76,17 @@ const Homebar = () => {
               <Typography variant="subtitle1">Admin</Typography>
             </MenuItem>
           )}
-          <MenuItem id="menu-item">
-            <Typography variant="subtitle1">Accounting</Typography>
-          </MenuItem>
+          {currentUser && (
+            <MenuItem
+              onClick={() => {
+                handleCloseNavMenu();
+                navigateTo("/accounts");
+              }}
+              id="menu-item"
+            >
+              <Typography variant="subtitle1">Accounting</Typography>
+            </MenuItem>
+          )}
           <MenuItem id="menu-item">
             <Typography variant="subtitle1">Contact</Typography>
           </MenuItem>

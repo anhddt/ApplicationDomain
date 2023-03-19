@@ -7,6 +7,7 @@ import HomePage from "../homePage/Home";
 import AdminPage from "../adminPage/AdminPage";
 import ProfilePage from "../profilePage/ProfilePage";
 import CustomThemeProvider from "../utils/themeProvider/CustomThemeProvier";
+import AccountsPage from "../accounts/AccountsPage";
 
 const App = () => {
   return (
@@ -32,6 +33,15 @@ const App = () => {
               element={
                 <PrivateRoute>
                   <ProfilePage />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              exact
+              path="/accounts"
+              element={
+                <PrivateRoute>
+                  <AccountsPage />
                 </PrivateRoute>
               }
             />

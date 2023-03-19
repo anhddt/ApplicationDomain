@@ -4,6 +4,7 @@ import { Fragment, useState } from "react";
 import Calendar from "react-calendar";
 import { IconButton, Menu, MenuItem } from "@mui/material";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
+import { useThemeProvider } from "../../utils/themeProvider/CustomThemeProvier";
 
 /**
  * Customade Icon calendar that actually span a calendar
@@ -13,6 +14,7 @@ import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
  * Supply view: `month`, `year`, `decade`, `century`
  */
 const ReactCalendarIcon = (props) => {
+  const { theme } = useThemeProvider();
   const { size, fontSize, view } = { ...props };
   const date = new Date();
   const [anchorElCalendar, setAnchorElCalendar] = useState(null);
@@ -40,7 +42,13 @@ const ReactCalendarIcon = (props) => {
         anchorEl={anchorElCalendar}
       >
         <MenuItem>
-          <Calendar view={view} value={date} />
+          <Calendar
+            className={
+              theme === "dark" ? "react-calendar" : "react-calendar-light"
+            }
+            view={view}
+            value={date}
+          />
         </MenuItem>
       </Menu>
     </Fragment>
