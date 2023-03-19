@@ -5,6 +5,7 @@ import LoginPage from "../loginPage/LoginPage";
 import RegisterPage from "../register/RegisterPage";
 import HomePage from "../homePage/Home";
 import AdminPage from "../adminPage/AdminPage";
+import AccountingPage from "../accountingPage/AccountingPage";
 import ProfilePage from "../profilePage/ProfilePage";
 import CustomThemeProvider from "../utils/themeProvider/CustomThemeProvier";
 
@@ -15,6 +16,15 @@ const App = () => {
         <BrowserRouter>
           <Routes>
             <Route index element={<HomePage />} />
+            <Route
+              exact
+              path="/accounting"
+              element={
+                <PrivateRoute>
+                  <AccountingPage />
+                </PrivateRoute>
+              }
+            />
             <Route
               exact
               path="/admin"
