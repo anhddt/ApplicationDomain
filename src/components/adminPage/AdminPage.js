@@ -2,6 +2,7 @@ import "./adminpage.css";
 import { useEffect, useRef, useState } from "react";
 import { Header } from "../common";
 import { getAllUsers, bulkUpdateUserProperty, removeUser } from "../../middleware/firebase/FireStoreUtils";
+import { deleteAccount } from "../utils/AuthProvider";
 import { DataGrid} from '@mui/x-data-grid';
 import {
   Box,
@@ -31,28 +32,26 @@ const AdminPage = () => {
 
   const [open, setOpen] = useState(false);
   const [userInfo, setUserInfo] = useState([]);
-  const [username, setUsername] = useState("no selected user");
-  const [prevUsername, setPrevUsername] = useState("no selected user")
+  const [username, setUsername] = useState("");
   const [UID, setUID] = useState("");
   const [profiles, setProfiles] = useState([]);
   const [UIDS, setUIDS] = useState([]);
   const [button, setButton] = useState("");
+  const [showAlert, setShowAlert] = useState(false);
   const refState = useRef(false);
 
-  const [tempInfo, setTempInfo] = useState({
-    phone: userInfo.phone,
-    street: userInfo.street,
-    city: userInfo.city,
-    state: userInfo.state,
-    zip: userInfo.zip,
-    country: userInfo.country,
-    role: userInfo.role
-  })
+  const closeAlert = () => {
+    setShowAlert(false);
+    setButton("");
+  }
 
-
+  const handleDelete = () => {
+    setButton("delete");
+    closeAlert();
+  }
 
   const handleChange = (e) => {
-    setTempInfo((existing) => ({
+    setUserInfo((existing) => ({
       ...existing,
       [e.target.name]: e.target.value,
     }));
@@ -74,6 +73,7 @@ const AdminPage = () => {
   //handles closing for the dialouge
   const handleClose = () => {
     setOpen(false);
+    setButton("");
   };
 
   const handleCancel = () => {
@@ -110,16 +110,20 @@ const AdminPage = () => {
   useEffect(() => {
     getProfile(username);
     if (button == "edit") {
-      console.log("username: " + username, "prevUser: " + prevUsername);
+      //console.log("username: " + username, "prevUser: " + prevUsername);
       handleClickOpen();
     } else if (button == "delete") {
-      console.log(username);
-      console.log(UID);
-      //removeUser(UID);
+      try {
+        deleteAccount(UID);
+        removeUser(UID);
+      } catch (error) {
+        console.log(error);
+      }
+      
     }
 
     if (button == "save") {
-    bulkUpdateUserProperty(UID, tempInfo);
+    bulkUpdateUserProperty(UID, userInfo);
     }
   }, [username, button]);
 
@@ -136,7 +140,6 @@ const renderEditButton = (params) => {
           style={{ marginLeft: 16 }}
           onClick={() => {
             setButton("edit");
-            setPrevUsername(username);
             console.log("username from table: " + params.row.id);
             setUsername(params.row.id);
           }}
@@ -156,8 +159,8 @@ const renderDeleteButton = (params) => {
               size="small"
               style={{ marginLeft: 16 }}
               onClick={() => {
-                console.log("delete was clicked");
                 setButton("delete");
+                setShowAlert(true);
                 setUsername(params.row.id);
               }}
           >
@@ -220,7 +223,6 @@ return (
           <DataGrid
             rows={rows}
             columns={columns}
-            pageSize={10}
           />
           <Dialog open={open} onClose={handleClose}>
             <DialogTitle>Edit User {userInfo.username}</DialogTitle>
@@ -379,8 +381,12 @@ return (
             <Grid xs={6} item>
               <InputLabel>Role</InputLabel>
               <Select
+              name = "role"
                 label="Role"
                 value={userInfo.role}
+                onChange = {(e) => {
+                  handleChange(e);
+                }}
               >
                 <MenuItem value={"user"}>User</MenuItem>
                 <MenuItem value={"manager"}>Manager</MenuItem>
@@ -394,6 +400,13 @@ return (
             <DialogActions>
               <Button onClick={handleCancel}>Cancel</Button>
               <Button onClick={handleSave}>Save</Button>
+            </DialogActions>
+          </Dialog>
+          <Dialog open={showAlert} onClose={closeAlert}>
+            <DialogTitle>Delete user {userInfo.username}?</DialogTitle>
+            <DialogActions>
+              <Button onClick={handleDelete}>Yes</Button>
+              <Button onClick={closeAlert}>No</Button>
             </DialogActions>
           </Dialog>
         </div>
