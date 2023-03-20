@@ -30,11 +30,7 @@ const Homebar = () => {
     setAnchorEl(null);
   };
   return (
-    <AppBar
-      position="sticky"
-      color="inherit"
-      sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}
-    >
+    <AppBar position="sticky" color="inherit" sx={{ zIndex: 1201 }}>
       <Toolbar>
         <IconButton
           id={anchorEl ? "lid-up-icon" : "menu-item"}
