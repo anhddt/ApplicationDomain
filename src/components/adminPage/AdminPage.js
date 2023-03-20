@@ -24,6 +24,9 @@ import LocationCityIcon from "@mui/icons-material/LocationCity";
 import AccountBalanceIcon from "@mui/icons-material/AccountBalance";
 import SendIcon from "@mui/icons-material/Send";
 import TravelExploreIcon from "@mui/icons-material/TravelExplore";
+import AddIcon from '@mui/icons-material/Add';
+import AddNewUserForm from "./AddNewUserForm";
+//import RegisterForm from "../register/RegisterForm";
 
 const AdminPage = () => {
 
@@ -35,6 +38,7 @@ const AdminPage = () => {
   const [UIDS, setUIDS] = useState([]);
   const [button, setButton] = useState("");
   const [showAlert, setShowAlert] = useState(false);
+  const [addUser, setAddUser] = useState(false);
   const refState = useRef(false);
 
   const closeAlert = () => {
@@ -52,22 +56,6 @@ const AdminPage = () => {
       [e.target.name]: e.target.value,
     }));
   };
-
-  /*
-  const getProfile = (_username) => {
-      for (let i = 0; i < profiles.length; i++) {
-          if (profiles[i].username === _username) {
-            setUserInfo(profiles[i]);
-            setUID(UIDS[i]);
-          }
-      }
-  }
-
-  const profileCallBack = useCallBack( 
-    () => {
-      getProfile(username);
-  }, [username]);
-  */
 
   const getProfile = useCallback((username) => {
     for (let i = 0; i < profiles.length; i++) {
@@ -188,6 +176,10 @@ const renderDeleteButton = (params) => {
           </Button>
       </strong>
   )
+}
+
+const addNewUser = () => {
+  setAddUser(true);
 }
 
 //defines the columns of the table
@@ -434,7 +426,30 @@ return (
 
 
         </div>
-        <Button variant="contained" size="small">Add User</Button>
+        <div>
+          <Button 
+            variant="contained" 
+            size="large" 
+            color="success" 
+            startIcon={<AddIcon/>} 
+            style={
+                {
+                justifyContent: 'right !important', 
+                maxWidth: '200px', maxHeight: '50px', 
+                minWidth: '70px', minHeight: '50px'
+                }
+              }
+            onClick={addNewUser}
+          >
+              Add User
+          </Button>
+        </div>
+
+        <Dialog open={addUser}>
+          <DialogContent>
+            <AddNewUserForm/>
+          </DialogContent>
+        </Dialog>
     </Box>
   </Box>
 );
