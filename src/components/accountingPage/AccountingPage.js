@@ -2,7 +2,7 @@ import "./accountingpage.css";
 import "../utils/themeProvider/themeProvider.css";
 import { useThemeProvider } from "../utils/themeProvider/CustomThemeProvier";
 import { useEffect, useRef, useState } from "react";
-import { Box, Paper } from "@mui/material";
+import { Box, Paper} from "@mui/material";
 import Homebar from "../common/header/Homebar";
 import { getAllUsers } from "../../middleware/firebase/FireStoreUtils";
 
@@ -45,7 +45,9 @@ const AccountingPage = () => {
                                 <td>
                                     {val.acctDesc}</td>
                                 <td>
-                                    <button>View</button>
+                                    <a href="/accountdetail">
+                                        <button>View</button>
+                                    </a>
                                 </td>
                                 <td>
                                     <button>Delete</button>

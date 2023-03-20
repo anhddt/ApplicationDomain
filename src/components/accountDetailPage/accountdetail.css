@@ -1,4 +1,4 @@
-.accting-screen {
+.acctDetail-screen {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -8,7 +8,7 @@
     background-size: cover;
   }
 
-.acctingBody {
+.acctDetailBody {
     display: flex;
     flex-direction: column;
     text-align: center;
@@ -19,18 +19,4 @@
     min-width: 900px;
     top: 200px;
     box-shadow: 0 0 15px 0 rgba(0, 0, 0, 0.832);
-}
-
-table {
-  width: 100%;
-  height: 300px;
-}
-
-/*Table Header*/
-th {
-  border-bottom: 1px solid black;
-}
-
-td {
-  text-align: center;
 }
