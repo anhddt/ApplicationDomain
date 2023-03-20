@@ -410,8 +410,8 @@ return (
 
             </DialogContent>
             <DialogActions>
-              <Button onClick={handleCancel}>Cancel</Button>
               <Button onClick={handleSave}>Save</Button>
+              <Button onClick={handleCancel}>Cancel</Button>
             </DialogActions>
           </Dialog>
 
