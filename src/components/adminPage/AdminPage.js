@@ -53,7 +53,7 @@ const AdminPage = () => {
     }));
   };
 
-  
+  /*
   const getProfile = (_username) => {
       for (let i = 0; i < profiles.length; i++) {
           if (profiles[i].username === _username) {
@@ -67,6 +67,16 @@ const AdminPage = () => {
     () => {
       getProfile(username);
   }, [username]);
+  */
+
+  const getProfile = useCallback((username) => {
+    for (let i = 0; i < profiles.length; i++) {
+      if (profiles[i].username === username) {
+        setUserInfo(profiles[i]);
+        setUID(UIDS[i]);
+      }
+  }
+  }, [UIDS, profiles])
 
   //handles opening for dialouge
   const handleClickOpen = () => {
@@ -110,7 +120,7 @@ const AdminPage = () => {
 
   //gets user info for selected user from table
   useEffect(() => {
-    
+    getProfile(username);
     if (button === "edit") {
       //console.log("username: " + username, "prevUser: " + prevUsername);
       handleClickOpen();
@@ -136,7 +146,7 @@ const AdminPage = () => {
       }
       
     }
-  }, [username, button, UID, userInfo]);
+  }, [username, button, UID, userInfo, getProfile]);
 
 
 
