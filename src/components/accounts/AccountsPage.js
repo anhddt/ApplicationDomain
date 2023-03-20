@@ -28,11 +28,13 @@ const AcccountsPage = () => {
   const { theme } = useThemeProvider();
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [show, setShow] = useState("Chart of accounts");
+  const openWidth = 205;
   /**
    * To add a nav on the side just pass the
    * primary and the icon here.
-   * then scroll down to line 114-115
-   * and add your to be shown component after clicking on your icon
+   * then scroll down to the bottom
+   * and add your to be shown component inside the
+   * <Box> component after </CustomDrawer>
    */
   const listItems = [
     { primary: "Chart of accounts", icon: <FormatListNumberedIcon /> },
@@ -85,7 +87,10 @@ const AcccountsPage = () => {
   return (
     <Box>
       <HomeBar />
-      <CustomDrawer variant="permanent" open={drawerOpen}>
+      <CustomDrawer
+        variant="permanent"
+        open={{ drawerOpen: drawerOpen, openWidth: openWidth }}
+      >
         <Toolbar />
         <List
           sx={{ minHeight: "92vh", display: "block" }}
@@ -106,7 +111,10 @@ const AcccountsPage = () => {
       </CustomDrawer>
       <Box
         className="account-page-paper"
-        sx={{ pl: drawerOpen ? "205px" : "65px" }}
+        sx={{
+          pl: drawerOpen ? `${openWidth}px` : "65px",
+          transition: "all .1s linear",
+        }}
         id={theme === "dark" ? "paper-dark" : "paper-light"}
       >
         {showIf(show === "Chart of accounts", <ChartOfAccounts />)}
