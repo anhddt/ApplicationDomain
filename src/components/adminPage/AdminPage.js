@@ -10,11 +10,9 @@ import {
   Grid,
   InputAdornment,
   TextField,
-  Typography,
   Dialog,
   DialogActions,
   DialogContent,
-  DialogContentText,
   DialogTitle,
   InputLabel,
   Select,
@@ -159,7 +157,6 @@ const renderDeleteButton = (params) => {
               size="small"
               style={{ marginLeft: 16 }}
               onClick={() => {
-                setButton("delete");
                 setShowAlert(true);
                 setUsername(params.row.id);
               }}
