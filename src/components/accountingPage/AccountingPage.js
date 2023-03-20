@@ -8,6 +8,14 @@ import { getAllUsers } from "../../middleware/firebase/FireStoreUtils";
 
 const AccountingPage = () => {
     const { theme } = useThemeProvider();
+    
+    //Temp dictionary to fill tables
+    const sample1 = [
+        {acctNum: "101", acctName: "Sample1", acctDesc: "This is an account"},
+        {acctNum: "102", acctName: "Sample2", acctDesc: "This is an account"},
+        {acctNum: "103", acctName: "Sample3", acctDesc: "This is an account"},
+    ];
+
     return (
         <Paper>
             <Homebar />
@@ -19,7 +27,36 @@ const AccountingPage = () => {
                     className="acctingBody"
                     id={theme === "dark" ? "box-dark" : "box-light"}
                 >
-                   </Box>
+                    <div className="userTable">
+                        <table>
+                        <tbody>
+                            <tr>
+                            <th>Account #</th>
+                            <th>Account Name</th>
+                            <th>Description</th>
+                            <th>View</th>
+                            <th>Delete</th>
+                            </tr>
+                            {sample1.map((val, key) => {
+                            return (
+                                <tr key={key}>
+                                <td>{val.acctNum}</td>
+                                <td>{val.acctName}</td>
+                                <td>
+                                    {val.acctDesc}</td>
+                                <td>
+                                    <button>View</button>
+                                </td>
+                                <td>
+                                    <button>Delete</button>
+                                </td>
+                                </tr>
+                            );
+                            })}
+                        </tbody>
+                        </table>
+                    </div>    
+                </Box>
             </Box>
         </Paper>
     )
