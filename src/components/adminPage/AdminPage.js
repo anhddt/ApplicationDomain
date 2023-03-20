@@ -1,5 +1,6 @@
 import "./adminpage.css";
-import { useEffect, useRef, useState, useCallback } from "react";
+//import { useEffect, useRef, useState, useCallback } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Header } from "../common";
 import { getAllUsers, bulkUpdateUserProperty, removeUser } from "../../middleware/firebase/FireStoreUtils";
 import { DataGrid} from '@mui/x-data-grid';
@@ -12,6 +13,7 @@ import {
   Dialog,
   DialogActions,
   DialogContent,
+  DialogContentText,
   DialogTitle,
   InputLabel,
   Select,
@@ -25,7 +27,6 @@ import AccountBalanceIcon from "@mui/icons-material/AccountBalance";
 import SendIcon from "@mui/icons-material/Send";
 import TravelExploreIcon from "@mui/icons-material/TravelExplore";
 import AddIcon from '@mui/icons-material/Add';
-import AddNewUserForm from "./AddNewUserForm";
 //import RegisterForm from "../register/RegisterForm";
 
 const AdminPage = () => {
@@ -46,6 +47,10 @@ const AdminPage = () => {
     setButton("");
   }
 
+  const HandleNewUserClose = () => {
+    setAddUser(false);
+  }
+
   const handleDelete = () => {
     setButton("delete");
   }
@@ -57,14 +62,25 @@ const AdminPage = () => {
     }));
   };
 
+  /*
   const getProfile = useCallback((username) => {
     for (let i = 0; i < profiles.length; i++) {
       if (profiles[i].username === username) {
         setUserInfo(profiles[i]);
         setUID(UIDS[i]);
       }
+    }
+  }, [UIDS, profiles]);
+  */
+
+  const getProfile = (_username) => {
+    for (let i = 0; i < profiles.length; i++) {
+      if (profiles[i].username === _username) {
+        setUserInfo(profiles[i]);
+        setUID(UIDS[i]);
+      }
+    }
   }
-  }, [UIDS, profiles])
 
   //handles opening for dialouge
   const handleClickOpen = () => {
@@ -127,6 +143,7 @@ const AdminPage = () => {
       console.log("saving user " + username);
       try {
         bulkUpdateUserProperty(UID, userInfo);
+        console.log("saved user");
       } catch (error) {
         console.log(error);
       } finally {
@@ -134,7 +151,8 @@ const AdminPage = () => {
       }
       
     }
-  }, [username, button, UID, userInfo, getProfile]);
+    }, [username, button]);
+  //}, [username, button, UID, userInfo, getProfile]);
 
 
 
@@ -393,7 +411,7 @@ return (
             <Grid xs={6} item>
               <InputLabel>Role</InputLabel>
               <Select
-              name = "role"
+                name = "role"
                 label="Role"
                 value={userInfo.role}
                 onChange = {(e) => {
@@ -445,10 +463,8 @@ return (
           </Button>
         </div>
 
-        <Dialog open={addUser}>
-          <DialogContent>
-            <AddNewUserForm/>
-          </DialogContent>
+        <Dialog open={addUser} onClose={HandleNewUserClose}>
+          <DialogTitle>Add User</DialogTitle>
         </Dialog>
     </Box>
   </Box>
