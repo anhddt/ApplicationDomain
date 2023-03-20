@@ -1,8 +1,7 @@
 import "./adminpage.css";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
 import { Header } from "../common";
 import { getAllUsers, bulkUpdateUserProperty, removeUser } from "../../middleware/firebase/FireStoreUtils";
-import { deleteAccount } from "../utils/AuthProvider";
 import { DataGrid} from '@mui/x-data-grid';
 import {
   Box,
@@ -45,7 +44,6 @@ const AdminPage = () => {
 
   const handleDelete = () => {
     setButton("delete");
-    closeAlert();
   }
 
   const handleChange = (e) => {
@@ -55,14 +53,21 @@ const AdminPage = () => {
     }));
   };
 
+  
   const getProfile = (_username) => {
       for (let i = 0; i < profiles.length; i++) {
-          if (profiles[i].username == _username) {
+          if (profiles[i].username === _username) {
             setUserInfo(profiles[i]);
             setUID(UIDS[i]);
           }
       }
   }
+
+  const profileCallBack = useCallBack( 
+    () => {
+      getProfile(username);
+  }, [username]);
+
   //handles opening for dialouge
   const handleClickOpen = () => {
     setOpen(true);
@@ -80,7 +85,6 @@ const AdminPage = () => {
 
   const handleSave = () => {
     setButton("save");
-    handleClose();
   }
   
   //sets table at page render
@@ -106,24 +110,33 @@ const AdminPage = () => {
 
   //gets user info for selected user from table
   useEffect(() => {
-    getProfile(username);
-    if (button == "edit") {
+    
+    if (button === "edit") {
       //console.log("username: " + username, "prevUser: " + prevUsername);
       handleClickOpen();
-    } else if (button == "delete") {
+    } else if (button === "delete") {
       try {
-        deleteAccount(UID);
         removeUser(UID);
       } catch (error) {
         console.log(error);
+      } finally {
+        closeAlert();
       }
       
     }
 
-    if (button == "save") {
-    bulkUpdateUserProperty(UID, userInfo);
+    if (button === "save") {
+      console.log("saving user " + username);
+      try {
+        bulkUpdateUserProperty(UID, userInfo);
+      } catch (error) {
+        console.log(error);
+      } finally {
+        handleClose();
+      }
+      
     }
-  }, [username, button]);
+  }, [username, button, UID, userInfo]);
 
 
 
@@ -399,6 +412,8 @@ return (
               <Button onClick={handleSave}>Save</Button>
             </DialogActions>
           </Dialog>
+
+
           <Dialog open={showAlert} onClose={closeAlert}>
             <DialogTitle>Delete user {userInfo.username}?</DialogTitle>
             <DialogActions>
@@ -406,7 +421,10 @@ return (
               <Button onClick={closeAlert}>No</Button>
             </DialogActions>
           </Dialog>
+
+
         </div>
+        <Button variant="contained" size="small">Add User</Button>
     </Box>
   </Box>
 );
