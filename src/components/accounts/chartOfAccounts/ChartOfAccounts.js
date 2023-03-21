@@ -147,6 +147,8 @@ const ChartOfAccounts = () => {
         height: 401,
         maxHeight: 500,
         width: "100%",
+        backgroundColor:
+          theme === "dark" ? "rgba(41, 37, 37, 0.745)" : "rgb(246, 243, 243);",
       }}
     >
       <DataGrid
