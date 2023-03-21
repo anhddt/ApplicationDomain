@@ -118,10 +118,7 @@ export function AuthProvider({ children }) {
       );
       setUserProfile(newUser.user.uid, userInfo);
       try {
-        await signInWithEmailAndPassword(auth, userInfo.email, password);
-        try {
-          await sendEmailVerification(auth.currentUser);
-        } catch (error) {}
+        await sendEmailVerification(newUser.user);
       } catch (error) {}
     } catch (error) {
       setError(true);
