@@ -69,7 +69,8 @@ const ChartOfAccounts = () => {
     {
       field: "category",
       headerName: "Category",
-      maxWidth: 180,
+      flex: 0.5,
+      minWidth: 180,
       renderHeader: (param) => headerElement(param),
       editable: true,
     },
