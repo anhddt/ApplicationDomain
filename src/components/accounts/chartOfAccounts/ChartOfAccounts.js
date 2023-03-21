@@ -26,6 +26,10 @@ const linkStyle = {
   color: "primary.main",
   fontSize: "14px",
 };
+
+// This components wraps the account's name within the link
+// Later when we click on the link it will redirect to the actual
+// account page/sheet with account details
 const toLink = (value, f) => {
   return (
     <Link
@@ -39,11 +43,17 @@ const toLink = (value, f) => {
   );
 };
 
+//This styles the tital, category, subtitle, etc. go
 const headerElement = (param) => (
   <Typography sx={{ fontWeight: "bold" }} variant="subtitle1">
     {param.colDef.headerName}
   </Typography>
 );
+
+/**
+ * This renders the table with differnt accounts
+ * @returns
+ */
 const ChartOfAccounts = () => {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const { tableStyles, theme } = useThemeProvider();
@@ -51,6 +61,10 @@ const ChartOfAccounts = () => {
   const handleDrawer = () => {
     setDrawerOpen(!drawerOpen);
   };
+
+  /**
+   * This makes the header of the table
+   */
   const columns = [
     {
       field: "id",
@@ -106,6 +120,7 @@ const ChartOfAccounts = () => {
   const data = (id, name, category, subCat, balance, action) => {
     return { id, name, category, subCat, balance, action };
   };
+  // In the future this will just be an array pulled off from the database
   const rows = [
     data(1, "Account1", "Expense", "Owner Expense", 200, "None"),
     data(2, "Account2", "Income", "Account Receivable", 200, "None"),
@@ -121,6 +136,8 @@ const ChartOfAccounts = () => {
     data(12, "Account12", "Another", "Some Account", 1000, "None"),
     data(13, "Account13", "Another", "Some Account", 1000, "None"),
   ];
+
+  // This allows the user to choose how many rows to display on each page
   const pageSizeOptions = [5, 10, 20, 50, 100];
   const GridToolbar = () => (
     <Box

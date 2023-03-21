@@ -7,7 +7,6 @@ import { Typography } from "@mui/material";
 
 function Navbar() {
   const { currentUser, role } = useAuth();
-
   return (
     <section className="navbar">
       {" "}

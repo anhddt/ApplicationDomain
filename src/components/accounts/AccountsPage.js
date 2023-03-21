@@ -43,7 +43,11 @@ const AcccountsPage = () => {
     { primary: "Add file", icon: <AttachFileIcon /> },
     { primary: "Download", icon: <DownloadIcon /> },
   ];
-
+  /**
+   * This allows the showing of the children components after clicking on the icons
+   * on the left column of the accounting page.
+   * @param {} view
+   */
   const handleShow = (view) => {
     setShow(view);
   };
