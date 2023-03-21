@@ -90,6 +90,7 @@ const AcccountsPage = () => {
       <CustomDrawer
         variant="permanent"
         open={{ drawerOpen: drawerOpen, openWidth: openWidth }}
+        className="leftt-side-drawer"
       >
         <Toolbar />
         <List
