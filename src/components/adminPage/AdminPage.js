@@ -227,6 +227,12 @@ const addNewUser = () => {
         disableClickEventBubbling: true,
     },
     {
+      field: 'role',
+      headerName: 'Role',
+      width: 150,
+      disableClickEventBubbling: true,
+    },
+    {
         field: 'edit',
         headerName: 'Edit',
         width: 150,
