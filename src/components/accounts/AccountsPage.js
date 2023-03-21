@@ -85,7 +85,7 @@ const AcccountsPage = () => {
     setDrawerOpen(!drawerOpen);
   };
   return (
-    <Box>
+    <Box >
       <HomeBar />
       <CustomDrawer
         variant="permanent"
@@ -93,7 +93,7 @@ const AcccountsPage = () => {
       >
         <Toolbar />
         <List
-          sx={{ minHeight: "92vh", display: "block" }}
+          sx={{ height: "100%", display: "block" }}
           id={theme === "dark" ? "box-dark" : "box-light"}
         >
           {ListItem}

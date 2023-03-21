@@ -142,7 +142,6 @@ const ChartOfAccounts = () => {
   return (
     <Box
       sx={{
-        borderRadius: "4px",
         boxShadow: "0 0 15px 0 rgba(0, 0, 0, 0.832)",
         height: 401,
         maxHeight: 500,
