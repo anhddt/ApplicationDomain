@@ -9,6 +9,43 @@ import ProfilePage from "../profilePage/ProfilePage";
 import CustomThemeProvider from "../utils/themeProvider/CustomThemeProvier";
 import AccountsPage from "../accounts/AccountsPage";
 
+/**
+ * The App components consists of the theme provider
+ * and different routing components.
+ * To navigate to a components, import useNavigate from react-router-dom
+ * then see the path on each Route for the correct routing
+ * To add a route, if the route is public, simply add to the publicPage
+ * an object that has a path and a compnent
+ * The same goes for privatePage.
+ * The App function will stay as is.
+ */
+
+const publicPages = [
+  { path: "/login", component: <LoginPage /> },
+  { path: "/register", component: <RegisterPage /> },
+];
+const PublicRoutes = publicPages.map((page) => {
+  return (
+    <Route key={page.path} exact path={page.path} element={page.component} />
+  );
+});
+
+const privatePages = [
+  { path: "/admin", component: <AdminPage /> },
+  { path: "/userProfile", component: <ProfilePage /> },
+  { path: "/accounts", component: <AccountsPage /> },
+];
+
+const PrivateRoutes = privatePages.map((page) => {
+  return (
+    <Route
+      key={page.path}
+      exact
+      path={page.path}
+      element={<PrivateRoute>{page.component}</PrivateRoute>}
+    />
+  );
+});
 const App = () => {
   return (
     <CustomThemeProvider>
@@ -16,35 +53,8 @@ const App = () => {
         <BrowserRouter>
           <Routes>
             <Route index element={<HomePage />} />
-            <Route
-              exact
-              path="/admin"
-              element={
-                <PrivateRoute>
-                  <AdminPage />
-                </PrivateRoute>
-              }
-            />
-            <Route exact path="/login" element={<LoginPage />} />
-            <Route exact path="/register" element={<RegisterPage />} />
-            <Route
-              exact
-              path="/userProfile"
-              element={
-                <PrivateRoute>
-                  <ProfilePage />
-                </PrivateRoute>
-              }
-            />
-            <Route
-              exact
-              path="/accounts"
-              element={
-                <PrivateRoute>
-                  <AccountsPage />
-                </PrivateRoute>
-              }
-            />
+            {PublicRoutes}
+            {PrivateRoutes}
           </Routes>
         </BrowserRouter>
       </AuthProvider>

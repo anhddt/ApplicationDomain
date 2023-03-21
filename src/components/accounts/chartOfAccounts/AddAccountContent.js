@@ -9,12 +9,21 @@ import {
   Typography,
 } from "@mui/material";
 import { showIf } from "../../utils/conditionalRendering";
+
+/**
+ * This component is used as a drawer on the right hand side
+ * of the accounting page. When clicking on the add account
+ * on the table, this shows up with the steps hard coded below.
+ */
 const steps = ["Account name?", "Category", "Subcategory", "Balance"];
 const AddAccountContent = () => {
+  // This is for indicating which step the user is currently on.
   const [currentStep, setCurrentStep] = useState(0);
   const handleCancel = async () => {
     setCurrentStep(0);
   };
+  // After finishing creating the account,
+  // The page reload and the step is reset back to 0.
   const finish = async () => {
     handleCancel();
     window.location.reload();
