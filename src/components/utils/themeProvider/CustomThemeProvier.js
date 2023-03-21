@@ -33,6 +33,10 @@ const CustomThemeProvider = ({ children }) => {
     "& .MuiDataGrid-virtualScrollerRenderZone": {
       backgroundColor: getBodyColor(),
     },
+    "& MuiDataGrid-columnHeaders": {
+      borderTopLeftRadius: 0,
+      borderTopRightRadius: 0,
+    },
   };
   const customTheme = createTheme({
     palette: {
