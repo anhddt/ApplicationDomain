@@ -85,7 +85,7 @@ const AcccountsPage = () => {
     setDrawerOpen(!drawerOpen);
   };
   return (
-    <Box >
+    <Box>
       <HomeBar />
       <CustomDrawer
         variant="permanent"
