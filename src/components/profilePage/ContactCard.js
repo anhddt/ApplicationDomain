@@ -35,6 +35,7 @@ const ContactCard = () => {
     state,
     zip,
     country,
+    setRefresh,
   } = useAuth();
   const [contactInfo, setContactInfo] = useState({
     phone: phone,
@@ -67,7 +68,7 @@ const ContactCard = () => {
   const updateContact = async () => {
     await bulkUpdateUserProperty(currentUser.uid, contactInfo);
     handleEdit();
-    window.location.reload();
+    setRefresh((refresh) => !refresh);
   };
   return (
     <form

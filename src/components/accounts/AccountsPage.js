@@ -1,6 +1,6 @@
 import "../utils/themeProvider/themeProvider.css";
 import "./accountsPage.css";
-import { Fragment, useState } from "react";
+import { useState } from "react";
 import {
   Box,
   Divider,
@@ -10,7 +10,6 @@ import {
   ListItemText,
   Tooltip,
   Toolbar,
-  Typography,
 } from "@mui/material";
 import { showIf } from "../utils/conditionalRendering";
 import { useThemeProvider } from "../utils/themeProvider/CustomThemeProvier";
@@ -122,27 +121,7 @@ const AcccountsPage = () => {
         }}
         id={theme === "dark" ? "paper-dark" : "paper-light"}
       >
-        {showIf(show === "Chart of accounts",
-          <Fragment>
-            <Box
-              sx={{
-                width: "100%",
-                backgroundColor:
-                  theme === "dark" ? "#121212" : "rgb(246, 243, 243)",
-                flexGrow: 1,
-              }}
-            >
-              <Typography
-                variant="h4"
-                sx={{ mt: "20px", ml: "20px", fontWeight: "bold" }}
-              >
-                {" "}
-                Chart of Accounts
-              </Typography>
-            </Box>
-            <ChartOfAccounts />
-          </Fragment>
-        )}
+        {showIf(show === "Chart of accounts", <ChartOfAccounts />)}
       </Box>
     </Box>
   );

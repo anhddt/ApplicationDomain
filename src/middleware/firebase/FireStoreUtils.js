@@ -168,3 +168,56 @@ export const updateUserPassword = async (password, newPassword) => {
     throw new Error();
   }
 };
+
+/**
+ * DON'T BE MISTAKEN THIS WITH THE REGISTER FUNCTION. THIS IS NOT THE ONE!!!
+ * This function is used to create new account in the chart of accounts
+ */
+export const createAccount = async (newAccount) => {
+  try {
+    await setDoc(
+      doc(db, "accounting", "chartOfAccounts"),
+      { [newAccount.id]: newAccount },
+      { merge: true }
+    );
+  } catch (error) {
+    console.log(error);
+  }
+};
+/**
+ * Once an account is created in the chart of accounts, use this to
+ * get the chart of accounts
+ */
+export const getChartOfAccounts = async () => {
+  try {
+    const userDoc = await getDoc(doc(db, "accounting", "chartOfAccounts"));
+    const userData = userDoc.data();
+    return userData;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+// This function gets the counter to assign a unique id to the account
+export const getChartOfAccountsCounter = async () => {
+  try {
+    const userDoc = await getDoc(
+      doc(db, "accounting", "chartOfAccountsCounter")
+    );
+    const counter = userDoc.data().counter;
+    return counter;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+// This function updates the counter of the chart of accounts everytime an account is created
+export const setChartOfAccountsCounter = async (newCounter) => {
+  try {
+    await setDoc(doc(db, "accounting", "chartOfAccountsCounter"), {
+      counter: newCounter,
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};

@@ -15,5 +15,11 @@ service cloud.firestore {
       allow get: if request.auth != null && isValidUsersData();
       allow list: if request.auth != null && isAdmin();
     }
+    match /accounting/chartOfAccounts {
+      allow read, write;
+    }
+    match /accounting/chartOfAccountsCounter {
+      allow read, update;
+    }
   }
 }
