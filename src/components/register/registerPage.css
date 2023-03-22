@@ -8,6 +8,7 @@
   min-height: 100vh;
   padding-top: 50x;
   padding-bottom: 50px;
+  overflow: scroll;
 }
 
 .email-verify-box {
