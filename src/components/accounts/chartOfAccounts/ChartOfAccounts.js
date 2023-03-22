@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { useThemeProvider } from "../../utils/themeProvider/CustomThemeProvier";
 import {
   Box,
@@ -17,6 +17,7 @@ import {
   GridToolbarExport,
 } from "@mui/x-data-grid";
 import AddAccountContent from "./AddAccountContent";
+import { getChartOfAccounts } from "../../../middleware/firebase/FireStoreUtils";
 
 const toCurrency = new Intl.NumberFormat("en-US", {
   style: "currency",
@@ -49,93 +50,86 @@ const headerElement = (param) => (
     {param.colDef.headerName}
   </Typography>
 );
+const columns = [
+  {
+    field: "id",
+    headerName: "ID",
+    renderHeader: (param) => headerElement(param),
+    width: 90,
+  },
+  {
+    field: "name",
+    headerName: "Name",
+    flex: 1,
+    minWidth: 150,
+    renderHeader: (param) => headerElement(param),
+    renderCell: (param) => toLink(param.value),
+  },
+  {
+    field: "category",
+    headerName: "Category",
+    flex: 0.5,
+    minWidth: 180,
+    renderHeader: (param) => headerElement(param),
+    editable: true,
+  },
+  {
+    field: "subCat",
+    headerName: "Sub-category",
+    flex: 1,
+    minWidth: 110,
+    renderHeader: (param) => headerElement(param),
+    editable: true,
+  },
+  {
+    field: "balance",
+    headerName: "Balance",
+    type: "number",
+    maxWidth: 130,
+    flex: 1,
+    renderHeader: (param) => headerElement(param),
+    valueFormatter: ({ value }) => value && toCurrency.format(value),
+  },
+  {
+    field: "status",
+    headerName: "Status",
+    type: "singleSelect",
+    editable: true,
+    maxWidth: 180,
+    flex: 1,
+    renderHeader: (param) => headerElement(param),
+    valueOptions: ["Pending", "Resolved"],
+  },
+];
 
 /**
  * This renders the table with differnt accounts
- * @returns
+ * @returns a table JSX component
  */
 const ChartOfAccounts = () => {
+  const [refresh, setRefresh] = useState(false);
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const [rows, setRows] = useState([]);
   const { tableStyles, theme } = useThemeProvider();
+  useEffect(() => {
+    const getAccounts = async () => {
+      const accounts = await getChartOfAccounts();
+      setRows(Object.values(accounts));
+    };
+    getAccounts();
+  }, [refresh]);
   const page = 10;
-  const handleDrawer = () => {
-    setDrawerOpen(!drawerOpen);
-  };
-
   /**
    * This makes the header of the table
    */
-  const columns = [
-    {
-      field: "id",
-      headerName: "ID",
-      renderHeader: (param) => headerElement(param),
-      width: 90,
-    },
-    {
-      field: "name",
-      headerName: "Name",
-      flex: 1,
-      minWidth: 150,
-      renderHeader: (param) => headerElement(param),
-      renderCell: (param) => toLink(param.value),
-    },
-    {
-      field: "category",
-      headerName: "Category",
-      flex: 0.5,
-      minWidth: 180,
-      renderHeader: (param) => headerElement(param),
-      editable: true,
-    },
-    {
-      field: "subCat",
-      headerName: "Sub-category",
-      flex: 1,
-      minWidth: 110,
-      renderHeader: (param) => headerElement(param),
-      editable: true,
-    },
-    {
-      field: "balance",
-      headerName: "Balance",
-      type: "number",
-      maxWidth: 130,
-      flex: 1,
-      renderHeader: (param) => headerElement(param),
-      valueFormatter: ({ value }) => value && toCurrency.format(value),
-    },
-    {
-      field: "action",
-      headerName: "Action",
-      type: "singleSelect",
-      editable: true,
-      maxWidth: 180,
-      flex: 1,
-      renderHeader: (param) => headerElement(param),
-      valueOptions: ["None", "View history", "Request Approval"],
-    },
-  ];
 
-  const data = (id, name, category, subCat, balance, action) => {
-    return { id, name, category, subCat, balance, action };
+  const handleDrawerOpen = () => {
+    setDrawerOpen(true);
+  };
+  const handleDrawerClose = () => {
+    setDrawerOpen(false);
   };
   // In the future this will just be an array pulled off from the database
-  const rows = [
-    data(1, "Account1", "Expense", "Owner Expense", 200, "None"),
-    data(2, "Account2", "Income", "Account Receivable", 200, "None"),
-    data(3, "Account3", "Loan", "Credit Card", 1000, "None"),
-    data(4, "Account4", "Investment", "Owner Investment", 1000, "None"),
-    data(5, "Account5", "Other", "Goodwill", 1000, "None"),
-    data(6, "Account6", "Another", "Some Account", 1000, "None"),
-    data(7, "Account7", "Another", "Some Account", 1000, "None"),
-    data(8, "Account8", "Another", "Some Account", 1000, "None"),
-    data(9, "Account9", "Another", "Some Account", 1000, "None"),
-    data(10, "Account10", "Another", "Some Account", 1000, "None"),
-    data(11, "Account11", "Another", "Some Account", 1000, "None"),
-    data(12, "Account12", "Another", "Some Account", 1000, "None"),
-    data(13, "Account13", "Another", "Some Account", 1000, "None"),
-  ];
   // This allows the user to choose how many rows to display on each page
   const pageSizeOptions = [10, 20, 50, 100];
   const GridToolbar = (props) => (
@@ -148,7 +142,7 @@ const ChartOfAccounts = () => {
         pl: "16px",
       }}
     >
-      <Button variant="contained" onClick={() => handleDrawer()}>
+      <Button variant="contained" onClick={() => handleDrawerOpen()}>
         Add Account
       </Button>
       <GridToolbarColumnsButton />
@@ -158,52 +152,72 @@ const ChartOfAccounts = () => {
   );
 
   return (
-    <Box
-      sx={{
-        height: "83%",
-        mb: "60px",
-        width: "100%",
-        backgroundColor:
-          theme === "dark" ? "rgba(41, 37, 37, 0.745)" : "rgb(246, 243, 243);",
-      }}
-    >
-      <DataGrid
-        slots={{
-          toolbar: GridToolbar,
+    <Fragment>
+      <Box
+        sx={{
+          display: "flex",
+          width: "100%",
+          backgroundColor: theme === "dark" ? "#121212" : "rgb(246, 243, 243)",
+          flexGrow: 1,
         }}
-        rows={rows}
-        columns={columns}
-        initialState={{
-          pagination: {
-            paginationModel: {
-              pageSize: page,
-            },
-          },
-        }}
-        pageSizeOptions={pageSizeOptions}
-        checkboxSelection
-        disableRowSelectionOnClick
-        sx={tableStyles}
-      />
-      <Drawer
-        anchor="right"
-        open={drawerOpen}
-        onClose={() => handleDrawer()}
-        sx={{ zIndex: 1202 }}
       >
-        <Toolbar>
-          <IconButton
-            id="menu-item"
-            color="inherit"
-            edge="start"
-            onClick={() => handleDrawer()}
-          >
-            <CloseIcon />
-          </IconButton>
-        </Toolbar>
-        <AddAccountContent />
-      </Drawer>
-    </Box>
+        <Typography
+          variant="h4"
+          sx={{ mt: "20px", ml: "20px", fontWeight: "bold" }}
+        >
+          {" "}
+          Chart of Accounts
+        </Typography>
+      </Box>
+      <Box
+        sx={{
+          height: "83%",
+          mb: "60px",
+          width: "100%",
+          backgroundColor:
+            theme === "dark"
+              ? "rgba(41, 37, 37, 0.745)"
+              : "rgb(246, 243, 243);",
+        }}
+      >
+        <DataGrid
+          slots={{
+            toolbar: GridToolbar,
+          }}
+          rows={rows}
+          columns={columns}
+          initialState={{
+            pagination: {
+              paginationModel: {
+                pageSize: page,
+              },
+            },
+          }}
+          pageSizeOptions={pageSizeOptions}
+          checkboxSelection
+          disableRowSelectionOnClick
+          sx={tableStyles}
+        />
+        <Drawer
+          anchor="right"
+          open={drawerOpen}
+          onClose={() => handleDrawerClose()}
+          sx={{ zIndex: 1202 }}
+        >
+          <Toolbar>
+            <IconButton
+              id="menu-item"
+              color="inherit"
+              edge="start"
+              onClick={() => handleDrawerClose()}
+            >
+              <CloseIcon />
+            </IconButton>
+          </Toolbar>
+          <AddAccountContent setRefresh={setRefresh} />
+        </Drawer>
+      </Box>
+    </Fragment>
   );
 };
 

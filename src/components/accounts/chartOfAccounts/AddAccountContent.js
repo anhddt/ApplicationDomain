@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import {
   Box,
   Button,
@@ -7,8 +7,14 @@ import {
   StepLabel,
   Stepper,
   Typography,
+  TextField,
 } from "@mui/material";
 import { showIf } from "../../utils/conditionalRendering";
+import {
+  createAccount,
+  getChartOfAccountsCounter,
+  setChartOfAccountsCounter,
+} from "../../../middleware/firebase/FireStoreUtils";
 
 /**
  * This component is used as a drawer on the right hand side
@@ -16,17 +22,72 @@ import { showIf } from "../../utils/conditionalRendering";
  * on the table, this shows up with the steps hard coded below.
  */
 const steps = ["Account name?", "Category", "Subcategory", "Balance"];
-const AddAccountContent = () => {
+const AddAccountContent = (props) => {
   // This is for indicating which step the user is currently on.
   const [currentStep, setCurrentStep] = useState(0);
-  const handleCancel = async () => {
+  const [newAccount, setNewAccount] = useState({
+    id: 0,
+    name: "",
+    category: "",
+    subCat: "",
+    balance: "",
+    status: "Pending",
+  });
+
+  useMemo(() => {
+    const getCounter = async () => {
+      const counter = await getChartOfAccountsCounter();
+      setNewAccount((rest) => ({
+        ...rest,
+        id: counter,
+      }));
+    };
+    currentStep === steps.length - 1 && getCounter();
+  }, [currentStep]);
+
+  const getName = (index) => {
+    if (index === 0) return "name";
+    else if (index === 1) return "category";
+    else if (index === 2) return "subCat";
+    else return "balance";
+  };
+  const getPlaceholder = (index) => {
+    if (index === 0) return "Account name";
+    else if (index === 1) return "Account category";
+    else if (index === 2) return "Account sub-category";
+    else return "Account balance";
+  };
+  const getValue = (index) => {
+    if (index === 0) return newAccount.name;
+    else if (index === 1) return newAccount.category;
+    else if (index === 2) return newAccount.subCat;
+    else return newAccount.balance;
+  };
+  const handleCancel = () => {
+    setNewAccount({
+      id: 0,
+      name: "",
+      category: "",
+      subCat: "",
+      balance: "",
+      status: "Pending",
+    });
     setCurrentStep(0);
+  };
+  // Every time the user types, handle the change here
+  const handleChange = (e) => {
+    setNewAccount((rest) => ({
+      ...rest,
+      [e.target.name]: e.target.value,
+    }));
   };
   // After finishing creating the account,
   // The page reload and the step is reset back to 0.
   const finish = async () => {
+    createAccount(newAccount);
+    await setChartOfAccountsCounter(newAccount.id + 1);
+    props.setRefresh((refresh) => !refresh);
     handleCancel();
-    window.location.reload();
   };
   const next = (index) => {
     if (index === steps.length - 1) {
@@ -44,6 +105,14 @@ const AddAccountContent = () => {
         </Typography>
       </StepLabel>
       <StepContent>
+        <TextField
+          sx={{ mb: "10px", width: "200px" }}
+          name={getName(index)}
+          value={getValue(index)}
+          placeholder={getPlaceholder(index)}
+          onChange={(e) => handleChange(e)}
+          size="small"
+        ></TextField>
         <Box sx={{ display: "flex", mb: 2, gap: "10px" }}>
           <Button variant="contained" onClick={() => next(index)}>
             {index === steps.length - 1 ? "Finish" : "Next"}

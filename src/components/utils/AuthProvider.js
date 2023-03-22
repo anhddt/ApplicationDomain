@@ -53,8 +53,9 @@ export const useAuth = () => {
  */
 export function AuthProvider({ children }) {
   const [currentUser, setCurrentUser] = useState();
-  const [isNotSignedIn, setIsNotSignedIn] = useState(true);
+  const [isSignedIn, setIsNotSignedIn] = useState(false);
   const [userInfo, setUserInfo] = useState({});
+  const [refresh, setRefresh] = useState(false);
 
   /**
    * What this function does is sign helping the user
@@ -89,7 +90,6 @@ export function AuthProvider({ children }) {
         );
         if (!profile.isDisabled) {
           navigateTo(location.state?.from || "/");
-          window.location.reload();
         } else {
           throw new Error();
         }
@@ -156,10 +156,10 @@ export function AuthProvider({ children }) {
         logOut();
         setCurrentUser();
       }
-      setIsNotSignedIn(false);
+      setIsNotSignedIn(true);
     });
     return unsubscribe;
-  }, []);
+  }, [refresh]);
 
   const firstName = userInfo.firstName;
   const lastName = userInfo.lastName;
@@ -176,6 +176,7 @@ export function AuthProvider({ children }) {
   const isDisabled = userInfo.isDisabled;
 
   const values = {
+    setRefresh,
     userInfo,
     firstName,
     lastName,
@@ -197,8 +198,6 @@ export function AuthProvider({ children }) {
   };
 
   return (
-    <Context.Provider value={values}>
-      {!isNotSignedIn && children}
-    </Context.Provider>
+    <Context.Provider value={values}>{isSignedIn && children}</Context.Provider>
   );
 }
