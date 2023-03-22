@@ -24,7 +24,7 @@ const CustomThemeProvider = ({ children }) => {
   const getBodyHoverColor = () =>
     theme === "dark" ? "rgb(20, 19, 19)" : "white";
   const getBodyColor = () =>
-    theme === "dark" ? "rgba(41, 37, 37, 0.745)" : "rgb(246, 243, 243);";
+    theme === "dark" ? "rgba(41, 37, 37, 0.745)" : "rgb(246, 243, 243)";
   /**
    * This style is used for the chart of accounts table
    * This can be imported to use for the other table as well
