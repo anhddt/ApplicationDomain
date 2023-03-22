@@ -57,7 +57,7 @@ const headerElement = (param) => (
 const ChartOfAccounts = () => {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const { tableStyles, theme } = useThemeProvider();
-  const page = 5;
+  const page = 10;
   const handleDrawer = () => {
     setDrawerOpen(!drawerOpen);
   };
@@ -136,10 +136,9 @@ const ChartOfAccounts = () => {
     data(12, "Account12", "Another", "Some Account", 1000, "None"),
     data(13, "Account13", "Another", "Some Account", 1000, "None"),
   ];
-
   // This allows the user to choose how many rows to display on each page
-  const pageSizeOptions = [5, 10, 20, 50, 100];
-  const GridToolbar = () => (
+  const pageSizeOptions = [10, 20, 50, 100];
+  const GridToolbar = (props) => (
     <Box
       sx={{
         display: "flex",
@@ -157,12 +156,12 @@ const ChartOfAccounts = () => {
       <GridToolbarExport />
     </Box>
   );
+
   return (
     <Box
       sx={{
-        boxShadow: "0 0 15px 0 rgba(0, 0, 0, 0.832)",
-        height: 401,
-        maxHeight: 500,
+        height: "83%",
+        mb: "60px",
         width: "100%",
         backgroundColor:
           theme === "dark" ? "rgba(41, 37, 37, 0.745)" : "rgb(246, 243, 243);",
