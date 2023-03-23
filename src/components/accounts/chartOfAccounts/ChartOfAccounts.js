@@ -17,7 +17,10 @@ import {
   GridToolbarExport,
 } from "@mui/x-data-grid";
 import AddAccountContent from "./AddAccountContent";
-import { getChartOfAccounts } from "../../../middleware/firebase/FireStoreUtils";
+import {
+  getChartOfAccounts,
+  updateChartOfAccounts,
+} from "../../../middleware/firebase/FireStoreUtils";
 
 const toCurrency = new Intl.NumberFormat("en-US", {
   style: "currency",
@@ -28,79 +31,12 @@ const linkStyle = {
   fontSize: "14px",
 };
 
-// This components wraps the account's name within the link
-// Later when we click on the link it will redirect to the actual
-// account page/sheet with account details
-const toLink = (value, f) => {
-  return (
-    <Link
-      underline="hover"
-      sx={linkStyle}
-      component="button"
-      onClick={() => f()}
-    >
-      {value}
-    </Link>
-  );
-};
-
 //This styles the tital, category, subtitle, etc. go
 const headerElement = (param) => (
   <Typography sx={{ fontWeight: "bold" }} variant="subtitle1">
     {param.colDef.headerName}
   </Typography>
 );
-const columns = [
-  {
-    field: "id",
-    headerName: "ID",
-    renderHeader: (param) => headerElement(param),
-    width: 90,
-  },
-  {
-    field: "name",
-    headerName: "Name",
-    flex: 1,
-    minWidth: 150,
-    renderHeader: (param) => headerElement(param),
-    renderCell: (param) => toLink(param.value),
-  },
-  {
-    field: "category",
-    headerName: "Category",
-    flex: 0.5,
-    minWidth: 180,
-    renderHeader: (param) => headerElement(param),
-    editable: true,
-  },
-  {
-    field: "subCat",
-    headerName: "Sub-category",
-    flex: 1,
-    minWidth: 110,
-    renderHeader: (param) => headerElement(param),
-    editable: true,
-  },
-  {
-    field: "balance",
-    headerName: "Balance",
-    type: "number",
-    maxWidth: 130,
-    flex: 1,
-    renderHeader: (param) => headerElement(param),
-    valueFormatter: ({ value }) => value && toCurrency.format(value),
-  },
-  {
-    field: "status",
-    headerName: "Status",
-    type: "singleSelect",
-    editable: true,
-    maxWidth: 180,
-    flex: 1,
-    renderHeader: (param) => headerElement(param),
-    valueOptions: ["Pending", "Resolved"],
-  },
-];
 
 /**
  * This renders the table with differnt accounts
@@ -111,6 +47,76 @@ const ChartOfAccounts = () => {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [rows, setRows] = useState([]);
   const { tableStyles, theme } = useThemeProvider();
+  const showDetail = (cell) => {
+    console.log(cell);
+  };
+  // This components wraps the account's name within the link
+  // Later when we click on the link it will redirect to the actual
+  // account page/sheet with account details
+  const toLink = (cell) => {
+    return (
+      <Link
+        underline="hover"
+        sx={linkStyle}
+        component="button"
+        onClick={() => showDetail(cell)}
+      >
+        {cell.value}
+      </Link>
+    );
+  };
+  const columns = [
+    {
+      field: "id",
+      headerName: "ID",
+      renderHeader: (param) => headerElement(param),
+      width: 90,
+    },
+    {
+      field: "name",
+      headerName: "Name",
+      flex: 1,
+      minWidth: 150,
+      renderHeader: (param) => headerElement(param),
+      renderCell: (cell) => toLink(cell),
+      editable: true,
+    },
+    {
+      field: "category",
+      headerName: "Category",
+      flex: 0.5,
+      minWidth: 180,
+      renderHeader: (param) => headerElement(param),
+      editable: true,
+    },
+    {
+      field: "subCat",
+      headerName: "Sub-category",
+      flex: 1,
+      minWidth: 110,
+      renderHeader: (param) => headerElement(param),
+      editable: true,
+    },
+    {
+      field: "balance",
+      headerName: "Balance",
+      type: "number",
+      maxWidth: 130,
+      flex: 1,
+      renderHeader: (param) => headerElement(param),
+      valueFormatter: ({ value }) => value && toCurrency.format(value),
+    },
+    {
+      field: "status",
+      headerName: "Status",
+      type: "singleSelect",
+      editable: true,
+      maxWidth: 180,
+      flex: 1,
+      renderHeader: (param) => headerElement(param),
+      valueOptions: ["Pending", "Resolved"],
+    },
+  ];
   useEffect(() => {
     const getAccounts = async () => {
       const accounts = await getChartOfAccounts();
@@ -129,10 +135,21 @@ const ChartOfAccounts = () => {
   const handleDrawerClose = () => {
     setDrawerOpen(false);
   };
+
+  /**
+   * This function updates the cell everytime we changes the value inside the cell.
+   * @param {*} (new, old)
+   */
+  const updateCell = async (current, change) => {
+    let row = current.row;
+    row[current.field] = change.target.defaultValue;
+    await updateChartOfAccounts(row);
+    setRefresh((refresh) => !refresh);
+  };
   // In the future this will just be an array pulled off from the database
   // This allows the user to choose how many rows to display on each page
   const pageSizeOptions = [10, 20, 50, 100];
-  const GridToolbar = (props) => (
+  const GridToolbar = () => (
     <Box
       sx={{
         display: "flex",
@@ -186,6 +203,7 @@ const ChartOfAccounts = () => {
           }}
           rows={rows}
           columns={columns}
+          onCellEditStop={(current, change) => updateCell(current, change)}
           initialState={{
             pagination: {
               paginationModel: {
