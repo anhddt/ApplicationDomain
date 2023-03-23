@@ -117,7 +117,7 @@ const AcccountsPage = () => {
         className="account-page-paper"
         sx={{
           pl: drawerOpen ? `${openWidth}px` : "65px",
-          transition: "all .1s linear",
+          transition: "all .3s linear",
         }}
         id={theme === "dark" ? "paper-dark" : "paper-light"}
       >

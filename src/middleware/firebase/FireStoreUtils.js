@@ -154,8 +154,12 @@ export const updateUserEmail = async (password, newEmail) => {
   }
 };
 
-// The update user password function
-// explaination is simmilar to the one above
+/**
+ * The update user password function
+ * explaination is simmilar to the one above
+ * @param {*} password string
+ * @param {*} newPassword string
+ */
 export const updateUserPassword = async (password, newPassword) => {
   try {
     const credential = EmailAuthProvider.credential(
@@ -172,6 +176,7 @@ export const updateUserPassword = async (password, newPassword) => {
 /**
  * DON'T BE MISTAKEN THIS WITH THE REGISTER FUNCTION. THIS IS NOT THE ONE!!!
  * This function is used to create new account in the chart of accounts
+ * @param newAccount an object
  */
 export const createAccount = async (newAccount) => {
   try {
@@ -211,12 +216,34 @@ export const getChartOfAccountsCounter = async () => {
   }
 };
 
-// This function updates the counter of the chart of accounts everytime an account is created
+/**
+ * This function updates the counter of the chart of accounts everytime an account is created
+ * @param {*} newCounter a number
+ */
 export const setChartOfAccountsCounter = async (newCounter) => {
   try {
     await setDoc(doc(db, "accounting", "chartOfAccountsCounter"), {
       counter: newCounter,
     });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+/**
+ * This function update the
+ * @param {*} current a row object
+ * @param {*} change a synthetic event
+ */
+export const updateChartOfAccounts = async (newRow) => {
+  try {
+    await setDoc(
+      doc(db, "accounting", "chartOfAccounts"),
+      {
+        [newRow.id]: newRow,
+      },
+      { merge: true }
+    );
   } catch (error) {
     console.log(error);
   }
