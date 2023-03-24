@@ -190,12 +190,11 @@ export const createAccount = async (newAccount) => {
   }
 };
 /**
- * Once an account is created in the chart of accounts, use this to
- * get the chart of accounts
+ * This function is used to get the document from a collection
  */
-export const getChartOfAccounts = async () => {
+export const getDataBulk = async (collection, document) => {
   try {
-    const userDoc = await getDoc(doc(db, "accounting", "chartOfAccounts"));
+    const userDoc = await getDoc(doc(db, collection, document));
     const userData = userDoc.data();
     return userData;
   } catch (error) {
@@ -231,7 +230,7 @@ export const setChartOfAccountsCounter = async (newCounter) => {
 };
 
 /**
- * This function update the
+ * This function updates the chart of account cell, any cell
  * @param {*} current a row object
  * @param {*} change a synthetic event
  */
@@ -241,6 +240,25 @@ export const updateChartOfAccounts = async (newRow) => {
       doc(db, "accounting", "chartOfAccounts"),
       {
         [newRow.id]: newRow,
+      },
+      { merge: true }
+    );
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+/**
+ * This function update the event to the database
+ * @param {*} event an event object which has the event date, previous object,
+ * current object, and what has changed object
+ */
+export const updateAccountingEvents = async (event) => {
+  try {
+    await setDoc(
+      doc(db, "accounting", "accountingEvents"),
+      {
+        [event.eventDate]: event,
       },
       { merge: true }
     );

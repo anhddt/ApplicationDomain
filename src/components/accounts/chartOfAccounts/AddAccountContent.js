@@ -22,17 +22,18 @@ import {
  * on the table, this shows up with the steps hard coded below.
  */
 const steps = ["Account name?", "Category", "Subcategory", "Balance"];
+const blankAccount = {
+  id: 0,
+  name: "",
+  category: "",
+  subCat: "",
+  balance: 0,
+  status: "Pending",
+};
 const AddAccountContent = (props) => {
   // This is for indicating which step the user is currently on.
   const [currentStep, setCurrentStep] = useState(0);
-  const [newAccount, setNewAccount] = useState({
-    id: 0,
-    name: "",
-    category: "",
-    subCat: "",
-    balance: "",
-    status: "Pending",
-  });
+  const [newAccount, setNewAccount] = useState(blankAccount);
 
   useMemo(() => {
     const getCounter = async () => {
@@ -64,14 +65,7 @@ const AddAccountContent = (props) => {
     else return newAccount.balance;
   };
   const handleCancel = () => {
-    setNewAccount({
-      id: 0,
-      name: "",
-      category: "",
-      subCat: "",
-      balance: "",
-      status: "Pending",
-    });
+    setNewAccount(blankAccount);
     setCurrentStep(0);
   };
   // Every time the user types, handle the change here
