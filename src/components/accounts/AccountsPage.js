@@ -13,9 +13,11 @@ import {
 } from "@mui/material";
 import { showIf } from "../utils/conditionalRendering";
 import { useThemeProvider } from "../utils/themeProvider/CustomThemeProvier";
+import { useAuth } from "../utils/AuthProvider";
 import HomeBar from "../common/header/Homebar";
 import CustomDrawer from "../common/drawer/Drawer";
 import ChartOfAccounts from "./chartOfAccounts/ChartOfAccounts";
+import EventLog from "./eventsLog/EventLog";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import FormatListNumberedIcon from "@mui/icons-material/FormatListNumbered";
@@ -25,6 +27,7 @@ import AttachFileIcon from "@mui/icons-material/AttachFile";
 import DownloadIcon from "@mui/icons-material/Download";
 
 const AcccountsPage = () => {
+  const { role } = useAuth();
   const { theme } = useThemeProvider();
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [show, setShow] = useState("Chart of accounts");
@@ -51,7 +54,8 @@ const AcccountsPage = () => {
   const handleShow = (view) => {
     setShow(view);
   };
-  const ListItem = listItems.map((item) => {
+  const ListItem = listItems.map((item, index) => {
+    if (index === 1 && role !== ("admin" || "manager")) return null;
     return (
       <Tooltip
         key={item.primary}
@@ -122,6 +126,7 @@ const AcccountsPage = () => {
         id={theme === "dark" ? "paper-dark" : "paper-light"}
       >
         {showIf(show === "Chart of accounts", <ChartOfAccounts />)}
+        {showIf(show === "Event log", <EventLog />)}
       </Box>
     </Box>
   );

@@ -90,7 +90,7 @@ export function AuthProvider({ children }) {
         );
         if (!profile.isDisabled) {
           navigateTo(location.state?.from || "/");
-          setRefresh(refresh => !refresh);
+          setRefresh((refresh) => !refresh);
         } else {
           throw new Error();
         }

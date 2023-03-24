@@ -1,4 +1,5 @@
 import { Fragment, useEffect, useState } from "react";
+import { useAuth } from "../../utils/AuthProvider";
 import { useThemeProvider } from "../../utils/themeProvider/CustomThemeProvier";
 import {
   Box,
@@ -18,10 +19,15 @@ import {
 } from "@mui/x-data-grid";
 import AddAccountContent from "./AddAccountContent";
 import {
-  getChartOfAccounts,
+  getDataBulk,
+  updateAccountingEvents,
   updateChartOfAccounts,
 } from "../../../middleware/firebase/FireStoreUtils";
+import { createEvent } from "../eventsLog/event";
 
+/**
+ * This convert the given number to us currency.
+ */
 const toCurrency = new Intl.NumberFormat("en-US", {
   style: "currency",
   currency: "USD",
@@ -43,33 +49,41 @@ const headerElement = (param) => (
  * @returns a table JSX component
  */
 const ChartOfAccounts = () => {
+  const { currentUser, username, firstName, lastName, role } = useAuth();
   const [refresh, setRefresh] = useState(false);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [rows, setRows] = useState([]);
   const { tableStyles, theme } = useThemeProvider();
+  const page = 10;
+  // This allows the user to choose how many rows to display on each page
+  const pageSizeOptions = [10, 20, 50, 100];
   const showDetail = (cell) => {
     console.log(cell);
   };
   // This components wraps the account's name within the link
   // Later when we click on the link it will redirect to the actual
   // account page/sheet with account details
-  const toLink = (cell) => {
+  const toLink = (row) => {
     return (
       <Link
         underline="hover"
         sx={linkStyle}
         component="button"
-        onClick={() => showDetail(cell)}
+        onClick={() => showDetail(row)}
       >
-        {cell.value}
+        {row.value}
       </Link>
     );
   };
+  /**
+   * This makes the header of the table
+   */
   const columns = [
     {
       field: "id",
       headerName: "ID",
       renderHeader: (param) => headerElement(param),
+      renderCell: (row) => toLink(row),
       width: 90,
     },
     {
@@ -78,7 +92,7 @@ const ChartOfAccounts = () => {
       flex: 1,
       minWidth: 150,
       renderHeader: (param) => headerElement(param),
-      renderCell: (cell) => toLink(cell),
+      renderCell: (row) => toLink(row),
       editable: true,
     },
     {
@@ -100,17 +114,19 @@ const ChartOfAccounts = () => {
     {
       field: "balance",
       headerName: "Balance",
-      type: "number",
+      headerAlign: "right",
+      align: "right",
       maxWidth: 130,
       flex: 1,
+      editable: true,
       renderHeader: (param) => headerElement(param),
-      valueFormatter: ({ value }) => value && toCurrency.format(value),
+      renderCell: (row) => toCurrency.format(row.value),
     },
     {
       field: "status",
       headerName: "Status",
-      type: "singleSelect",
-      editable: true,
+      type: role === ("admin" || "manager") ? "singleSelect" : "string",
+      editable: role === ("admin" || "manager") ? true : false,
       maxWidth: 180,
       flex: 1,
       renderHeader: (param) => headerElement(param),
@@ -119,16 +135,11 @@ const ChartOfAccounts = () => {
   ];
   useEffect(() => {
     const getAccounts = async () => {
-      const accounts = await getChartOfAccounts();
+      const accounts = await getDataBulk("accounting", "chartOfAccounts");
       setRows(Object.values(accounts));
     };
     getAccounts();
   }, [refresh]);
-  const page = 10;
-  /**
-   * This makes the header of the table
-   */
-
   const handleDrawerOpen = () => {
     setDrawerOpen(true);
   };
@@ -138,17 +149,31 @@ const ChartOfAccounts = () => {
 
   /**
    * This function updates the cell everytime we changes the value inside the cell.
-   * @param {*} (new, old)
+   * once the cell is updated, an event is created and stored in the event log
+   * @param current a current state of the cell
+   * @param event an event
+   * this is a void function
+   * if the event code is Enter or Bab then proceed to update
+   * else abort
    */
-  const updateCell = async (current, change) => {
-    let row = current.row;
-    row[current.field] = change.target.defaultValue;
-    await updateChartOfAccounts(row);
+  const updateCell = async (current, event) => {
+    if (event.code === ("Enter" || "Tab")) {
+      const user = {
+        uid: currentUser.uid,
+        email: currentUser.email,
+        username: username,
+        firstName: firstName,
+        lastName: lastName,
+      };
+      const value = event.target.defaultValue || event.target.textContent;
+      current.row[current.field] = value;
+      await updateChartOfAccounts(current.row);
+      const e = createEvent(user, current, "cell");
+      updateAccountingEvents(e);
+    }
     setRefresh((refresh) => !refresh);
   };
   // In the future this will just be an array pulled off from the database
-  // This allows the user to choose how many rows to display on each page
-  const pageSizeOptions = [10, 20, 50, 100];
   const GridToolbar = () => (
     <Box
       sx={{
@@ -203,7 +228,7 @@ const ChartOfAccounts = () => {
           }}
           rows={rows}
           columns={columns}
-          onCellEditStop={(current, change) => updateCell(current, change)}
+          onCellEditStop={(current, event) => updateCell(current, event)}
           initialState={{
             pagination: {
               paginationModel: {
