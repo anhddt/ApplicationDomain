@@ -49,7 +49,7 @@ const headerElement = (param) => (
  * @returns a table JSX component
  */
 const ChartOfAccounts = () => {
-  const { currentUser, username, firstName, lastName, role } = useAuth();
+  const { role, user } = useAuth();
   const [refresh, setRefresh] = useState(false);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [rows, setRows] = useState([]);
@@ -158,15 +158,9 @@ const ChartOfAccounts = () => {
    */
   const updateCell = async (current, event) => {
     if (event.code === ("Enter" || "Tab")) {
-      const user = {
-        uid: currentUser.uid,
-        email: currentUser.email,
-        username: username,
-        firstName: firstName,
-        lastName: lastName,
-      };
       const value = event.target.defaultValue || event.target.textContent;
       current.row[current.field] = value;
+      if (role === "user") current.row.status = "Pending";
       await updateChartOfAccounts(current.row);
       const e = createEvent(user, current, "cell");
       updateAccountingEvents(e);

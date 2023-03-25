@@ -14,7 +14,10 @@ import {
   createAccount,
   getChartOfAccountsCounter,
   setChartOfAccountsCounter,
+  updateAccountingEvents,
 } from "../../../middleware/firebase/FireStoreUtils";
+import { useAuth } from "../../utils/AuthProvider";
+import { createEvent } from "../eventsLog/event";
 
 /**
  * This component is used as a drawer on the right hand side
@@ -31,6 +34,7 @@ const blankAccount = {
   status: "Pending",
 };
 const AddAccountContent = (props) => {
+  const { user } = useAuth();
   // This is for indicating which step the user is currently on.
   const [currentStep, setCurrentStep] = useState(0);
   const [newAccount, setNewAccount] = useState(blankAccount);
@@ -80,6 +84,8 @@ const AddAccountContent = (props) => {
   const finish = async () => {
     createAccount(newAccount);
     await setChartOfAccountsCounter(newAccount.id + 1);
+    const e = createEvent(user, newAccount.id, "newAccountInChart");
+    updateAccountingEvents(e);
     props.setRefresh((refresh) => !refresh);
     handleCancel();
   };
@@ -88,7 +94,7 @@ const AddAccountContent = (props) => {
       finish();
     } else setCurrentStep((step) => step + 1);
   };
-  const back = (index) => {
+  const back = () => {
     setCurrentStep((step) => step - 1);
   };
   const Steps = steps.map((step, index) => (
@@ -106,12 +112,13 @@ const AddAccountContent = (props) => {
           placeholder={getPlaceholder(index)}
           onChange={(e) => handleChange(e)}
           size="small"
-        ></TextField>
+          onKeyDown={(e) => e.code === "Enter" && next(index)}
+        />
         <Box sx={{ display: "flex", mb: 2, gap: "10px" }}>
           <Button variant="contained" onClick={() => next(index)}>
             {index === steps.length - 1 ? "Finish" : "Next"}
           </Button>
-          {showIf(index > 0, <Button onClick={() => back(index)}>Back</Button>)}
+          {showIf(index > 0, <Button onClick={() => back()}>Back</Button>)}
         </Box>
       </StepContent>
     </Step>
