@@ -176,26 +176,34 @@ export function AuthProvider({ children }) {
   const dateCreated = userInfo.dateCreated;
   const isDisabled = userInfo.isDisabled;
 
+  const user = {
+    uid: currentUser?.uid,
+    email: currentUser?.email,
+    username: username,
+    firstName: firstName,
+    lastName: lastName,
+  };
   const values = {
-    setRefresh,
-    userInfo,
-    firstName,
-    lastName,
-    phone,
-    street,
     city,
-    state,
-    zip,
     country,
-    role,
-    username,
-    email,
     currentUser,
-    dateCreated,
-    isDisabled,
     createAccount,
-    signInEmailPassword,
+    dateCreated,
+    email,
+    firstName,
+    isDisabled,
+    lastName,
     logOut,
+    phone,
+    role,
+    setRefresh,
+    signInEmailPassword,
+    state,
+    street,
+    user,
+    userInfo,
+    username,
+    zip,
   };
 
   return (

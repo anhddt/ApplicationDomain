@@ -8,9 +8,22 @@
  */
 const cellUpdateEvent = (user, change) => {
   const changeEvent = {
+    type: "modify",
     field: change.field,
     row: change.row,
     previous: change.formattedValue,
+  };
+  return {
+    eventDate: new Date(),
+    change: changeEvent,
+    user: user,
+  };
+};
+
+const newRowInChart = (user, id) => {
+  const changeEvent = {
+    type: "create",
+    id: id,
   };
   return {
     eventDate: new Date(),
@@ -33,6 +46,8 @@ export const createEvent = (user, change, whatChange) => {
   switch (whatChange) {
     case "cell":
       return cellUpdateEvent(user, change);
+    case "newAccountInChart":
+      return newRowInChart(user, change);
     default:
       break;
   }

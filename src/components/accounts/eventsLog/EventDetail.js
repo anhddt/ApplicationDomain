@@ -2,6 +2,7 @@ import { Fragment } from "react";
 import { Box, ListItem, Typography } from "@mui/material";
 
 const List = (o, m) => {
+  // console.log(o);
   return (
     <Fragment>
       {typeof o === "object" &&
@@ -11,10 +12,10 @@ const List = (o, m) => {
               sx={{ ml: 2 + m }}
               variant="subtitle1"
             >{`${key}:`}</Typography>
-            {List(o[key], 2)}
+            {List(o[key], 2 + m)}
           </Fragment>
         ))}
-      {typeof o !== "object" && o.length > 0 && (
+      {typeof o !== "object" && o.toString().length > 0 && (
         <ListItem sx={{ display: "list-item", py: 0 }}>
           <Typography
             sx={{ ml: 2 + m }}
@@ -47,7 +48,7 @@ const EventDetail = ({ detail }) => {
     </Fragment>
   ));
   return (
-    <Box sx={{ ml: "50px", width: "400px", overflow: "scroll" }}>{Str}</Box>
+    <Box sx={{ ml: "50px", width: "600px", overflow: "scroll" }}>{Str}</Box>
   );
 };
 

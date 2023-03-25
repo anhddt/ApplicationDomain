@@ -31,6 +31,25 @@ const toCurrency = new Intl.NumberFormat("en-US", {
   style: "currency",
   currency: "USD",
 });
+
+/**
+ * This function compares the date of the event
+ * What it does is is get the date as number instead of string
+ * then compare them this arrangement is ascending order.
+ * As for decending order just switch the order of < and >.
+ * @param {*} a
+ * @param {*} b
+ * @returns -1, 1, or 0
+ */
+const f = (a, b) => {
+  const x = new Date(a.id).getTime();
+  const y = new Date(b.id).getTime();
+  if (x > y) {
+    return -1;
+  } else if (x < y) {
+    return 1;
+  } else return 0;
+};
 const EventLog = () => {
   const [allEvents, setAllEvents] = useState({});
   const [drawerContent, setDrawerContent] = useState({});
@@ -80,6 +99,13 @@ const EventLog = () => {
       renderHeader: (param) => headerElement(param),
     },
     {
+      field: "type",
+      headerName: "Type",
+      flex: 0.2,
+      minWidth: 100,
+      renderHeader: (param) => headerElement(param),
+    },
+    {
       field: "accountID",
       headerName: "Made change to ID",
       type: "number",
@@ -111,8 +137,13 @@ const EventLog = () => {
       renderCell: (row) => handleCellRender(row),
     },
   ];
+
+  /**
+   * Trigger everytime the page is loaded for one time.
+   * Navigate the page again to refresh the content.
+   */
   useEffect(() => {
-    return async () => {
+    const getData = async () => {
       const rawData = await getDataBulk("accounting", "accountingEvents");
       setAllEvents(rawData);
       const filteredData = {};
@@ -120,14 +151,18 @@ const EventLog = () => {
         filteredData[key] = {
           id: rawData[key].eventDate.toDate().toString(),
           username: rawData[key].user.username,
-          accountID: rawData[key].change.row.id,
-          field: rawData[key].change.field,
-          currValue: rawData[key].change.row[rawData[key].change.field],
-          preValue: rawData[key].change.previous,
+          type: rawData[key].change.type,
+          accountID: rawData[key].change.row?.id ?? rawData[key].change.id,
+          field: rawData[key].change.field ?? "",
+          currValue: rawData[key].change.field
+            ? rawData[key].change.row[rawData[key].change.field]
+            : "",
+          preValue: rawData[key].change.previous ?? "",
         };
       });
-      setRows(Object.values(filteredData));
+      setRows(Object.values(filteredData).sort(f));
     };
+    getData();
   }, []);
   const handleDrawerOpen = (row) => {
     setDrawerContent(allEvents[row.id]);
