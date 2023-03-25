@@ -35,15 +35,17 @@ const ContactCard = () => {
     state,
     zip,
     country,
+    setRefresh,
   } = useAuth();
-  const [contactInfo, setContactInfo] = useState({
+  const info = {
     phone: phone,
     street: street,
     city: city,
     state: state,
     zip: zip,
     country: country,
-  });
+  };
+  const [contactInfo, setContactInfo] = useState(info);
   const handleChange = (e) => {
     setContactInfo((existing) => ({
       ...existing,
@@ -54,20 +56,13 @@ const ContactCard = () => {
     setIsEdit(!isEdit);
   };
   const handleCancel = () => {
-    setContactInfo({
-      phone: phone,
-      street: street,
-      city: city,
-      state: state,
-      zip: zip,
-      country: country,
-    });
+    setContactInfo(info);
     setIsEdit(!isEdit);
   };
   const updateContact = async () => {
     await bulkUpdateUserProperty(currentUser.uid, contactInfo);
     handleEdit();
-    window.location.reload();
+    setRefresh((refresh) => !refresh);
   };
   return (
     <form

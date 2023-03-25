@@ -24,7 +24,7 @@ import {
   isValidPw,
 } from "../../middleware/verification/userInfo";
 
-const RegisterForm = () => {
+const RegisterForm = ({ formName }) => {
   const { theme } = useThemeProvider();
   const [password, setPassword] = useState("");
   const date = new Date();
@@ -153,7 +153,7 @@ const RegisterForm = () => {
           id={theme === "dark" ? "box-dark" : "box-light"}
         >
           <Typography id="create-your-account-title" variant="h4">
-            Create your account
+            {formName || "Create your account"}
           </Typography>
           <Grid spacing={2} container>
             <Grid item xs={12}>

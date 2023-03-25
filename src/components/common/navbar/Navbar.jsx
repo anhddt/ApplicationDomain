@@ -7,7 +7,6 @@ import { Typography } from "@mui/material";
 
 function Navbar() {
   const { currentUser, role } = useAuth();
-
   return (
     <section className="navbar">
       {" "}
@@ -20,9 +19,11 @@ function Navbar() {
       <NavLink to="/" className="navbar-item">
         <Typography variant="subtitle1">About</Typography>
       </NavLink>
-      <NavLink to="/" className="navbar-item">
-        <Typography variant="subtitle1">Accounting</Typography>
-      </NavLink>
+      {currentUser && (
+        <NavLink to="/accounts" className="navbar-item">
+          <Typography variant="subtitle1">Accounting</Typography>
+        </NavLink>
+      )}
       {showIf(
         currentUser && role === "admin",
         <NavLink to="/admin" className="navbar-item">

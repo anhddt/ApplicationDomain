@@ -8,7 +8,6 @@ import { showIf } from "../../utils/conditionalRendering";
 import LogoIcon from "../logo/LogoIcon";
 import CustomProfileIcon from "../profile/CustomProfileIcon";
 import LoginDropDownIcon from "../profile/LoginDropDownIcon";
-
 function Header() {
   const { firstName, currentUser } = useAuth();
   const { theme } = useThemeProvider();

@@ -154,8 +154,12 @@ export const updateUserEmail = async (password, newEmail) => {
   }
 };
 
-// The update user password function
-// explaination is simmilar to the one above
+/**
+ * The update user password function
+ * explaination is simmilar to the one above
+ * @param {*} password string
+ * @param {*} newPassword string
+ */
 export const updateUserPassword = async (password, newPassword) => {
   try {
     const credential = EmailAuthProvider.credential(
@@ -166,5 +170,99 @@ export const updateUserPassword = async (password, newPassword) => {
     await updatePassword(auth.currentUser, newPassword);
   } catch (error) {
     throw new Error();
+  }
+};
+
+/**
+ * DON'T BE MISTAKEN THIS WITH THE REGISTER FUNCTION. THIS IS NOT THE ONE!!!
+ * This function is used to create new account in the chart of accounts
+ * @param newAccount an object
+ */
+export const createAccount = async (newAccount) => {
+  try {
+    await setDoc(
+      doc(db, "accounting", "chartOfAccounts"),
+      { [newAccount.id]: newAccount },
+      { merge: true }
+    );
+  } catch (error) {
+    console.log(error);
+  }
+};
+/**
+ * This function is used to get the document from a collection
+ */
+export const getDataBulk = async (collection, document) => {
+  try {
+    const userDoc = await getDoc(doc(db, collection, document));
+    const userData = userDoc.data();
+    return userData;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+// This function gets the counter to assign a unique id to the account
+export const getChartOfAccountsCounter = async () => {
+  try {
+    const userDoc = await getDoc(
+      doc(db, "accounting", "chartOfAccountsCounter")
+    );
+    const counter = userDoc.data().counter;
+    return counter;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+/**
+ * This function updates the counter of the chart of accounts everytime an account is created
+ * @param {*} newCounter a number
+ */
+export const setChartOfAccountsCounter = async (newCounter) => {
+  try {
+    await setDoc(doc(db, "accounting", "chartOfAccountsCounter"), {
+      counter: newCounter,
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+/**
+ * This function updates the chart of account cell, any cell
+ * @param {*} current a row object
+ * @param {*} change a synthetic event
+ */
+export const updateChartOfAccounts = async (newRow) => {
+  try {
+    await setDoc(
+      doc(db, "accounting", "chartOfAccounts"),
+      {
+        [newRow.id]: newRow,
+      },
+      { merge: true }
+    );
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+/**
+ * This function update the event to the database
+ * @param {*} event an event object which has the event date, previous object,
+ * current object, and what has changed object
+ */
+export const updateAccountingEvents = async (event) => {
+  try {
+    await setDoc(
+      doc(db, "accounting", "accountingEvents"),
+      {
+        [event.eventDate]: event,
+      },
+      { merge: true }
+    );
+  } catch (error) {
+    console.log(error);
   }
 };
