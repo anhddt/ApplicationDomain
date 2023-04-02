@@ -8,6 +8,7 @@ import AdminPage from "../adminPage/AdminPage";
 import ProfilePage from "../profilePage/ProfilePage";
 import CustomThemeProvider from "../utils/themeProvider/CustomThemeProvier";
 import AccountsPage from "../accounts/AccountsPage";
+import UploadDownload from "../accounts/uploadDownload/UploadDownload";
 
 /**
  * The App components consists of the theme provider
@@ -23,6 +24,9 @@ import AccountsPage from "../accounts/AccountsPage";
 const publicPages = [
   { path: "/login", component: <LoginPage /> },
   { path: "/register", component: <RegisterPage /> },
+  //Testing
+  { path: "/uploader", component: <UploadDownload /> },
+
 ];
 const PublicRoutes = publicPages.map((page) => {
   return (
