@@ -1,4 +1,6 @@
 import "./registerPage.css";
+import "../utils/themeProvider/themeProvider.css";
+import { useThemeProvider } from "../utils/themeProvider/CustomThemeProvier";
 import { useMemo, useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import {
@@ -22,7 +24,8 @@ import {
   isValidPw,
 } from "../../middleware/verification/userInfo";
 
-const RegisterForm = () => {
+const RegisterForm = ({ formName }) => {
+  const { theme } = useThemeProvider();
   const [password, setPassword] = useState("");
   const date = new Date();
   const { createAccount } = useAuth();
@@ -116,13 +119,19 @@ const RegisterForm = () => {
   }, [inputs, password]);
 
   return (
-    <Box className="container">
+    <Box
+      className="container"
+      id={theme === "dark" ? "paper-dark" : "paper-light"}
+    >
       {showIf(
         isEmailSent,
-        <Box className="email-verify-box">
+        <Box
+          className="email-verify-box"
+          id={theme === "dark" ? "box-dark" : "box-light"}
+        >
           <Typography textAlign="center" variant="subtitle1">
             {" "}
-            A verification email has been sent to <br />
+            A verification has been sent to <br />
             {inputs.email}
             <br />
             Please verify your email to login.
@@ -139,9 +148,12 @@ const RegisterForm = () => {
       )}
       {showIf(
         !isEmailSent,
-        <form className="userInfo-form">
+        <form
+          className="userInfo-form"
+          id={theme === "dark" ? "box-dark" : "box-light"}
+        >
           <Typography id="create-your-account-title" variant="h4">
-            Create your account
+            {formName || "Create your account"}
           </Typography>
           <Grid spacing={2} container>
             <Grid item xs={12}>
@@ -353,7 +365,15 @@ const RegisterForm = () => {
             <Grid item xs={12}>
               <Box id="password-constrains">
                 <Typography
-                  color={checkPwLength(password) ? "green" : "black"}
+                  color={
+                    checkPwLength(password)
+                      ? theme === "dark"
+                        ? "rgb(55, 239, 31)"
+                        : "green"
+                      : theme === "dark"
+                      ? "rgba(255, 255, 255, 0.5)"
+                      : "inherit"
+                  }
                   display="block"
                   textAlign="left"
                   variant="contained"
@@ -361,7 +381,15 @@ const RegisterForm = () => {
                   Must be at least 8 characters.
                 </Typography>
                 <Typography
-                  color={checkPwFirstChar(password) ? "green" : "black"}
+                  color={
+                    checkPwFirstChar(password)
+                      ? theme === "dark"
+                        ? "rgb(55, 239, 31)"
+                        : "green"
+                      : theme === "dark"
+                      ? "rgba(255, 255, 255, 0.5)"
+                      : "inherit"
+                  }
                   display="block"
                   textAlign="left"
                   variant="contained"
@@ -369,7 +397,15 @@ const RegisterForm = () => {
                   Must start with a letter.
                 </Typography>
                 <Typography
-                  color={checkPwForNumbers(password) ? "green" : "black"}
+                  color={
+                    checkPwForNumbers(password)
+                      ? theme === "dark"
+                        ? "rgb(55, 239, 31)"
+                        : "green"
+                      : theme === "dark"
+                      ? "rgba(255, 255, 255, 0.5)"
+                      : "inherit"
+                  }
                   display="block"
                   textAlign="left"
                   variant="contained"
@@ -377,7 +413,15 @@ const RegisterForm = () => {
                   Must have a number.
                 </Typography>
                 <Typography
-                  color={checkPwForSpecialChar(password) ? "green" : "black"}
+                  color={
+                    checkPwForSpecialChar(password)
+                      ? theme === "dark"
+                        ? "rgb(55, 239, 31)"
+                        : "green"
+                      : theme === "dark"
+                      ? "rgba(255, 255, 255, 0.5)"
+                      : "inherit"
+                  }
                   display="block"
                   textAlign="left"
                   variant="contained"

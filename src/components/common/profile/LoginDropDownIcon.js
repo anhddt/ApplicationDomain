@@ -1,29 +1,20 @@
 import "./customProfileIcon.css";
 import { useThemeProvider } from "../../utils/themeProvider/CustomThemeProvier";
 import { useState } from "react";
-import { useAuth } from "../../utils/AuthProvider";
 import { useNavigate } from "react-router-dom";
 import { Box, IconButton, Menu, MenuItem, Typography } from "@mui/material";
-import LogoutIcon from "@mui/icons-material/Logout";
-import AccountBoxIcon from "@mui/icons-material/AccountBox";
-import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import { showIf } from "../../utils/conditionalRendering";
+import LoginIcon from "@mui/icons-material/Login";
+import AppRegistrationIcon from "@mui/icons-material/AppRegistration";
+import ReadMoreIcon from "@mui/icons-material/ReadMore";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ExpandLessIcon from "@mui/icons-material/ExpandLess";
 import Brightness4Icon from "@mui/icons-material/Brightness4";
 import Brightness7Icon from "@mui/icons-material/Brightness7";
-import { showIf } from "../../utils/conditionalRendering";
 
-/**
- * An interactive icon used in the Header
- *
- * To add another menu,
- * add nother MenuItem
- * and handle it's onOnclick
- */
-const CustomProfileIcon = () => {
+const LoginDropDownIcon = () => {
   const { theme, setTheme } = useThemeProvider();
   const navigateTo = useNavigate();
-  const { logOut } = useAuth();
   const [anchorEl, setAnchorEl] = useState();
   const handleProfileClick = (e) => {
     setAnchorEl(e.currentTarget);
@@ -48,7 +39,7 @@ const CustomProfileIcon = () => {
         id={anchorEl ? "profile-icon" : "profile-expand-chevron"}
         onClick={(e) => handleProfileClick(e)}
       >
-        <AccountCircleIcon />
+        <ReadMoreIcon />
         {showIf(!anchorEl, <ExpandMoreIcon id="profile-expand-chevron" />)}
         {showIf(anchorEl, <ExpandLessIcon />)}
       </IconButton>
@@ -60,28 +51,31 @@ const CustomProfileIcon = () => {
         anchorEl={anchorEl}
       >
         {showIf(
-          window.location.pathname !== "/userProfile",
+          window.location.pathname !== "/login",
           <MenuItem
             id="profile-expand-chevron"
             onClick={() => {
               handleClose();
-              navigateTo("/userProfile");
+              navigateTo("/login");
             }}
           >
-            <AccountBoxIcon />
-            <Typography variant="subtitle1">Profile</Typography>
+            <LoginIcon />
+            <Typography variant="subtitle1">Sign in</Typography>
           </MenuItem>
         )}
-        <MenuItem
-          id="profile-expand-chevron"
-          onClick={() => {
-            handleClose();
-            logOut();
-          }}
-        >
-          <LogoutIcon />
-          <Typography variant="subtitle1">Sign out</Typography>
-        </MenuItem>
+        {showIf(
+          window.location.pathname !== "/register",
+          <MenuItem
+            id="profile-expand-chevron"
+            onClick={() => {
+              handleClose();
+              navigateTo("/register");
+            }}
+          >
+            <AppRegistrationIcon />
+            <Typography variant="subtitle1">Register</Typography>
+          </MenuItem>
+        )}
         <MenuItem
           id="profile-expand-chevron"
           onClick={() => {
@@ -96,4 +90,4 @@ const CustomProfileIcon = () => {
   );
 };
 
-export default CustomProfileIcon;
+export default LoginDropDownIcon;

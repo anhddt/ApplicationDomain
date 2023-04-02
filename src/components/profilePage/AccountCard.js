@@ -1,4 +1,6 @@
 import "./profilePage.css";
+import "../utils/themeProvider/themeProvider.css";
+import { useThemeProvider } from "../utils/themeProvider/CustomThemeProvier";
 import { Fragment, useMemo, useState } from "react";
 import { useAuth } from "../utils/AuthProvider";
 import {
@@ -7,6 +9,8 @@ import {
   Grid,
   InputAdornment,
   IconButton,
+  Menu,
+  MenuItem,
   TextField,
   Typography,
 } from "@mui/material";
@@ -30,6 +34,7 @@ import {
   isValidPw,
 } from "../../middleware/verification/userInfo";
 const AccountCard = () => {
+  const { theme } = useThemeProvider();
   const readOnly = true;
   const [isEdit, setIsEdit] = useState(false);
   const [editEmail, setEditEmail] = useState(false);
@@ -43,8 +48,16 @@ const AccountCard = () => {
   const [pwNotMatch, setPwNotMatch] = useState(false);
   const [isEmailValid, setIsEmailValid] = useState(true);
   const [focus, setFocus] = useState(false);
+  const [show, setShow] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
+  const [anchorEl, setAnchorEl] = useState();
+  const handleAccountEdit = (e) => {
+    setAnchorEl(e.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl();
+  };
   const handleMouseDownPassword = (e) => {
     e.preventDefault();
   };
@@ -55,6 +68,7 @@ const AccountCard = () => {
     setPassword("");
     setShowPassword(false);
     setEditEmail(false);
+    setEditEmailError(false);
     setIsEdit(false);
   };
   const handlePasswordCancel = () => {
@@ -62,6 +76,7 @@ const AccountCard = () => {
     setShowPassword(false);
     setShowNewPassword(false);
     setEditPassword(false);
+    setEditPasswordError(false);
     setIsEdit(false);
   };
   const handleEmailVerify = (e) => {
@@ -71,7 +86,7 @@ const AccountCard = () => {
   const handleEmailUpdate = async () => {
     try {
       await updateUserEmail(password, newEmail);
-      handleEmailCancel();
+      setShow(true);
     } catch (error) {
       setEditEmailError(true);
     }
@@ -96,7 +111,10 @@ const AccountCard = () => {
     <Fragment>
       {showIf(
         !isEdit,
-        <form id="contact-info-block">
+        <form
+          className="contact-info-block"
+          id={theme === "dark" ? "box-dark" : "box-light"}
+        >
           <Grid container spacing={2}>
             <Grid xs={6} item>
               <Typography variant="h6" textAlign="left">
@@ -108,24 +126,40 @@ const AccountCard = () => {
                 <Button
                   variant="contained"
                   size="small"
-                  onClick={() => {
-                    setEditEmail(true);
-                    setIsEdit(true);
-                  }}
+                  onClick={(e) => handleAccountEdit(e)}
                 >
-                  Edit email
+                  {anchorEl ? "Cancel" : "Edit"}
                 </Button>
-                <Button
-                  color="success"
-                  variant="contained"
-                  size="small"
-                  onClick={() => {
-                    setEditPassword(true);
-                    setIsEdit(true);
+                <Menu
+                  open={anchorEl ? true : false}
+                  onClose={() => {
+                    handleClose();
                   }}
+                  anchorEl={anchorEl}
                 >
-                  Edit password
-                </Button>
+                  <MenuItem
+                    id="profile-expand-chevron"
+                    onClick={() => {
+                      handleClose();
+                      setEditEmail(true);
+                      setIsEdit(true);
+                    }}
+                  >
+                    <EmailIcon />
+                    <Typography variant="subtitle1">Email</Typography>
+                  </MenuItem>
+                  <MenuItem
+                    id="profile-expand-chevron"
+                    onClick={() => {
+                      handleClose();
+                      setEditPassword(true);
+                      setIsEdit(true);
+                    }}
+                  >
+                    <LockIcon />
+                    <Typography variant="subtitle1">Password</Typography>
+                  </MenuItem>
+                </Menu>
               </Box>
             </Grid>
             <Grid xs={6} item>
@@ -183,12 +217,15 @@ const AccountCard = () => {
         </form>
       )}
       {showIf(
-        editEmail,
-        <form id="contact-info-block">
+        editEmail && !show,
+        <form
+          className="contact-info-block"
+          id={theme === "dark" ? "box-dark" : "box-light"}
+        >
           <Grid container spacing={2}>
             <Grid xs={6} item>
               <Typography variant="h6" textAlign="left">
-                Edit your email:
+                Update your email:
               </Typography>
             </Grid>
             <Grid xs={6} item>
@@ -202,16 +239,6 @@ const AccountCard = () => {
                 </Button>
               </Box>
             </Grid>
-            {showIf(
-              editEmailError,
-              <Grid xs={12} item>
-                <Box display="flex" justifyContent="center">
-                  <Typography color="red">
-                    Invalid new email or password
-                  </Typography>
-                </Box>
-              </Grid>
-            )}
             <Grid xs={6} item>
               <TextField
                 InputProps={{
@@ -255,6 +282,7 @@ const AccountCard = () => {
                 required
                 placeholder="Enter your password"
                 error={editEmailError}
+                helperText="Invalid password"
                 name="password"
                 label=" password"
                 type={showPassword ? "text" : "password"}
@@ -276,7 +304,7 @@ const AccountCard = () => {
                 fullWidth
                 required
                 placeholder="Enter new email"
-                error={(isEmailValid && newEmail.length > 0) || editEmailError}
+                error={isEmailValid && newEmail.length > 0}
                 helperText={
                   isEmailValid && newEmail.length > 0 && "Invalid email format"
                 }
@@ -304,8 +332,35 @@ const AccountCard = () => {
         </form>
       )}
       {showIf(
+        show,
+        <Box
+          className="email-verify-box"
+          id={theme === "dark" ? "box-dark" : "box-light"}
+        >
+          <Typography textAlign="center" variant="subtitle1">
+            {" "}
+            A verification has been sent to <br />
+            {newEmail}
+            <br />
+            Please check your email inbox.
+          </Typography>
+          <Button
+            variant="contained"
+            onClick={() => {
+              setShow(false);
+              handleEmailCancel();
+            }}
+          >
+            OK
+          </Button>
+        </Box>
+      )}
+      {showIf(
         editPassword,
-        <form id="contact-info-block">
+        <form
+          className="contact-info-block"
+          id={theme === "dark" ? "box-dark" : "box-light"}
+        >
           <Grid container spacing={2}>
             <Grid xs={6} item>
               <Typography variant="h6" textAlign="left">

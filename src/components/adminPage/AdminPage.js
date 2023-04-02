@@ -1,8 +1,9 @@
-import "./adminpage.css";
+//import "./adminpage.css";
+import "../utils/themeProvider/themeProvider.css";
 //import { useEffect, useRef, useState, useCallback } from "react";
 import { useEffect, useRef, useState } from "react";
 import { Header } from "../common";
-import { getAllUsers, bulkUpdateUserProperty, removeUser } from "../../middleware/firebase/FireStoreUtils";
+import { getAllUsers, bulkUpdateUserProperty, removeUser, getAllUsers } from "../../middleware/firebase/FireStoreUtils";
 import { DataGrid} from '@mui/x-data-grid';
 import {
   Box,
@@ -17,7 +18,8 @@ import {
   DialogTitle,
   InputLabel,
   Select,
-  MenuItem
+  MenuItem,
+  Paper
 } from "@mui/material";
 import BadgeIcon from "@mui/icons-material/Badge";
 import SmartphoneIcon from "@mui/icons-material/Smartphone";
@@ -27,10 +29,14 @@ import AccountBalanceIcon from "@mui/icons-material/AccountBalance";
 import SendIcon from "@mui/icons-material/Send";
 import TravelExploreIcon from "@mui/icons-material/TravelExplore";
 import AddIcon from '@mui/icons-material/Add';
+
+import { useThemeProvider } from "../utils/themeProvider/CustomThemeProvier";
+import Homebar from "../common/header/Homebar";
 //import RegisterForm from "../register/RegisterForm";
 
 const AdminPage = () => {
 
+  const { theme } = useThemeProvider();
   const [open, setOpen] = useState(false);
   const [userInfo, setUserInfo] = useState([]);
   const [username, setUsername] = useState("");
@@ -252,9 +258,10 @@ const addNewUser = () => {
 
 //returns the table of users and pop out dialouge for editing individual users
 return (
-  <Box className="admin-screen">
-      <Header />
-      <Box className="adminBody">
+	<Paper>
+	<Homebar />
+		<Box className="admin-screen" id={theme === "dark" ? "paper-dark" : "paper-light"}>
+		<Box className="adminBody" id={theme === "dark" ? "box-dark" : "box-light"}>
         <div className="userTable" style={{ height: 400, width: "100%" }}>
           <DataGrid
             rows={rows}
@@ -263,7 +270,6 @@ return (
           <Dialog open={open} onClose={handleClose}>
             <DialogTitle>Edit User {userInfo.username}</DialogTitle>
             <DialogContent>
-
               <form id="user_info_block">
                 <Grid container spacing={2}>
                   <Grid xs={6} item>
@@ -474,6 +480,7 @@ return (
         </Dialog>
     </Box>
   </Box>
+  </Paper>
 );
 }
 export default AdminPage;

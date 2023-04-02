@@ -53,8 +53,9 @@ export const useAuth = () => {
  */
 export function AuthProvider({ children }) {
   const [currentUser, setCurrentUser] = useState();
-  const [isNotSignedIn, setIsNotSignedIn] = useState(true);
+  const [isSignedIn, setIsNotSignedIn] = useState(false);
   const [userInfo, setUserInfo] = useState({});
+  const [refresh, setRefresh] = useState(false);
 
   /**
    * What this function does is sign helping the user
@@ -82,10 +83,14 @@ export function AuthProvider({ children }) {
       }
       try {
         const profile = await getUserProfile(loginToken.user.uid);
-        await updateUserProperty(loginToken.user.uid, "email", loginToken.user.email);
+        await updateUserProperty(
+          loginToken.user.uid,
+          "email",
+          loginToken.user.email
+        );
         if (!profile.isDisabled) {
           navigateTo(location.state?.from || "/");
-          window.location.reload();
+          setRefresh((refresh) => !refresh);
         } else {
           throw new Error();
         }
@@ -114,10 +119,7 @@ export function AuthProvider({ children }) {
       );
       setUserProfile(newUser.user.uid, userInfo);
       try {
-        await signInWithEmailAndPassword(auth, userInfo.email, password);
-        try {
-          await sendEmailVerification(auth.currentUser);
-        } catch (error) {}
+        await sendEmailVerification(newUser.user);
       } catch (error) {}
     } catch (error) {
       setError(true);
@@ -136,6 +138,14 @@ export function AuthProvider({ children }) {
 
   //useEffects triggers everytime the user logs in or out
   useEffect(() => {
+    window.onpopstate = (e) => {
+      if (
+        window.location.pathname === "/login" ||
+        window.location.pathname === "/register"
+      ) {
+        logOut();
+      }
+    };
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       try {
         const userProfile = await getUserProfile(user.uid);
@@ -144,13 +154,13 @@ export function AuthProvider({ children }) {
           setUserInfo(userProfile);
         } else throw new Error();
       } catch (error) {
-        logOut(auth);
+        logOut();
         setCurrentUser();
       }
-      setIsNotSignedIn(false);
+      setIsNotSignedIn(true);
     });
     return unsubscribe;
-  }, []);
+  }, [refresh]);
 
   const firstName = userInfo.firstName;
   const lastName = userInfo.lastName;
@@ -166,30 +176,37 @@ export function AuthProvider({ children }) {
   const dateCreated = userInfo.dateCreated;
   const isDisabled = userInfo.isDisabled;
 
+  const user = {
+    uid: currentUser?.uid,
+    email: currentUser?.email,
+    username: username,
+    firstName: firstName,
+    lastName: lastName,
+  };
   const values = {
-    userInfo,
-    firstName,
-    lastName,
-    phone,
-    street,
     city,
-    state,
-    zip,
     country,
-    role,
-    username,
-    email,
     currentUser,
-    dateCreated,
-    isDisabled,
     createAccount,
-    signInEmailPassword,
+    dateCreated,
+    email,
+    firstName,
+    isDisabled,
+    lastName,
     logOut,
+    phone,
+    role,
+    setRefresh,
+    signInEmailPassword,
+    state,
+    street,
+    user,
+    userInfo,
+    username,
+    zip,
   };
 
   return (
-    <Context.Provider value={values}>
-      {!isNotSignedIn && children}
-    </Context.Provider>
+    <Context.Provider value={values}>{isSignedIn && children}</Context.Provider>
   );
 }

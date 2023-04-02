@@ -2,28 +2,22 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
+  padding-bottom: 40px;
   align-items: center;
   gap: 20px;
   width: 100vw;
   height: 100vh;
-  background: rgb(2, 0, 36);
-  background: linear-gradient(
-    90deg,
-    rgba(2, 0, 36, 1) 0%,
-    rgba(192, 201, 35, 0.19091386554621848) 0%,
-    rgba(0, 212, 255, 1) 100%
-  );
   background-size: cover;
+  overflow: scroll;
 }
 
-#contact-info-block {
+.contact-info-block {
   display: flex;
   flex-direction: column;
   align-items: center;
   border-radius: 10px;
   max-width: 800px;
   width: 40%;
-  background-color: hsla(0, 0%, 100%, 0.857);
   box-shadow: 0 0 15px 0 rgba(0, 0, 0, 0.832);
   padding: 20px;
   gap: 10px;

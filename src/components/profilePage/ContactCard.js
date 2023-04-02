@@ -1,5 +1,7 @@
 import "./profilePage.css";
-import { useState } from "react";
+import "../utils/themeProvider/themeProvider.css";
+import { useThemeProvider } from "../utils/themeProvider/CustomThemeProvier";
+import { Fragment, useState } from "react";
 import { useAuth } from "../utils/AuthProvider";
 import {
   Box,
@@ -18,7 +20,9 @@ import SendIcon from "@mui/icons-material/Send";
 import TravelExploreIcon from "@mui/icons-material/TravelExplore";
 import { bulkUpdateUserProperty } from "../../middleware/firebase/FireStoreUtils";
 import { showIf } from "../utils/conditionalRendering";
+
 const ContactCard = () => {
+  const { theme } = useThemeProvider();
   const readOnly = true;
   const [isEdit, setIsEdit] = useState(false);
   const {
@@ -31,15 +35,17 @@ const ContactCard = () => {
     state,
     zip,
     country,
+    setRefresh,
   } = useAuth();
-  const [contactInfo, setContactInfo] = useState({
+  const info = {
     phone: phone,
     street: street,
     city: city,
     state: state,
     zip: zip,
     country: country,
-  });
+  };
+  const [contactInfo, setContactInfo] = useState(info);
   const handleChange = (e) => {
     setContactInfo((existing) => ({
       ...existing,
@@ -50,43 +56,41 @@ const ContactCard = () => {
     setIsEdit(!isEdit);
   };
   const handleCancel = () => {
-    setContactInfo({
-      phone: phone,
-      street: street,
-      city: city,
-      state: state,
-      zip: zip,
-      country: country,
-    })
+    setContactInfo(info);
     setIsEdit(!isEdit);
   };
   const updateContact = async () => {
     await bulkUpdateUserProperty(currentUser.uid, contactInfo);
     handleEdit();
-    window.location.reload();
+    setRefresh((refresh) => !refresh);
   };
   return (
-    <>
-      {showIf(
-        !isEdit,
-        <form id="contact-info-block">
-          <Grid container spacing={2}>
-            <Grid xs={6} item>
-              <Typography variant="h6" textAlign="left">
-                Contact info:
-              </Typography>
-            </Grid>
-            <Grid xs={6} item>
-              <Box display="flex" justifyContent="flex-end">
-                <Button
-                  variant="contained"
-                  size="small"
-                  onClick={() => handleEdit()}
-                >
-                  Edit
-                </Button>
-              </Box>
-            </Grid>
+    <form
+      className="contact-info-block"
+      id={theme === "dark" ? "box-dark" : "box-light"}
+    >
+      <Grid container spacing={2}>
+        <Grid xs={6} item>
+          <Typography variant="h6" textAlign="left">
+            {isEdit ? "Update contact info:" : "Contact info:"}
+          </Typography>
+        </Grid>
+        <Grid xs={6} item>
+          <Box display="flex" justifyContent="flex-end">
+            <Button
+              variant="contained"
+              size="small"
+              onClick={() => {
+                isEdit ? handleCancel() : handleEdit();
+              }}
+            >
+              {isEdit ? "Cancel" : "Edit"}
+            </Button>
+          </Box>
+        </Grid>
+        {showIf(
+          !isEdit,
+          <Fragment>
             <Grid xs={6} item>
               <TextField
                 InputProps={{
@@ -121,258 +125,148 @@ const ContactCard = () => {
                 value={lastName}
               />
             </Grid>
-            <Grid xs={6} item>
-              <TextField
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <SmartphoneIcon />
-                    </InputAdornment>
-                  ),
-                }}
-                inputProps={{ readOnly: readOnly }}
-                fullWidth
-                variant="standard"
-                label="Phone#"
-                size="small"
-                value={phone}
-              />
-            </Grid>
-            <Grid xs={6} item>
-              <TextField
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <HomeIcon />
-                    </InputAdornment>
-                  ),
-                }}
-                inputProps={{ readOnly: readOnly }}
-                fullWidth
-                variant="standard"
-                label="Street"
-                size="small"
-                value={street}
-              />
-            </Grid>
-            <Grid xs={6} item>
-              <TextField
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <LocationCityIcon />
-                    </InputAdornment>
-                  ),
-                }}
-                inputProps={{ readOnly: readOnly }}
-                fullWidth
-                variant="standard"
-                label="City"
-                size="small"
-                value={city}
-              />
-            </Grid>
-            <Grid xs={6} item>
-              <TextField
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <AccountBalanceIcon />
-                    </InputAdornment>
-                  ),
-                }}
-                inputProps={{ readOnly: readOnly }}
-                fullWidth
-                variant="standard"
-                label="State"
-                size="small"
-                value={state}
-              />
-            </Grid>
-            <Grid xs={6} item>
-              <TextField
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <SendIcon />
-                    </InputAdornment>
-                  ),
-                }}
-                inputProps={{ readOnly: readOnly }}
-                fullWidth
-                variant="standard"
-                label="Zip"
-                size="small"
-                value={zip}
-              />
-            </Grid>
-            <Grid xs={6} item>
-              <TextField
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <TravelExploreIcon />
-                    </InputAdornment>
-                  ),
-                }}
-                inputProps={{ readOnly: readOnly }}
-                fullWidth
-                variant="standard"
-                label="Country"
-                size="small"
-                value={country}
-              />
-            </Grid>
-          </Grid>
-        </form>
-      )}
+          </Fragment>
+        )}
+        <Grid xs={6} item>
+          <TextField
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <SmartphoneIcon />
+                </InputAdornment>
+              ),
+            }}
+            inputProps={{ readOnly: isEdit ? false : readOnly }}
+            fullWidth
+            variant={isEdit ? "outlined" : "standard"}
+            name="phone"
+            label="Phone#"
+            size="small"
+            value={contactInfo.phone}
+            onChange={(e) => {
+              handleChange(e);
+            }}
+          />
+        </Grid>
+        <Grid xs={6} item>
+          <TextField
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <HomeIcon />
+                </InputAdornment>
+              ),
+            }}
+            inputProps={{ readOnly: isEdit ? false : readOnly }}
+            fullWidth
+            variant={isEdit ? "outlined" : "standard"}
+            name="street"
+            label="Street"
+            size="small"
+            value={contactInfo.street}
+            onChange={(e) => {
+              handleChange(e);
+            }}
+          />
+        </Grid>
+        <Grid xs={6} item>
+          <TextField
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <LocationCityIcon />
+                </InputAdornment>
+              ),
+            }}
+            inputProps={{ readOnly: isEdit ? false : readOnly }}
+            fullWidth
+            variant={isEdit ? "outlined" : "standard"}
+            name="city"
+            label="City"
+            size="small"
+            value={contactInfo.city}
+            onChange={(e) => {
+              handleChange(e);
+            }}
+          />
+        </Grid>
+        <Grid xs={6} item>
+          <TextField
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <AccountBalanceIcon />
+                </InputAdornment>
+              ),
+            }}
+            inputProps={{ readOnly: isEdit ? false : readOnly }}
+            fullWidth
+            variant={isEdit ? "outlined" : "standard"}
+            name="state"
+            label="State"
+            size="small"
+            value={contactInfo.state}
+            onChange={(e) => {
+              handleChange(e);
+            }}
+          />
+        </Grid>
+        <Grid xs={6} item>
+          <TextField
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <SendIcon />
+                </InputAdornment>
+              ),
+            }}
+            inputProps={{ readOnly: isEdit ? false : readOnly }}
+            fullWidth
+            variant={isEdit ? "outlined" : "standard"}
+            name="zip"
+            label="Zip"
+            size="small"
+            value={contactInfo.zip}
+            onChange={(e) => {
+              handleChange(e);
+            }}
+          />
+        </Grid>
+        <Grid xs={6} item>
+          <TextField
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <TravelExploreIcon />
+                </InputAdornment>
+              ),
+            }}
+            inputProps={{ readOnly: isEdit ? false : readOnly }}
+            fullWidth
+            variant={isEdit ? "outlined" : "standard"}
+            name="country"
+            label="Country"
+            size="small"
+            value={contactInfo.country}
+            onChange={(e) => {
+              handleChange(e);
+            }}
+          />
+        </Grid>
+      </Grid>
       {showIf(
         isEdit,
-        <form id="contact-info-block">
-          <Grid container spacing={2}>
-            <Grid xs={6} item>
-              <Typography variant="h6" textAlign="left">
-                Update contact info:
-              </Typography>
-            </Grid>
-            <Grid xs={6} item>
-              <Box display="flex" justifyContent="flex-end">
-                <Button
-                  variant="contained"
-                  size="small"
-                  onClick={() => handleCancel()}
-                >
-                  Cancel
-                </Button>
-              </Box>
-            </Grid>
-            <Grid xs={6} item>
-              <TextField
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <SmartphoneIcon />
-                    </InputAdornment>
-                  ),
-                }}
-                fullWidth
-                name="phone"
-                label="Phone#"
-                size="small"
-                placeholder={contactInfo.phone}
-                onChange={(e) => {
-                  handleChange(e);
-                }}
-              />
-            </Grid>
-            <Grid xs={6} item>
-              <TextField
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <HomeIcon />
-                    </InputAdornment>
-                  ),
-                }}
-                fullWidth
-                name="street"
-                label="Street"
-                size="small"
-                placeholder={contactInfo.street}
-                onChange={(e) => {
-                  handleChange(e);
-                }}
-              />
-            </Grid>
-            <Grid xs={6} item>
-              <TextField
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <LocationCityIcon />
-                    </InputAdornment>
-                  ),
-                }}
-                fullWidth
-                name="city"
-                label="City"
-                size="small"
-                placeholder={contactInfo.city}
-                onChange={(e) => {
-                  handleChange(e);
-                }}
-              />
-            </Grid>
-            <Grid xs={6} item>
-              <TextField
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <AccountBalanceIcon />
-                    </InputAdornment>
-                  ),
-                }}
-                fullWidth
-                name="state"
-                label="State"
-                size="small"
-                placeholder={contactInfo.state}
-                onChange={(e) => {
-                  handleChange(e);
-                }}
-              />
-            </Grid>
-            <Grid xs={6} item>
-              <TextField
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <SendIcon />
-                    </InputAdornment>
-                  ),
-                }}
-                fullWidth
-                name="zip"
-                label="Zip"
-                size="small"
-                placeholder={contactInfo.zip}
-                onChange={(e) => {
-                  handleChange(e);
-                }}
-              />
-            </Grid>
-            <Grid xs={6} item>
-              <TextField
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <TravelExploreIcon />
-                    </InputAdornment>
-                  ),
-                }}
-                fullWidth
-                name="country"
-                label="Country"
-                size="small"
-                placeholder={contactInfo.country}
-                onChange={(e) => {
-                  handleChange(e);
-                }}
-              />
-            </Grid>
-          </Grid>
-          <Button
-            variant="contained"
-            onClick={() => {
-              updateContact();
-            }}
-            fullWidth
-          >
-            Submit
-          </Button>
-        </form>
+        <Button
+          variant="contained"
+          onClick={() => {
+            updateContact();
+          }}
+          fullWidth
+        >
+          Submit
+        </Button>
       )}
-    </>
+    </form>
   );
 };
 export default ContactCard;

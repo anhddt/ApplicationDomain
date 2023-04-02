@@ -1,12 +1,6 @@
 .container {
   align-items: center;
   background-size: cover;
-  background: rgb(63, 125, 251);
-  background: linear-gradient(
-    90deg,
-    rgba(63, 125, 251, 1) 0%,
-    rgba(180, 43, 215, 1) 100%
-  );
   display: flex;
   gap: 20px;
   flex-direction: column;
@@ -14,10 +8,10 @@
   min-height: 100vh;
   padding-top: 50x;
   padding-bottom: 50px;
+  overflow: scroll;
 }
 
 .email-verify-box {
-  background-color: hsla(0, 0%, 100%, 0.94);
   box-shadow: 0 0 15px 0 rgba(0, 0, 0, 0.832);
   border-radius: 20px;
   padding: 20px;
@@ -34,7 +28,6 @@
   max-width: 800px;
   min-height: 100%;
   width: 40%;
-  background-color: hsla(0, 0%, 100%, 0.857);
   box-shadow: 0 0 15px 0 rgba(0, 0, 0, 0.832);
   padding: 20px;
   gap: 10px;
@@ -52,7 +45,7 @@
 }
 
 .nav-link {
-  color: blue;
+  color: rgb(25, 108, 202);
   text-decoration: none;
 }
 .nav-link:hover {
