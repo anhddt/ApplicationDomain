@@ -223,6 +223,7 @@ const ChartOfAccounts = () => {
     {
       field: "category",
       headerName: "Category",
+      type: role === "admin" ? "singleSelect" : "string",
       flex: 0.5,
       minWidth: 180,
       renderHeader: (param) => headerElement(param),
