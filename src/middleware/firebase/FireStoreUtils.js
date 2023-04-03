@@ -363,13 +363,7 @@ export const deleteAccount = async (id) => {
 export const createAccountEvent = async (event) => {
   try {
     await setDoc(
-      doc(
-        db,
-        "accounting",
-        "chartOfAccounts",
-        "events",
-        event.eventDate.toString()
-      ),
+      doc(db, "accounting", "chartOfAccounts", "events", event.eventDate),
       event
     );
   } catch (error) {
@@ -508,7 +502,7 @@ export const createEntryEvent = async (event, parent) => {
 
 /**
  * =================================================================
- * This function gets all events of AN ACCOUNT                     *
+ * This function gets all events related to AN ACCOUNT entries     *
  * =================================================================
  * @param {*} id
  * @returns account data
