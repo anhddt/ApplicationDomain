@@ -20,9 +20,17 @@ const cellUpdateEvent = (user, change) => {
   };
 };
 
-const itemCreatedEvent = (user, change) => {
+/**
+ * When an account is created, a create account event is created or deleted
+ * an event is created here.
+ * @param {*} user
+ * @param {*} change
+ * @param {*} type
+ * @returns
+ */
+const itemCreatedEvent = (user, change, type) => {
   const changeEvent = {
-    type: "create",
+    type: type,
     field: "",
     row: {
       id: change.id,
@@ -52,7 +60,9 @@ export const createEvent = (user, change, whatChange) => {
     case "cell":
       return cellUpdateEvent(user, change);
     case "new":
-      return itemCreatedEvent(user, change);
+      return itemCreatedEvent(user, change, "create");
+    case "delete":
+      return itemCreatedEvent(user, change, "delete");
     default:
       break;
   }

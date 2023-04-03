@@ -87,6 +87,8 @@ const getBalance = (array) => {
 };
 /**
  * This renders the table with differnt accounts
+ * Admin can change anything except the id and the balance of the account
+ * Account can be disabled at any balance but can only be deleted when balance is 0.
  * @returns a table JSX component
  */
 const ChartOfAccounts = () => {
@@ -128,9 +130,25 @@ const ChartOfAccounts = () => {
   const handleClickClose = () => {
     setOpen(false);
   };
+  /**
+   * Delete an account
+   * The account has to be 0 balance before it can be deleted.
+   */
   const handleDeleteAccount = async () => {
+    const currents = [];
+    selectedRows.map((row) =>
+      currents.push({
+        id: row,
+        name: filteredRows.filter((r) => r.id === row)[0].name,
+      })
+    );
     await deleteAccount(selectedRows);
     handleClickClose();
+    currents.map((current) => {
+      const e = createEvent(user, current, "delete");
+      createAccountEvent(e);
+      return true;
+    });
     setSelectedRows([]);
     setRefresh((r) => !r);
   };
