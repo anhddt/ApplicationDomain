@@ -14,19 +14,24 @@ const cellUpdateEvent = (user, change) => {
     previous: change.formattedValue,
   };
   return {
-    eventDate: new Date(),
+    eventDate: new Date().toString(),
     change: changeEvent,
     user: user,
   };
 };
 
-const newRowInChart = (user, id) => {
+const itemCreatedEvent = (user, change) => {
   const changeEvent = {
     type: "create",
-    id: id,
+    field: "",
+    row: {
+      id: change.id,
+      name: change.name,
+    },
+    previous: "",
   };
   return {
-    eventDate: new Date(),
+    eventDate: new Date().toString(),
     change: changeEvent,
     user: user,
   };
@@ -46,8 +51,8 @@ export const createEvent = (user, change, whatChange) => {
   switch (whatChange) {
     case "cell":
       return cellUpdateEvent(user, change);
-    case "newAccountInChart":
-      return newRowInChart(user, change);
+    case "new":
+      return itemCreatedEvent(user, change);
     default:
       break;
   }
