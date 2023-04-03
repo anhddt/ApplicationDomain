@@ -1,9 +1,7 @@
-//import "./adminpage.css";
+import "./adminpage.css";
 import "../utils/themeProvider/themeProvider.css";
-//import { useEffect, useRef, useState, useCallback } from "react";
 import { useEffect, useRef, useState } from "react";
-import { Header } from "../common";
-import { getAllUsers, bulkUpdateUserProperty, removeUser, getAllUsers } from "../../middleware/firebase/FireStoreUtils";
+import { getAllUsers, bulkUpdateUserProperty, removeUser } from "../../middleware/firebase/FireStoreUtils";
 import { DataGrid} from '@mui/x-data-grid';
 import {
   Box,
@@ -14,7 +12,6 @@ import {
   Dialog,
   DialogActions,
   DialogContent,
-  DialogContentText,
   DialogTitle,
   InputLabel,
   Select,
@@ -32,7 +29,7 @@ import AddIcon from '@mui/icons-material/Add';
 
 import { useThemeProvider } from "../utils/themeProvider/CustomThemeProvier";
 import Homebar from "../common/header/Homebar";
-//import RegisterForm from "../register/RegisterForm";
+import RegisterForm from "../register/RegisterForm";
 
 const AdminPage = () => {
 
@@ -43,24 +40,47 @@ const AdminPage = () => {
   const [UID, setUID] = useState("");
   const [profiles, setProfiles] = useState([]);
   const [UIDS, setUIDS] = useState([]);
-  const [button, setButton] = useState("");
   const [showAlert, setShowAlert] = useState(false);
   const [addUser, setAddUser] = useState(false);
   const refState = useRef(false);
+  const [button, setButton] = useState("");
+  const [refresh, setRefresh] = useState(false);
 
-  const closeAlert = () => {
-    setShowAlert(false);
-    setButton("");
+  const updateUser = async() => {
+    getProfile(username);
+    await bulkUpdateUserProperty(UID, userInfo);
+    handleClose();
+    setRefresh(!refresh);
   }
 
-  const HandleNewUserClose = () => {
-    setAddUser(false);
+  const deleteUser = async() => {
+    getProfile(username);
+    await removeUser(UID);
+    closeAlert();
+    setRefresh(!refresh);    
+  }
+
+  const handleSave = () => {
+    setButton("save");
   }
 
   const handleDelete = () => {
     setButton("delete");
   }
 
+  //closes alert for if the user wants to delete a user
+  const closeAlert = () => {
+    setShowAlert(false);
+    setButton("");
+  }
+
+  //closes dialog for adding users
+  const HandleNewUserClose = () => {
+    setAddUser(false);
+    setButton("");
+  }
+
+//handles storing changes to user data
   const handleChange = (e) => {
     setUserInfo((existing) => ({
       ...existing,
@@ -68,25 +88,16 @@ const AdminPage = () => {
     }));
   };
 
-  /*
-  const getProfile = useCallback((username) => {
-    for (let i = 0; i < profiles.length; i++) {
-      if (profiles[i].username === username) {
-        setUserInfo(profiles[i]);
-        setUID(UIDS[i]);
-      }
-    }
-  }, [UIDS, profiles]);
-  */
-
+  //gets user id baed on username from the table
   const getProfile = (_username) => {
     for (let i = 0; i < profiles.length; i++) {
       if (profiles[i].username === _username) {
         setUserInfo(profiles[i]);
         setUID(UIDS[i]);
+        break;
       }
     }
-  }
+  };
 
   //handles opening for dialouge
   const handleClickOpen = () => {
@@ -101,10 +112,6 @@ const AdminPage = () => {
 
   const handleCancel = () => {
     handleClose();
-  }
-
-  const handleSave = () => {
-    setButton("save");
   }
   
   //sets table at page render
@@ -122,46 +129,24 @@ const AdminPage = () => {
       } catch (error) {}
     };
     allUsers();
-  }, []);
+  }, [refresh]);
+
+  useEffect(() => {
+    if (button === "save") {
+      try {
+        updateUser();
+      } catch (error) {}
+    } else if (button === "delete") {
+      try {
+        deleteUser();
+      } catch (error) {}
+    }
+    }, [button, updateUser, deleteUser]);
+
 
   //sets rows to be profiles recieved during use effect
   let rows = profiles;
-  Array.prototype.forEach.call(rows, (profile) => profile.id = profile.username)
-
-  //gets user info for selected user from table
-  useEffect(() => {
-    getProfile(username);
-    if (button === "edit") {
-      //console.log("username: " + username, "prevUser: " + prevUsername);
-      handleClickOpen();
-    } else if (button === "delete") {
-      try {
-        removeUser(UID);
-      } catch (error) {
-        console.log(error);
-      } finally {
-        closeAlert();
-      }
-      
-    }
-
-    if (button === "save") {
-      console.log("saving user " + username);
-      try {
-        bulkUpdateUserProperty(UID, userInfo);
-        console.log("saved user");
-      } catch (error) {
-        console.log(error);
-      } finally {
-        handleClose();
-      }
-      
-    }
-    }, [username, button]);
-  //}, [username, button, UID, userInfo, getProfile]);
-
-
-
+  Array.prototype.forEach.call(rows, (profile) => profile.id = profile.username);
 
 //a function to render edit buttons into the table
 const renderEditButton = (params) => {
@@ -172,9 +157,10 @@ const renderEditButton = (params) => {
           size="small"
           style={{ marginLeft: 16 }}
           onClick={() => {
-            setButton("edit");
-            console.log("username from table: " + params.row.id);
             setUsername(params.row.id);
+            handleClickOpen();
+            //console.log("username from table: " + params.row.id);
+            console.log("username from table: " + username);
           }}
         >
         Edit
@@ -192,8 +178,8 @@ const renderDeleteButton = (params) => {
               size="small"
               style={{ marginLeft: 16 }}
               onClick={() => {
-                setShowAlert(true);
                 setUsername(params.row.id);
+                setShowAlert(true);
               }}
           >
               Delete
@@ -464,7 +450,7 @@ return (
             startIcon={<AddIcon/>} 
             style={
                 {
-                justifyContent: 'right !important', 
+                justifyContent: 'center', 
                 maxWidth: '200px', maxHeight: '50px', 
                 minWidth: '70px', minHeight: '50px'
                 }
@@ -475,8 +461,12 @@ return (
           </Button>
         </div>
 
-        <Dialog open={addUser} onClose={HandleNewUserClose}>
-          <DialogTitle>Add User</DialogTitle>
+        <Dialog open={addUser}
+         onClose={HandleNewUserClose}
+         fullWidth
+         maxWidth="md"
+         >
+            <RegisterForm formName={"Add New User"} />
         </Dialog>
     </Box>
   </Box>
