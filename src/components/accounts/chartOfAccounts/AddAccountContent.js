@@ -179,7 +179,7 @@ const AddAccountContent = ({ setRefresh }) => {
         )}
         {index === 6 && (
           <Select
-            sx={{ mb: "10px", width: "200px" }}
+            sx={{ mb: "10px", width: "300px" }}
             size="small"
             displayEmpty
             name={getName(index)}
@@ -191,8 +191,10 @@ const AddAccountContent = ({ setRefresh }) => {
               <em>Select a statement</em>
             </MenuItem>
             <MenuItem value="BS">{"BS (balance sheet)"}</MenuItem>
+            <MenuItem value="CF">{"CF (cash flow statement)"}</MenuItem>
+            <MenuItem value="CI">{"CI (change in equity statement)"}</MenuItem>
             <MenuItem value="IS">{"IS (income statement)"}</MenuItem>
-            <MenuItem value="RE">{"RE (retained earning statement"}</MenuItem>
+            <MenuItem value="RE">{"RE (retained earning statement)"}</MenuItem>
           </Select>
         )}
         {index !== 2 && index !== 3 && index !== 6 && (
