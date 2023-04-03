@@ -227,6 +227,7 @@ const ChartOfAccounts = () => {
       minWidth: 180,
       renderHeader: (param) => headerElement(param),
       editable: role === "admin",
+      valueOptions: ["Assets", "Liabilities", "Equity"],
     },
     {
       field: "subCat",
@@ -243,7 +244,7 @@ const ChartOfAccounts = () => {
       minWidth: 130,
       renderHeader: (param) => headerElement(param),
       editable: role === "admin",
-      valueOptions: ["BS", "IS", "RE"],
+      valueOptions: ["BS", "CF", "CI", "IS", "RE"],
     },
     {
       field: "balance",
