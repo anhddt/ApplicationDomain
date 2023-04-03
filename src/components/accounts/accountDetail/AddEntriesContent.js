@@ -230,7 +230,6 @@ const AddEntriesContent = ({ setRefresh }) => {
               placeholder={getPlaceholder(index)}
               onChange={(e) => handleChange(e)}
               size="small"
-              onKeyDown={(e) => e.code === "Enter" && next(index)}
             />
           )}
           {index === 2 && Amount}
