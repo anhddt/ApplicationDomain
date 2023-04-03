@@ -65,8 +65,9 @@ export const headerElement = (param) => (
  */
 const plusOrMinus = (row) => {
   let number = row.balance;
-  if (row.normalSide === "Debit") number *= 1;
-  else number *= -1;
+  if (row.normalSide === "Credit")
+    if (number === 0);
+    else number *= -1;
   return number;
 };
 
@@ -288,7 +289,7 @@ const ChartOfAccounts = () => {
     });
   }, [tab, rows]);
   useEffect(() => {
-    const getAccounts = async () => {
+    const getAccounts = setTimeout(async () => {
       try {
         const q = await getAllAccounts();
         const arr = [];
@@ -301,8 +302,8 @@ const ChartOfAccounts = () => {
         );
         setBalance(balance);
       } catch (error) {}
-    };
-    getAccounts();
+    }, 500);
+    return () => clearTimeout(getAccounts);
   }, [refresh, role]);
   const handleDrawerOpen = () => {
     setDrawerOpen(true);
