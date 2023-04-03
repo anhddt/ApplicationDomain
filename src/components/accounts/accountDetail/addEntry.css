@@ -1,0 +1,16 @@
+#cancel-x-button:hover {
+  color: #ff1744;
+  background: transparent;
+}
+#cancel-x-button-dark:hover {
+  color: #ff4569;
+  background: transparent;
+}
+#add-more-button:hover {
+  color: #2979ff;
+  background: transparent;
+}
+#add-more-button-dark:hover {
+  color: #5393ff;
+  background: transparent;
+}

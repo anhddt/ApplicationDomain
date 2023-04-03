@@ -25,7 +25,7 @@ function Navbar() {
         </NavLink>
       )}
       {showIf(
-        currentUser && role === "admin",
+        role === "admin",
         <NavLink to="/admin" className="navbar-item">
           <Typography variant="subtitle1">Admin</Typography>
         </NavLink>

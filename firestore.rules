@@ -18,6 +18,12 @@ service cloud.firestore {
     match /accounting/chartOfAccounts {
       allow read, write;
     }
+    match /accounting/chartOfAccounts/{collection}/{document} {
+      allow read, write;
+    }
+    match /accounting/chartOfAccounts/{collection}/{document}/{child}/{doc}{
+      allow read, write;
+    }
     match /accounting/chartOfAccountsCounter {
       allow read, update;
     }

@@ -61,7 +61,7 @@ const Homebar = () => {
             <Typography variant="subtitle1">About</Typography>
           </MenuItem>
           {showIf(
-            currentUser && role === "admin",
+            role === "admin",
             <MenuItem
               id="menu-item"
               onClick={() => {

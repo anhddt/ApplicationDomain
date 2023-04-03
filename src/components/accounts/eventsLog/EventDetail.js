@@ -28,7 +28,7 @@ const List = (o, m) => {
 };
 const EventDetail = ({ detail }) => {
   const Str = Object.keys(detail).map((key, index) => (
-    <Fragment key={`${detail.eventDate.toDate()}-${index}`}>
+    <Fragment key={`${detail.eventDate}-${index}`}>
       {key === "eventDate" && (
         <Fragment>
           <Typography variant="subtitle1">{`${key}:`}</Typography>

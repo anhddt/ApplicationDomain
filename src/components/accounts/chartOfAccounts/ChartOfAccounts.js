@@ -1,16 +1,26 @@
-import { Fragment, useEffect, useState } from "react";
+import "./chartOfAccounts.css";
+import { Fragment, useEffect, useMemo, useState } from "react";
 import { useAuth } from "../../utils/AuthProvider";
 import { useThemeProvider } from "../../utils/themeProvider/CustomThemeProvier";
 import {
   Box,
   Button,
   Drawer,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
   IconButton,
   Link,
+  Tab,
+  Tabs,
   Toolbar,
   Typography,
 } from "@mui/material";
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import CloseIcon from "@mui/icons-material/Close";
+import ReportProblemIcon from "@mui/icons-material/ReportProblem";
 import {
   DataGrid,
   GridToolbarColumnsButton,
@@ -18,38 +28,75 @@ import {
   GridToolbarExport,
 } from "@mui/x-data-grid";
 import AddAccountContent from "./AddAccountContent";
+import AccountDetail from "../accountDetail/AccountDetail";
 import {
-  getDataBulk,
-  updateAccountingEvents,
+  createAccountEvent,
+  deleteAccount,
+  getAllAccounts,
   updateChartOfAccounts,
 } from "../../../middleware/firebase/FireStoreUtils";
 import { createEvent } from "../eventsLog/event";
+import { showIf } from "../../utils/conditionalRendering";
+import EventLog from "../eventsLog/EventLog";
 
 /**
  * This convert the given number to us currency.
  */
-const toCurrency = new Intl.NumberFormat("en-US", {
+export const toCurrency = new Intl.NumberFormat("en-US", {
   style: "currency",
   currency: "USD",
 });
-const linkStyle = {
+export const linkStyle = {
   color: "primary.main",
   fontSize: "14px",
 };
 
 //This styles the tital, category, subtitle, etc. go
-const headerElement = (param) => (
+export const headerElement = (param) => (
   <Typography sx={{ fontWeight: "bold" }} variant="subtitle1">
     {param.colDef.headerName}
   </Typography>
 );
+/**
+ * This function tells whether the balance is negative or positive.
+ * @param {*} row
+ * @param {*} parentNormalSide
+ * @returns negative or positive total
+ */
+const plusOrMinus = (row) => {
+  let number = row.balance;
+  if (row.normalSide === "Debit") number *= 1;
+  else number *= -1;
+  return number;
+};
 
+/**
+ * This function gets the balance of the array in the param
+ * @param {*} array
+ * @param {*} parentNormalSide
+ * @returns
+ */
+const getBalance = (array) => {
+  let balance = 0;
+  if (array.length > 0)
+    balance = array
+      .map((row) => plusOrMinus(row))
+      .reduce((total, amount) => amount + total);
+  return balance;
+};
 /**
  * This renders the table with differnt accounts
  * @returns a table JSX component
  */
 const ChartOfAccounts = () => {
-  const { role, user } = useAuth();
+  const { role, user, accountDetailPersistence, setAccountDetailPersistence } =
+    useAuth();
+  const [open, setOpen] = useState(false);
+  const [selectedRows, setSelectedRows] = useState([]);
+  const [filteredRows, setFilteredRows] = useState([]);
+  const [balance, setBalance] = useState(0);
+  const [tab, setTab] = useState(0);
+  const [showInfo, setShowInfo] = useState(accountDetailPersistence.open);
   const [refresh, setRefresh] = useState(false);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [rows, setRows] = useState([]);
@@ -57,8 +104,34 @@ const ChartOfAccounts = () => {
   const page = 10;
   // This allows the user to choose how many rows to display on each page
   const pageSizeOptions = [10, 20, 50, 100];
+  const handleClose = () => {
+    setShowInfo(false);
+    setAccountDetailPersistence((rest) => ({ ...rest, open: false }));
+    setRefresh((r) => !r);
+  };
   const showDetail = (cell) => {
-    console.log(cell);
+    const id = cell.id;
+    setAccountDetailPersistence({
+      open: true,
+      normalSide: cell.row.normalSide,
+      id: id,
+    });
+    setShowInfo(true);
+  };
+  const handleTab = (newTab) => {
+    setTab(newTab);
+  };
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+  const handleClickClose = () => {
+    setOpen(false);
+  };
+  const handleDeleteAccount = async () => {
+    await deleteAccount(selectedRows);
+    handleClickClose();
+    setSelectedRows([]);
+    setRefresh((r) => !r);
   };
   // This components wraps the account's name within the link
   // Later when we click on the link it will redirect to the actual
@@ -90,10 +163,42 @@ const ChartOfAccounts = () => {
       field: "name",
       headerName: "Name",
       flex: 1,
-      minWidth: 150,
+      minWidth: 250,
       renderHeader: (param) => headerElement(param),
       renderCell: (row) => toLink(row),
-      editable: true,
+      editable: role === "admin",
+    },
+    {
+      field: "description",
+      headerName: "Description",
+      width: 250,
+      renderHeader: (param) => headerElement(param),
+      editable: role === "admin",
+    },
+    {
+      field: "normalSide",
+      headerName: "Normal Side",
+      headerAlign: "center",
+      flex: 0.3,
+      minWidth: 150,
+      renderHeader: (param) => headerElement(param),
+      renderCell: (row) => (
+        <Box
+          sx={{
+            width: "100%",
+            height: "100%",
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            pr: "15px",
+            pl: "15px",
+          }}
+        >
+          <Typography textAlign={row.value === "Debit" ? "left" : "right"}>
+            {row.value}
+          </Typography>
+        </Box>
+      ),
     },
     {
       field: "category",
@@ -101,45 +206,104 @@ const ChartOfAccounts = () => {
       flex: 0.5,
       minWidth: 180,
       renderHeader: (param) => headerElement(param),
-      editable: true,
+      editable: role === "admin",
     },
     {
       field: "subCat",
       headerName: "Sub-category",
-      flex: 1,
-      minWidth: 110,
+      flex: 0.8,
+      minWidth: 200,
       renderHeader: (param) => headerElement(param),
-      editable: true,
+      editable: role === "admin",
+    },
+    {
+      field: "statement",
+      headerName: "Statement",
+      type: role === "admin" ? "singleSelect" : "string",
+      minWidth: 130,
+      renderHeader: (param) => headerElement(param),
+      editable: role === "admin",
+      valueOptions: ["BS", "IS", "RE"],
     },
     {
       field: "balance",
       headerName: "Balance",
       headerAlign: "right",
       align: "right",
-      maxWidth: 130,
-      flex: 1,
-      editable: true,
+      width: 130,
       renderHeader: (param) => headerElement(param),
-      renderCell: (row) => toCurrency.format(row.value),
+      renderCell: (row) =>
+        row.value >= 0
+          ? toCurrency.format(row.value)
+          : `(${toCurrency.format(row.value * -1)})`,
+    },
+    {
+      field: "comment",
+      headerName: "Comment",
+      type: "string",
+      editable: true,
+      width: 250,
+      renderHeader: (param) => headerElement(param),
+    },
+    {
+      field: "createdDate",
+      headerName: "Created On",
+      type: "string",
+      flex: 1,
+      renderHeader: (param) => headerElement(param),
+      minWidth: 420,
+    },
+    {
+      field: "modifiedDate",
+      headerName: "Modified On",
+      type: "string",
+      flex: 1,
+      renderHeader: (param) => headerElement(param),
+      minWidth: 420,
     },
     {
       field: "status",
       headerName: "Status",
-      type: role === ("admin" || "manager") ? "singleSelect" : "string",
-      editable: role === ("admin" || "manager") ? true : false,
-      maxWidth: 180,
-      flex: 1,
+      type: role === "admin" ? "singleSelect" : "string",
+      editable: role === "admin",
+      width: 120,
       renderHeader: (param) => headerElement(param),
-      valueOptions: ["Pending", "Resolved"],
+      valueOptions: ["Active", "Disabled"],
     },
   ];
+  const getColumns = () => {
+    if (role !== "admin") columns.splice(9, 2);
+    return columns;
+  };
+  useMemo(() => {
+    setFilteredRows(() => {
+      switch (tab) {
+        case 1:
+          return [];
+        case 2:
+          return rows.filter((row) => row.balance === 0);
+        default:
+          return rows;
+      }
+    });
+  }, [tab, rows]);
   useEffect(() => {
     const getAccounts = async () => {
-      const accounts = await getDataBulk("accounting", "chartOfAccounts");
-      setRows(Object.values(accounts));
+      try {
+        const q = await getAllAccounts();
+        const arr = [];
+        q.map((item) => arr.push(item.data()));
+        setRows(
+          role === "admin" ? arr : arr.filter((row) => row.status === "Active")
+        );
+        const balance = getBalance(
+          arr.filter((row) => row.status === "Active")
+        );
+        setBalance(balance);
+      } catch (error) {}
     };
     getAccounts();
-  }, [refresh]);
+  }, [refresh, role]);
   const handleDrawerOpen = () => {
     setDrawerOpen(true);
   };
@@ -157,13 +321,12 @@ const ChartOfAccounts = () => {
    * else abort
    */
   const updateCell = async (current, event) => {
-    if (event.code === ("Enter" || "Tab")) {
+    if (event.code === "Enter" || event.code === "Tab") {
       const value = event.target.defaultValue || event.target.textContent;
-      current.row[current.field] = value;
-      if (role === "user") current.row.status = "Pending";
-      await updateChartOfAccounts(current.row);
       const e = createEvent(user, current, "cell");
-      updateAccountingEvents(e);
+      current.row[current.field] = value;
+      await updateChartOfAccounts(current, value, e.eventDate);
+      createAccountEvent(e);
     }
     setRefresh((refresh) => !refresh);
   };
@@ -178,82 +341,203 @@ const ChartOfAccounts = () => {
         pl: "16px",
       }}
     >
-      <Button variant="contained" onClick={() => handleDrawerOpen()}>
-        Add Account
-      </Button>
+      {role === "admin" && (
+        <Button variant="contained" onClick={() => handleDrawerOpen()}>
+          Add Account
+        </Button>
+      )}
       <GridToolbarColumnsButton />
       <GridToolbarFilterButton />
       <GridToolbarExport />
+      {role === "admin" && tab === 2 && selectedRows.length > 0 && (
+        <Button
+          id={theme === "dark" ? "delete-button-dark" : "delete-button"}
+          variant="contained"
+          onClick={() => handleClickOpen()}
+        >
+          Delete
+        </Button>
+      )}
+      <Dialog open={open} onClose={() => handleClickClose()}>
+        <DialogTitle>Are you sure?</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            Deleting the account also deletes its entries and events. Are you
+            sure you want to delete the account?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button variant="outlined" onClick={() => handleDeleteAccount()}>
+            Yes
+          </Button>
+          <Button
+            variant="contained"
+            onClick={() => handleClickClose()}
+            autoFocus
+          >
+            No
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Box>
   );
 
+  const viewTabs = ["Accounts", "Event log", "Delete account"];
+  const ViewTabs = viewTabs.map((view, index) => (
+    <Tab
+      key={`tab-${index}`}
+      sx={{
+        ":hover":
+          theme === "dark"
+            ? {
+                backgroundColor: "#1a1a1a",
+                color: "white",
+              }
+            : {
+                backgroundColor: "#ccefff",
+                color: "black",
+              },
+      }}
+      label={view}
+    />
+  ));
   return (
     <Fragment>
-      <Box
-        sx={{
-          display: "flex",
-          width: "100%",
-          backgroundColor: theme === "dark" ? "#121212" : "rgb(246, 243, 243)",
-          flexGrow: 1,
-        }}
-      >
-        <Typography
-          variant="h4"
-          sx={{ mt: "20px", ml: "20px", fontWeight: "bold" }}
-        >
-          {" "}
-          Chart of Accounts
-        </Typography>
-      </Box>
-      <Box
-        sx={{
-          height: "83%",
-          mb: "60px",
-          width: "100%",
-          backgroundColor:
-            theme === "dark"
-              ? "rgba(41, 37, 37, 0.745)"
-              : "rgb(246, 243, 243);",
-        }}
-      >
-        <DataGrid
-          slots={{
-            toolbar: GridToolbar,
+      {showIf(
+        !showInfo,
+        <Box
+          sx={{
+            width: "100%",
+            height: "100%",
+            gap: "20px",
+            display: "flex",
+            flexDirection: "column",
+            backgroundColor:
+              theme === "dark" ? "#121212" : "rgb(246, 243, 243)",
           }}
-          rows={rows}
-          columns={columns}
-          onCellEditStop={(current, event) => updateCell(current, event)}
-          initialState={{
-            pagination: {
-              paginationModel: {
-                pageSize: page,
-              },
-            },
-          }}
-          pageSizeOptions={pageSizeOptions}
-          checkboxSelection
-          disableRowSelectionOnClick
-          sx={tableStyles}
-        />
-        <Drawer
-          anchor="right"
-          open={drawerOpen}
-          onClose={() => handleDrawerClose()}
-          sx={{ zIndex: 1202 }}
         >
-          <Toolbar>
-            <IconButton
-              id="menu-item"
-              color="inherit"
-              edge="start"
-              onClick={() => handleDrawerClose()}
+          <Box
+            sx={{
+              pl: "50px",
+              display: "flex",
+              width: "100%",
+              flexGrow: 1,
+            }}
+          >
+            <Typography
+              variant="h4"
+              sx={{ mt: "20px", ml: "20px", fontWeight: "bold", flexGrow: 1 }}
             >
-              <CloseIcon />
-            </IconButton>
-          </Toolbar>
-          <AddAccountContent setRefresh={setRefresh} />
-        </Drawer>
-      </Box>
+              {" "}
+              Chart of Accounts
+            </Typography>
+            <Box sx={{ display: "flex", gap: "10px", mt: "20px", mr: "20px" }}>
+              <Box>
+                {balance === 0 ? (
+                  <CheckCircleIcon
+                    fontSize="large"
+                    sx={{ color: theme === "dark" ? "#33eb91" : "#00e676" }}
+                  />
+                ) : (
+                  <ReportProblemIcon
+                    fontSize="large"
+                    sx={{ color: theme === "dark" ? "#ff4569" : "#ff1744" }}
+                  />
+                )}
+              </Box>
+              <Typography variant="h5" sx={{ fontWeight: "bold" }}>
+                {`Balance: ${
+                  balance >= 0
+                    ? toCurrency.format(balance)
+                    : `(${toCurrency.format(balance * -1)})`
+                }`}
+              </Typography>
+            </Box>
+          </Box>
+          {role === "admin" && (
+            <Box
+              sx={{
+                pl: "50px",
+                display: "flex",
+                width: "100%",
+                borderBottom: 1,
+                borderColor: "divider",
+              }}
+            >
+              <Tabs
+                value={tab}
+                onChange={(e, n) => {
+                  handleTab(n);
+                }}
+              >
+                {ViewTabs}
+              </Tabs>
+            </Box>
+          )}
+          <Box
+            sx={{
+              height: "83%",
+              mb: "60px",
+              minWidth: "100%",
+              backgroundColor:
+                theme === "dark"
+                  ? "rgba(41, 37, 37, 0.745)"
+                  : "rgb(246, 243, 243);",
+            }}
+          >
+            {tab !== 1 && (
+              <DataGrid
+                slots={{
+                  toolbar: GridToolbar,
+                }}
+                rows={filteredRows}
+                columns={getColumns()}
+                onCellEditStop={(current, event) => updateCell(current, event)}
+                initialState={{
+                  pagination: {
+                    paginationModel: {
+                      pageSize: page,
+                    },
+                  },
+                  columns: {
+                    columnVisibilityModel: {
+                      createdDate: false,
+                      modifiedDate: false,
+                      comment: false,
+                    },
+                  },
+                }}
+                pageSizeOptions={pageSizeOptions}
+                checkboxSelection
+                disableRowSelectionOnClick
+                onRowSelectionModelChange={(state) => setSelectedRows(state)}
+                rowSelectionModel={selectedRows}
+                sx={tableStyles}
+              />
+            )}
+            {tab === 1 && <EventLog />}
+            <Drawer
+              anchor="right"
+              open={drawerOpen}
+              onClose={() => handleDrawerClose()}
+              sx={{ zIndex: 1202 }}
+            >
+              <Toolbar>
+                <IconButton
+                  id="menu-item"
+                  color="inherit"
+                  edge="start"
+                  onClick={() => handleDrawerClose()}
+                >
+                  <CloseIcon />
+                </IconButton>
+              </Toolbar>
+              <AddAccountContent setRefresh={setRefresh} />
+            </Drawer>
+          </Box>
+        </Box>
+      )}
+      {showIf(showInfo, <AccountDetail onClose={() => handleClose()} />)}
     </Fragment>
   );
 };

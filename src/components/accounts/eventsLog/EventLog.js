@@ -1,36 +1,20 @@
 import { Fragment, useEffect, useState } from "react";
 import { useThemeProvider } from "../../utils/themeProvider/CustomThemeProvier";
-import {
-  AppBar,
-  Box,
-  Drawer,
-  IconButton,
-  Link,
-  Toolbar,
-  Typography,
-} from "@mui/material";
+import { AppBar, Box, Drawer, IconButton, Link, Toolbar } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
-import { getDataBulk } from "../../../middleware/firebase/FireStoreUtils";
+import { getAllEvents } from "../../../middleware/firebase/FireStoreUtils";
 import {
   DataGrid,
   GridToolbarColumnsButton,
   GridToolbarFilterButton,
   GridToolbarExport,
 } from "@mui/x-data-grid";
+import {
+  headerElement,
+  linkStyle,
+  toCurrency,
+} from "../chartOfAccounts/ChartOfAccounts";
 import EventDetail from "./EventDetail";
-const headerElement = (param) => (
-  <Typography sx={{ fontWeight: "bold" }} variant="subtitle1">
-    {param.colDef.headerName}
-  </Typography>
-);
-const linkStyle = {
-  color: "primary.main",
-  fontSize: "14px",
-};
-const toCurrency = new Intl.NumberFormat("en-US", {
-  style: "currency",
-  currency: "USD",
-});
 
 /**
  * This function compares the date of the event
@@ -41,7 +25,7 @@ const toCurrency = new Intl.NumberFormat("en-US", {
  * @param {*} b
  * @returns -1, 1, or 0
  */
-const f = (a, b) => {
+export const f = (a, b) => {
   const x = new Date(a.id).getTime();
   const y = new Date(b.id).getTime();
   if (x > y) {
@@ -51,7 +35,6 @@ const f = (a, b) => {
   } else return 0;
 };
 const EventLog = () => {
-  const [allEvents, setAllEvents] = useState({});
   const [drawerContent, setDrawerContent] = useState({});
   const [rows, setRows] = useState([]);
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -81,6 +64,7 @@ const EventLog = () => {
       </Link>
     );
   };
+
   const columns = [
     {
       field: "id",
@@ -89,35 +73,43 @@ const EventLog = () => {
       flex: 1,
       renderHeader: (param) => headerElement(param),
       renderCell: (row) => toLink(row),
-      width: 500,
+      minWidth: 425,
     },
     {
       field: "username",
       headerName: "Username",
       flex: 0.3,
-      minWidth: 100,
+      minWidth: 150,
       renderHeader: (param) => headerElement(param),
     },
     {
-      field: "type",
-      headerName: "Type",
+      field: "action",
+      headerName: "Action",
       flex: 0.2,
-      minWidth: 100,
+      minWidth: 150,
       renderHeader: (param) => headerElement(param),
     },
     {
       field: "accountID",
-      headerName: "Made change to ID",
+      headerName: "Account ID",
       type: "number",
       flex: 0.3,
-      minWidth: 180,
+      minWidth: 120,
+      renderHeader: (param) => headerElement(param),
+    },
+    {
+      field: "accountName",
+      headerName: "Account Name",
+      type: "number",
+      flex: 0.3,
+      minWidth: 200,
       renderHeader: (param) => headerElement(param),
     },
     {
       field: "field",
       headerName: "Field Changed",
       flex: 0.3,
-      minWidth: 110,
+      minWidth: 150,
       renderHeader: (param) => headerElement(param),
     },
     {
@@ -144,28 +136,33 @@ const EventLog = () => {
    */
   useEffect(() => {
     const getData = async () => {
-      const rawData = await getDataBulk("accounting", "accountingEvents");
-      setAllEvents(rawData);
-      const filteredData = {};
-      Object.keys(rawData).forEach((key) => {
-        filteredData[key] = {
-          id: rawData[key].eventDate.toDate().toString(),
-          username: rawData[key].user.username,
-          type: rawData[key].change.type,
-          accountID: rawData[key].change.row?.id ?? rawData[key].change.id,
-          field: rawData[key].change.field ?? "",
-          currValue: rawData[key].change.field
-            ? rawData[key].change.row[rawData[key].change.field]
-            : "",
-          preValue: rawData[key].change.previous ?? "",
-        };
-      });
-      setRows(Object.values(filteredData).sort(f));
+      try {
+        const events = await getAllEvents();
+        const arr = [];
+        events.map((event) => arr.push(event.data()));
+        const formatedEvents = [];
+        arr.map(
+          (event, index) =>
+            (formatedEvents[index] = {
+              id: event.eventDate,
+              username: event.user.username,
+              action: event.change.type,
+              accountID: event.change.row.id,
+              accountName: event.change.row.name,
+              field: event.change.field,
+              currValue: event.change.field
+                ? event.change.row[event.change.field]
+                : "",
+              preValue: event.change.previous ?? "",
+            })
+        );
+        setRows(formatedEvents.sort(f));
+      } catch (error) {}
     };
     getData();
   }, []);
   const handleDrawerOpen = (row) => {
-    setDrawerContent(allEvents[row.id]);
+    setDrawerContent(rows.filter((item) => item.id === row.id)[0]);
     setDrawerOpen(true);
   };
   const handleDrawerClose = () => {
@@ -188,22 +185,6 @@ const EventLog = () => {
   );
   return (
     <Fragment>
-      <Box
-        sx={{
-          display: "flex",
-          width: "100%",
-          backgroundColor: theme === "dark" ? "#121212" : "rgb(246, 243, 243)",
-          flexGrow: 1,
-        }}
-      >
-        <Typography
-          variant="h4"
-          sx={{ mt: "20px", ml: "20px", fontWeight: "bold" }}
-        >
-          {" "}
-          Event log
-        </Typography>
-      </Box>
       <Box
         sx={{
           height: "83%",
