@@ -25,6 +25,7 @@ import NoteAltIcon from "@mui/icons-material/NoteAlt";
 import CalculateIcon from "@mui/icons-material/Calculate";
 import AttachFileIcon from "@mui/icons-material/AttachFile";
 import DownloadIcon from "@mui/icons-material/Download";
+import UploadDownload from "./uploadDownload/UploadDownload";
 
 const AcccountsPage = () => {
   const { role } = useAuth();
@@ -127,6 +128,7 @@ const AcccountsPage = () => {
       >
         {showIf(show === "Chart of accounts", <ChartOfAccounts />)}
         {showIf(show === "Event log", <EventLog />)}
+        {showIf(show === "Add file", <UploadDownload />)}
       </Box>
     </Box>
   );
