@@ -65,7 +65,7 @@ export const headerElement = (param) => (
  */
 const plusOrMinus = (row) => {
   let number = row.balance;
-  if (row.normalSide === "Credit"){
+  if (row.normalSide === "Credit") {
     if (number === 0);
     else number *= -1;
   }
