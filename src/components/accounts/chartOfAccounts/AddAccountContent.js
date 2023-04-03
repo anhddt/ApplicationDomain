@@ -207,7 +207,6 @@ const AddAccountContent = ({ setRefresh }) => {
             placeholder={getPlaceholder(index)}
             onChange={(e) => handleChange(e)}
             size="small"
-            onKeyDown={(e) => e.code === "Enter" && next(index)}
           />
         )}
         <Box sx={{ display: "flex", mb: 2, gap: "10px" }}>

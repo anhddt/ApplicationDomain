@@ -49,9 +49,15 @@ const Transition = forwardRef((props, ref) => {
 const plusOrMinus = (row, parentNormalSide) => {
   let number = row.total;
   if (parentNormalSide === "Debit") {
-    if (row.type === "Credit") number *= -1;
+    if (row.type === "Credit") {
+      if (number === 0);
+      else number *= -1;
+    }
   } else if (parentNormalSide === "Credit") {
-    if (row.type === "Debit") number *= -1;
+    if (row.type === "Debit") {
+      if (number === 0);
+      else number *= -1;
+    }
   }
   return number;
 };
