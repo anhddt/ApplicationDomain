@@ -294,7 +294,7 @@ const ChartOfAccounts = () => {
     },
   ];
   const getColumns = () => {
-    if (role !== "admin") columns.splice(9, 2);
+    if (role !== "admin") columns.splice(9, 3);
     return columns;
   };
   useMemo(() => {
