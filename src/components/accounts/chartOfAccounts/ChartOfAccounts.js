@@ -39,6 +39,9 @@ import { createEvent } from "../eventsLog/event";
 import { showIf } from "../../utils/conditionalRendering";
 import EventLog from "../eventsLog/EventLog";
 
+const f = (a, b) => {
+  return a?.id - b?.id;
+};
 /**
  * This convert the given number to us currency.
  */
@@ -316,7 +319,9 @@ const ChartOfAccounts = () => {
         const arr = [];
         q.map((item) => arr.push(item.data()));
         setRows(
-          role === "admin" ? arr : arr.filter((row) => row.status === "Active")
+          role === "admin"
+            ? arr.sort(f)
+            : arr.filter((row) => row.status === "Active").sort(f)
         );
         const balance = getBalance(
           arr.filter((row) => row.status === "Active")
@@ -381,11 +386,15 @@ const ChartOfAccounts = () => {
         </Button>
       )}
       <Dialog open={open} onClose={() => handleClickClose()}>
-        <DialogTitle>Are you sure?</DialogTitle>
+        <DialogTitle sx={{ fontWeight: "bold" }}>Are you sure?</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            Deleting the account also deletes its entries and events. Are you
-            sure you want to delete the account?
+            {
+              "Deleting the account also deletes its entries and events. Are you sure you want to delete the following account(s)?"
+            }
+          </DialogContentText>
+          <DialogContentText sx={{ fontWeight: "bold" }}>
+            {`To be deleted: ${selectedRows.toString()}.`}
           </DialogContentText>
         </DialogContent>
         <DialogActions>
@@ -521,6 +530,7 @@ const ChartOfAccounts = () => {
                       pageSize: page,
                     },
                   },
+                  sorting: "ascending",
                   columns: {
                     columnVisibilityModel: {
                       createdDate: false,
