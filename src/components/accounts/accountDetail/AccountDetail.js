@@ -105,6 +105,18 @@ const AccountDetail = ({ onClose }) => {
       </Link>
     );
   };
+  const toLink2 = (row) => {
+    return (
+      <Link
+        underline="hover"
+        sx={linkStyle}
+        component="button"
+        onClick={() => {}}
+      >
+        {row.value}
+      </Link>
+    );
+  };
   const handleDrawerOpen = (row) => {
     setDrawerContent(eventRows.filter((item) => item.id === row.id)[0]);
     setDrawerOpen(true);
@@ -249,7 +261,7 @@ const AccountDetail = ({ onClose }) => {
       type: "string",
       flex: 1,
       renderHeader: (param) => headerElement(param),
-      renderCell: (row) => toLink(row),
+      renderCell: (row) => toLink2(row),
       minWidth: 420,
     },
     {
