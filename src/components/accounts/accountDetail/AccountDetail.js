@@ -101,7 +101,7 @@ const AccountDetail = ({ onClose }) => {
           handleDrawerOpen(row);
         }}
       >
-        {row.value}
+        {new Date(row.value).toString()}
       </Link>
     );
   };
@@ -215,7 +215,7 @@ const AccountDetail = ({ onClose }) => {
       renderHeader: (param) => headerElement(param),
     },
     {
-      field: "type",
+      field: "eventType",
       headerName: "Action",
       flex: 0.2,
       minWidth: 100,
@@ -275,17 +275,26 @@ const AccountDetail = ({ onClose }) => {
       field: "type",
       headerName: "Type",
       headerAlign: "center",
-      flex: 0.3,
-      minWidth: 110,
+      width: 150,
       renderHeader: (param) => headerElement(param),
       renderCell: (row) => (
         <Box
           sx={{
+            pl: "15px",
+            pr: "15px",
             width: "100%",
             height: "100%",
             display: "flex",
             flexDirection: "column",
             justifyContent: "center",
+            backgroundColor:
+              row.value === "Debit"
+                ? theme === "dark"
+                  ? "info.dark"
+                  : "info.light"
+                : theme === "dark"
+                ? "error.dark"
+                : "error.light",
           }}
         >
           <Typography textAlign={row.value === "Debit" ? "left" : "right"}>
@@ -404,7 +413,7 @@ const AccountDetail = ({ onClose }) => {
           (formatedEvents[index] = {
             id: event.eventDate,
             username: event.user.username,
-            type: event.change.type,
+            eventType: event.change.type,
             entryName: event.change.row.name,
             field: event.change.field,
             currValue: event.change.field

@@ -148,11 +148,12 @@ const ChartOfAccounts = () => {
     );
     await deleteAccount(selectedRows);
     handleClickClose();
-    currents.map((current) => {
-      const e = createEvent(user, current, "delete");
-      createAccountEvent(e);
-      return true;
-    });
+    for (const current of currents) {
+      setTimeout(() => {
+        const e = createEvent(user, current, "delete");
+        createAccountEvent(e);
+      }, 2000);
+    }
     setSelectedRows([]);
     setRefresh((r) => !r);
   };
@@ -215,6 +216,14 @@ const ChartOfAccounts = () => {
             justifyContent: "center",
             pr: "15px",
             pl: "15px",
+            backgroundColor:
+              row.value === "Debit"
+                ? theme === "dark"
+                  ? "info.dark"
+                  : "info.light"
+                : theme === "dark"
+                ? "error.dark"
+                : "error.light",
           }}
         >
           <Typography textAlign={row.value === "Debit" ? "left" : "right"}>
@@ -276,6 +285,7 @@ const ChartOfAccounts = () => {
       type: "string",
       flex: 1,
       renderHeader: (param) => headerElement(param),
+      renderCell: (row) => new Date(row.createdDate).toString(),
       minWidth: 420,
     },
     {
@@ -284,6 +294,7 @@ const ChartOfAccounts = () => {
       type: "string",
       flex: 1,
       renderHeader: (param) => headerElement(param),
+      renderCell: (row) => new Date(row.modifiedDate).toString(),
       minWidth: 420,
     },
     {
@@ -368,7 +379,7 @@ const ChartOfAccounts = () => {
         pl: "16px",
       }}
     >
-      {role === "admin" && (
+      {role === "admin" && tab === 0 && (
         <Button variant="contained" onClick={() => handleDrawerOpen()}>
           Add Account
         </Button>
@@ -467,12 +478,17 @@ const ChartOfAccounts = () => {
                 {balance === 0 ? (
                   <CheckCircleIcon
                     fontSize="large"
-                    sx={{ color: theme === "dark" ? "#33eb91" : "#00e676" }}
+                    sx={{
+                      color:
+                        theme === "dark" ? "success.dark" : "success.light",
+                    }}
                   />
                 ) : (
                   <ReportProblemIcon
                     fontSize="large"
-                    sx={{ color: theme === "dark" ? "#ff4569" : "#ff1744" }}
+                    sx={{
+                      color: theme === "dark" ? "error.dark" : "error.light",
+                    }}
                   />
                 )}
               </Box>
