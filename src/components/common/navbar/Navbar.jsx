@@ -10,7 +10,13 @@ function Navbar() {
   return (
     <section className="navbar">
       {" "}
-      <ReactCalendarIcon size="large" fontSize="large" view="month" />
+      <ReactCalendarIcon
+        id2="menu-item-header-calendar"
+        id1="lidup-icon-header-calendar"
+        size="large"
+        fontSize="large"
+        view="month"
+      />
       {/* These can be changed, added, or removed without issue.
         As of 2/13 not hooked up. */}
       <NavLink to="/" className="navbar-item">

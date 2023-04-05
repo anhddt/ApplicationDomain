@@ -12,7 +12,7 @@ import ExpandLessIcon from "@mui/icons-material/ExpandLess";
 import Brightness4Icon from "@mui/icons-material/Brightness4";
 import Brightness7Icon from "@mui/icons-material/Brightness7";
 
-const LoginDropDownIcon = () => {
+const LoginDropDownIcon = ({ id1, id2 }) => {
   const { theme, setTheme } = useThemeProvider();
   const navigateTo = useNavigate();
   const [anchorEl, setAnchorEl] = useState();
@@ -36,11 +36,11 @@ const LoginDropDownIcon = () => {
     <Box>
       <IconButton
         color="inherit"
-        id={anchorEl ? "profile-icon" : "profile-expand-chevron"}
+        id={anchorEl ? id1 : id2}
         onClick={(e) => handleProfileClick(e)}
       >
         <ReadMoreIcon />
-        {showIf(!anchorEl, <ExpandMoreIcon id="profile-expand-chevron" />)}
+        {showIf(!anchorEl, <ExpandMoreIcon id={id2} />)}
         {showIf(anchorEl, <ExpandLessIcon />)}
       </IconButton>
       <Menu

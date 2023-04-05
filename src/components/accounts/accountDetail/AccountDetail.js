@@ -37,6 +37,7 @@ import {
 } from "@mui/x-data-grid";
 import AddEntriesContent from "./AddEntriesContent";
 import {
+  getAccount,
   getAllEntries,
   getAllEntryEvents,
   createEntryEvent,
@@ -81,6 +82,7 @@ const getTotal = (ids, filteredRows, parentNormalSide) => {
 };
 
 const AccountDetail = ({ onClose }) => {
+  const [parentAccount, setParentAccount] = useState({});
   const [dialogOpen, setDialogOpen] = useState(false);
   const [drawerContent, setDrawerContent] = useState({});
   const [eventRows, setEventRows] = useState([]);
@@ -420,6 +422,8 @@ const AccountDetail = ({ onClose }) => {
   useEffect(() => {
     const id = accountDetailPersistence.id;
     const getDetails = async () => {
+      const parentAcc = await getAccount(accountDetailPersistence.id);
+      setParentAccount(parentAcc);
       const details = await getAllEntries(id);
       const rawData = [];
       details.map((detail) => rawData.push(detail.data()));
@@ -489,11 +493,19 @@ const AccountDetail = ({ onClose }) => {
         <Button onClick={() => onClose()} variant="outlined">
           <ArrowBackIcon /> Go Back
         </Button>
+        {/* <Typography
+          variant="h4"
+          sx={{ ml: "20px", fontWeight: "bold" }}
+        >
+          Account details
+        </Typography> */}
         <Typography
           variant="h4"
           sx={{ ml: "20px", fontWeight: "bold", flexGrow: 1 }}
         >
-          Account details
+          {`${parentAccount.name ? parentAccount.name : ""} (${
+            parentAccount.normalSide ? parentAccount.normalSide : ""
+          })`}
         </Typography>
         <Typography variant="h5" sx={{ mr: "20px", fontWeight: "bold" }}>
           {`Account Balance: ${
@@ -546,9 +558,7 @@ const AccountDetail = ({ onClose }) => {
               },
             },
           }}
-          isCellEditable={
-            tab !== 4 ? (oj) => oj.row.status === "Pending" : true
-          }
+          isCellEditable={(oj) => oj.row.status === "Pending"}
           onCellEditStop={(current, event) => updateCell(current, event)}
           pageSizeOptions={pageSizeOptions}
           checkboxSelection
