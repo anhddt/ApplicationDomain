@@ -4,6 +4,10 @@ import {
   Box,
   Button,
   Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
   Drawer,
   IconButton,
   Slide,
@@ -12,6 +16,7 @@ import {
   Toolbar,
   Link,
   Typography,
+  TextField,
 } from "@mui/material";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import CloseIcon from "@mui/icons-material/Close";
@@ -82,6 +87,10 @@ const AccountDetail = ({ onClose }) => {
   const apiRef = useGridApiRef();
   const { tableStyles, theme } = useThemeProvider();
   const { accountDetailPersistence, role, user } = useAuth();
+  const [open, setOpen] = useState(false);
+  const [comment, setComment] = useState("");
+  const [row, setRow] = useState({});
+  const [changeValue, setChangeValue] = useState("");
   const [balance, setBalance] = useState(0);
   const [total, setTotal] = useState(0);
   const [refresh, setRefresh] = useState(false);
@@ -117,12 +126,31 @@ const AccountDetail = ({ onClose }) => {
       </Link>
     );
   };
+  const handleChange = (e) => {
+    setComment(e.target.value);
+  };
   const handleDrawerOpen = (row) => {
     setDrawerContent(eventRows.filter((item) => item.id === row.id)[0]);
     setDrawerOpen(true);
   };
   const handleDrawerClose = () => {
     setDrawerOpen(false);
+  };
+  const handleClickClose = async () => {
+    handleSubmit(row, changeValue);
+    setTimeout(async () => {
+      const copy = row;
+      copy.field = "comment";
+      copy.formattedValue = copy.row.comment;
+      handleSubmit(copy, comment);
+    }, 2000);
+    handleClickCancel();
+  };
+  const handleClickCancel = () => {
+    setComment("");
+    setChangeValue("");
+    setRow({});
+    setOpen(false);
   };
   const handleDialogOpen = () => {
     setDialogOpen(true);
@@ -353,11 +381,23 @@ const AccountDetail = ({ onClose }) => {
   const updateCell = async (current, event) => {
     if (event.code === "Enter" || event.code === "Tab") {
       const value = event.target.defaultValue || event.target.textContent;
-      await updateEntry(current, accountDetailPersistence.id, value);
-      current.row[current.field] = value;
-      const e = createEvent(user, current, "cell");
-      createEntryEvent(e, accountDetailPersistence.id);
+      if (current.field === "status" && value === "Rejected") {
+        setOpen(true);
+        setRow(current);
+        setChangeValue(value);
+      } else handleSubmit(current, value);
     }
+  };
+
+  const handleSubmit = async (current, value) => {
+    await updateEntry(current, accountDetailPersistence.id, value);
+    current.row[current.field] = value;
+    const e = createEvent(user, current, "cell");
+    handleEvents(e);
+  };
+
+  const handleEvents = (e) => {
+    createEntryEvent(e, accountDetailPersistence.id);
     setRefresh((refresh) => !refresh);
   };
 
@@ -506,6 +546,9 @@ const AccountDetail = ({ onClose }) => {
               },
             },
           }}
+          isCellEditable={
+            tab !== 4 ? (oj) => oj.row.status === "Pending" : true
+          }
           onCellEditStop={(current, event) => updateCell(current, event)}
           pageSizeOptions={pageSizeOptions}
           checkboxSelection
@@ -567,6 +610,37 @@ const AccountDetail = ({ onClose }) => {
           </AppBar>
           <EventDetail detail={drawerContent} />
         </Drawer>
+        <Dialog open={open} onClose={() => handleClickCancel()}>
+          <DialogTitle sx={{ fontWeight: "bold" }}>
+            Please provide a comment.
+          </DialogTitle>
+          <DialogContent>
+            <DialogContentText>
+              <TextField
+                sx={{
+                  width: "350px",
+                }}
+                multiline
+                value={comment}
+                placeholder={"You must enter a comment to reject an entry."}
+                onChange={(e) => handleChange(e)}
+                size="small"
+              />
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button variant="outlined" onClick={() => handleClickClose()}>
+              Yes
+            </Button>
+            <Button
+              variant="contained"
+              onClick={() => handleClickCancel()}
+              autoFocus
+            >
+              No
+            </Button>
+          </DialogActions>
+        </Dialog>
       </Box>
     </Box>
   );
