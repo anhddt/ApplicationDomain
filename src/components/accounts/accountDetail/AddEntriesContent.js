@@ -53,6 +53,11 @@ const AddEntriesContent = ({ setRefresh }) => {
   const [currentStep, setCurrentStep] = useState(0);
   const [newEntry, setNewEntry] = useState(blankEntry);
   const [amounts, setAmounts] = useState([{ amount: "", description: "" }]);
+
+  /**
+   * Once a field is filled in the useEffect picked up the changes
+   * and automatically update the changes to the newEntry variable.
+   */
   useEffect(() => {
     const date = new Date().toString();
     setNewEntry((rest) => ({
@@ -118,8 +123,10 @@ const AddEntriesContent = ({ setRefresh }) => {
   // The page reload and the step is reset back to 0.
   const finish = async () => {
     await createEntry(newEntry);
-    const e = createEvent(user, newEntry, "new");
-    createEntryEvent(e, accountDetailPersistence.id);
+    setTimeout(() => {
+      const e = createEvent(user, newEntry, "new");
+      createEntryEvent(e, accountDetailPersistence.id);
+    }, 2000);
     setRefresh((refresh) => !refresh);
     handleCancel();
   };

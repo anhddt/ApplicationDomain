@@ -62,7 +62,7 @@ const AddAccountContent = ({ setRefresh }) => {
       setNewAccount((rest) => ({
         ...rest,
         id: counter,
-        createdDate: new Date().toString(),
+        createdDate: new Date().toISOString(),
       }));
     };
     currentStep === steps.length - 1 && getCounter();

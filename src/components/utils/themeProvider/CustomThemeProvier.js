@@ -39,7 +39,6 @@ const CustomThemeProvider = ({ children }) => {
     border: "none",
     "& .MuiDataGrid-cell:hover": {
       backgroundColor: getBodyHoverColor(),
-      color: "primary.main",
     },
     "& .MuiDataGrid-columnHeaderCheckbox": {
       backgroundColor: getHeaderColor(),

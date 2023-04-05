@@ -14,7 +14,7 @@ const cellUpdateEvent = (user, change) => {
     previous: change.formattedValue,
   };
   return {
-    eventDate: new Date().toString(),
+    eventDate: new Date().toISOString(),
     change: changeEvent,
     user: user,
   };
@@ -39,7 +39,7 @@ const itemCreatedEvent = (user, change, type) => {
     previous: "",
   };
   return {
-    eventDate: new Date().toString(),
+    eventDate: new Date().toISOString(),
     change: changeEvent,
     user: user,
   };
