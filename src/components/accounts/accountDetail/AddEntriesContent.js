@@ -114,9 +114,11 @@ const AddEntriesContent = ({ setRefresh }) => {
   const handleAddMore = () => {
     setAmounts([...amounts, { amount: "", description: "" }]);
   };
-  const handleDiscard = () => {
+  const handleDiscard = (index) => {
     const arr = [...amounts];
-    arr.pop();
+    if (index === 0 && arr.length === 1) {
+      arr[0] = { amount: "", description: "" };
+    } else arr.splice(index, 1);
     setAmounts(arr);
   };
   // After finishing creating the account,
@@ -191,7 +193,7 @@ const AddEntriesContent = ({ setRefresh }) => {
         <Tooltip title="Discard" placement="right">
           <IconButton
             id={theme === "dark" ? "cancel-x-button-dark" : "cancel-x-button"}
-            onClick={() => handleDiscard()}
+            onClick={() => handleDiscard(index)}
           >
             <CancelIcon />
           </IconButton>
