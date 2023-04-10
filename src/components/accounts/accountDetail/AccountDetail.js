@@ -671,7 +671,7 @@ const AccountDetail = ({ onClose }) => {
               color: "inherit",
             }}
           >
-            <Toolbar>
+            <Toolbar sx={{ boxShadow: 5 }}>
               <IconButton
                 id="menu-item"
                 color="inherit"
@@ -682,7 +682,16 @@ const AccountDetail = ({ onClose }) => {
               </IconButton>
             </Toolbar>
           </AppBar>
-          <Grid container sx={{ p: "50px" }}>
+          <Grid
+            container
+            sx={{
+              p: "50px",
+              backgroundColor:
+                theme === "dark"
+                  ? "rgba(30, 27, 27, 0.745)"
+                  : "rgb(223, 223, 223)",
+            }}
+          >
             <EntryInfo entries={entries} />
           </Grid>
         </Drawer>

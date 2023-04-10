@@ -30,7 +30,6 @@ import { Transition } from "../accountDetail/AccountDetail";
 import AddEntriesContent from "../accountDetail/AddEntriesContent";
 import EntryInfo from "../accountDetail/EntryInfo";
 import {
-  getAccountList,
   getEntry,
   getJournals,
 } from "../../../middleware/firebase/FireStoreUtils";
@@ -43,7 +42,6 @@ const JournalReport = () => {
   const [refresh, setRefresh] = useState(false);
   const [rows, setRows] = useState([]);
   const [entries, setEntries] = useState([]);
-  const [allAccounts, setAllAccounts] = useState([""]);
   const [debits, setDebits] = useState(0);
   const [credits, setCredits] = useState(0);
   const page = 10;
@@ -63,7 +61,7 @@ const JournalReport = () => {
       field: "entries",
       headerName: "Accounts",
       renderHeader: (param) => headerElement(param),
-      renderCell: (row) => renderAccount(row),
+      renderCell: (row) => RenderAccount(row),
       flex: 1,
       width: 300,
     },
@@ -104,11 +102,12 @@ const JournalReport = () => {
     setDialogOpen(false);
     setRefresh((r) => !r);
   };
+
   const handleDrawerOpen = (row) => {
-    const entries = row.row.entries;
+    const e = row.row.entries;
     const getEntries = async () => {
-      const entry1 = await getEntry(entries[0].parent, entries[0].entry);
-      const entry2 = await getEntry(entries[1].parent, entries[1].entry);
+      const entry1 = await getEntry(e[0].parent, e[0].entry);
+      const entry2 = await getEntry(e[1].parent, e[1].entry);
       const arr = [entry1, entry2];
       setEntries(arr);
     };
@@ -121,8 +120,6 @@ const JournalReport = () => {
   useEffect(() => {
     const journals = async () => {
       const allJournals = await getJournals();
-      const accounts = await getAccountList();
-      setAllAccounts(accounts);
       setRows(allJournals);
     };
     journals();
@@ -144,24 +141,26 @@ const JournalReport = () => {
       </Link>
     );
   };
-  const renderAccount = (row) => (
-    <Box sx={{ display: "flex", flexDirection: "column" }}>
-      <Typography>
-        {
-          allAccounts.filter((account) =>
-            account.includes(row.row.entries[0].parent)
-          )[0]
-        }
-      </Typography>
-      <Typography>
-        {
-          allAccounts.filter((account) =>
-            account.includes(row.row.entries[1].parent)
-          )[0]
-        }
-      </Typography>
-    </Box>
-  );
+  const RenderAccount = (row) => {
+    const [label1, setLabel1] = useState("");
+    const [label2, setLabel2] = useState("");
+    const e = row.row.entries;
+    useEffect(() => {
+      const getLabels = async () => {
+        const l1 = await getEntry(e[0].parent, e[0].entry);
+        const l2 = await getEntry(e[1].parent, e[1].entry);
+        setLabel1(l1.parentLabel);
+        setLabel2(l2.parentLabel);
+      };
+      getLabels();
+    }, [e]);
+    return (
+      <Box sx={{ display: "flex", flexDirection: "column" }}>
+        <Typography>{label1}</Typography>
+        <Typography>{label2}</Typography>
+      </Box>
+    );
+  };
   const renderDebit = (row) => {
     const type1 = row.row.entries[0].type;
     const type2 = row.row.entries[1].type;
@@ -309,7 +308,7 @@ const JournalReport = () => {
               color: "inherit",
             }}
           >
-            <Toolbar>
+            <Toolbar sx={{ boxShadow: 5 }}>
               <IconButton
                 id="menu-item"
                 color="inherit"
@@ -320,7 +319,16 @@ const JournalReport = () => {
               </IconButton>
             </Toolbar>
           </AppBar>
-          <Grid container sx={{ p: "50px" }}>
+          <Grid
+            container
+            sx={{
+              p: "50px",
+              backgroundColor:
+                theme === "dark"
+                  ? "rgba(30, 27, 27, 0.745)"
+                  : "rgb(223, 223, 223)",
+            }}
+          >
             <EntryInfo entries={entries} />
           </Grid>
         </Drawer>

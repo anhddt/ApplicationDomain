@@ -49,6 +49,7 @@ const AddEntriesContent = ({ parent }) => {
   const [entries, setEntries] = useState([
     {
       id: "",
+      parentLabel: "",
       parent: parent ? accountDetailPersistence.id : null,
       name: "",
       type: "",
@@ -62,6 +63,7 @@ const AddEntriesContent = ({ parent }) => {
     },
     {
       id: "",
+      parentLabel: "",
       parent: null,
       name: "",
       type: "",
@@ -95,6 +97,7 @@ const AddEntriesContent = ({ parent }) => {
     if (v !== null) {
       const arr = [...entries];
       arr[i].parent = Number(v.substr(0, v.indexOf(" ")));
+      arr[i].parentLabel = v;
       setEntries(arr);
     }
   };
@@ -139,6 +142,7 @@ const AddEntriesContent = ({ parent }) => {
     setEntries([
       {
         id: "",
+        parentLabel: "",
         parent: null,
         name: "",
         type: "",
@@ -152,6 +156,7 @@ const AddEntriesContent = ({ parent }) => {
       },
       {
         id: "",
+        parentLabel: "",
         parent: null,
         name: "",
         type: "",
@@ -172,6 +177,10 @@ const AddEntriesContent = ({ parent }) => {
     if (ready[0]) {
       if (entriesBalance(arr)) {
         const date = new Date().toISOString();
+        if (arr[0].parent === accountDetailPersistence.id)
+          arr[0].parentLabel = allAccounts.filter((account) =>
+            account.includes(arr[0].parent)
+          )[0];
         for (let i = 0; i <= arr.length - 1; i++) {
           arr[i].id = date;
           arr[i].journal = date;
