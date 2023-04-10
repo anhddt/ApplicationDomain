@@ -48,3 +48,48 @@ export const isValidPw = (password) => {
     checkPwForSpecialChar(password)
   );
 };
+
+/**
+ * veryfy if balance is 0
+ * @param {*} arr
+ * @returns true or false
+ */
+export const entriesBalance = (arr) => {
+  let total1 = arr[0].total;
+  let total2 = arr[1].total;
+  const type1 = arr[0].type;
+  const type2 = arr[1].type;
+  if (type1 === "Credit") total1 *= -1;
+  else if (type2 === "Credit") total2 *= -1;
+  const sum = total1 + total2;
+  return sum === 0;
+};
+/**
+ * veryfy if all required fields are filled
+ * @param {*} arr
+ * @returns true or false
+ */
+export const isGood = (arr) => {
+  const a1 = arr[0];
+  const a2 = arr[1];
+  if (a1.parent === null || a2.parent === null)
+    return [false, "Must include parent account."];
+  if (a1.name === "" || a2.name === "") return [false, "Must include name."];
+  if (a1.type === "" || a2.type === "")
+    return [false, "Must include debit or credit."];
+  if (a1.total === 0 || a2.total === 0) return [false, "Must include amount."];
+  if (a1.parent === a2.parent)
+    return [false, "Parent accounts must be different."];
+  if (a1.type === a2.type) return [false, "Entry types must be different."];
+  if (a1.total < 0 || a2.total < 0)
+    return [false, "Amount cannot be negative."];
+  if (isNaN(a1.total) || isNaN(a2.total))
+    return [false, "Amount contain letter(s)."];
+  for (const ar of arr) {
+    for (const am of ar.amount) {
+      if (Number(am.amount) < 0)
+        return [false, "All amounts must be positive."];
+    }
+  }
+  return [true, ""];
+};

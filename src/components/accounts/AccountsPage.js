@@ -16,9 +16,11 @@ import { useThemeProvider } from "../utils/themeProvider/CustomThemeProvier";
 import HomeBar from "../common/header/Homebar";
 import CustomDrawer from "../common/drawer/Drawer";
 import ChartOfAccounts from "./chartOfAccounts/ChartOfAccounts";
+import JournalReport from "./journal/JournalReport";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import FormatListNumberedIcon from "@mui/icons-material/FormatListNumbered";
+import BorderColorIcon from "@mui/icons-material/BorderColor";
 import CalculateIcon from "@mui/icons-material/Calculate";
 import AttachFileIcon from "@mui/icons-material/AttachFile";
 import DownloadIcon from "@mui/icons-material/Download";
@@ -37,6 +39,7 @@ const AcccountsPage = () => {
    */
   const listItems = [
     { primary: "Chart of accounts", icon: <FormatListNumberedIcon /> },
+    { primary: "Journal", icon: <BorderColorIcon /> },
     { primary: "Calculator", icon: <CalculateIcon /> },
     { primary: "Add file", icon: <AttachFileIcon /> },
     { primary: "Download", icon: <DownloadIcon /> },
@@ -96,10 +99,16 @@ const AcccountsPage = () => {
         <Toolbar />
         <List
           sx={{ height: "100%", display: "block" }}
-          id={theme === "dark" ? "box-dark" : "box-light"}
+          id={
+            theme === "dark"
+              ? "account-page-left-drawer-dark"
+              : "account-page-left-drawer-light"
+          }
         >
           {ListItem}
-          <Divider />
+          <Divider
+            sx={{ backgroundColor: theme === "dark" ? "#B7B7B7" : "#DDDDDD" }}
+          />
           <List>
             <ListItemButton id="menu-item" onClick={() => handleDrawer()}>
               <ListItemIcon
@@ -120,6 +129,7 @@ const AcccountsPage = () => {
         id={theme === "dark" ? "paper-dark" : "paper-light"}
       >
         {showIf(show === "Chart of accounts", <ChartOfAccounts />)}
+        {showIf(show === "Journal", <JournalReport />)}
       </Box>
     </Box>
   );

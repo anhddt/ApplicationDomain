@@ -187,8 +187,7 @@ const EventLog = () => {
     <Fragment>
       <Box
         sx={{
-          height: "83%",
-          mb: "60px",
+          height: "100%",
           width: "100%",
           backgroundColor:
             theme === "dark"
