@@ -30,5 +30,8 @@ service cloud.firestore {
     match /accounting/accountingEvents {
       allow read, update;
     }
+    match /journal/{journal} {
+      allow read, write;
+    }
   }
 }

@@ -9,6 +9,7 @@ import {
   DialogContentText,
   DialogTitle,
   Drawer,
+  Grid,
   IconButton,
   Slide,
   Tab,
@@ -37,18 +38,21 @@ import {
 } from "@mui/x-data-grid";
 import AddEntriesContent from "./AddEntriesContent";
 import {
+  createEntryEvent,
   getAccount,
   getAllEntries,
   getAllEntryEvents,
-  createEntryEvent,
+  getEntry,
+  getJournal,
   updateEntry,
   updateAccountBalance,
 } from "../../../middleware/firebase/FireStoreUtils";
 import { f } from "../eventsLog/EventLog";
 import { createEvent } from "../eventsLog/event";
 import EventDetail from "../eventsLog/EventDetail";
+import EntryInfo from "./EntryInfo";
 
-const Transition = forwardRef((props, ref) => {
+export const Transition = forwardRef((props, ref) => {
   return <Slide direction="left" ref={ref} {...props} />;
 });
 
@@ -85,6 +89,7 @@ const AccountDetail = ({ onClose }) => {
   const [parentAccount, setParentAccount] = useState({});
   const [dialogOpen, setDialogOpen] = useState(false);
   const [drawerContent, setDrawerContent] = useState({});
+  const [entries, setEntries] = useState([]);
   const [eventRows, setEventRows] = useState([]);
   const apiRef = useGridApiRef();
   const { tableStyles, theme } = useThemeProvider();
@@ -99,6 +104,7 @@ const AccountDetail = ({ onClose }) => {
   const [rows, setRows] = useState([]);
   const [filteredRows, setFilteredRows] = useState([]);
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const [journalOpen, setJournalOpen] = useState(false);
   const [tab, setTab] = useState(0);
   const page = 10;
   const pageSizeOptions = [10, 20, 50, 100];
@@ -122,11 +128,29 @@ const AccountDetail = ({ onClose }) => {
         underline="hover"
         sx={linkStyle}
         component="button"
-        onClick={() => {}}
+        onClick={() => {
+          handleJournalOpen(row);
+        }}
       >
-        {row.value}
+        {new Date(row.value).toString()}
       </Link>
     );
+  };
+  const handleJournalOpen = (row) => {
+    const jn = row.row.journal;
+    const getEntries = async () => {
+      const journal = await getJournal(jn);
+      const entries = journal.entries;
+      const entry1 = await getEntry(entries[0].parent, entries[0].entry);
+      const entry2 = await getEntry(entries[1].parent, entries[1].entry);
+      const arr = [entry1, entry2];
+      setEntries(arr);
+    };
+    getEntries();
+    setJournalOpen(true);
+  };
+  const handleJournalClose = () => {
+    setJournalOpen(false);
   };
   const handleChange = (e) => {
     setComment(e.target.value);
@@ -159,6 +183,7 @@ const AccountDetail = ({ onClose }) => {
   };
   const handleDialogClose = () => {
     setDialogOpen(false);
+    setRefresh((r) => !r);
   };
   const handleTab = (newTab) => {
     setTab(newTab);
@@ -198,6 +223,7 @@ const AccountDetail = ({ onClose }) => {
         backgroundColor:
           theme === "dark" ? "rgba(30, 27, 27, 0.745)" : "rgb(223, 223, 223)",
         pl: "16px",
+        pt: "3px",
       }}
     >
       {tab !== 4 && (
@@ -439,6 +465,7 @@ const AccountDetail = ({ onClose }) => {
             description: data.description,
             status: data.status,
             comment: data.comment,
+            journal: data.journal,
           })
       );
       setRows(filteredData.sort(f));
@@ -475,7 +502,7 @@ const AccountDetail = ({ onClose }) => {
       sx={{
         width: "100%",
         height: "100%",
-        gap: "20px",
+        gap: "2px",
         display: "flex",
         flexDirection: "column",
         backgroundColor: theme === "dark" ? "#121212" : "rgb(246, 243, 243)",
@@ -483,65 +510,70 @@ const AccountDetail = ({ onClose }) => {
     >
       <Box
         sx={{
-          pl: "25px",
-          display: "flex",
           width: "100%",
-          alignItems: "center",
-          pt: "20px",
+          display: "flex",
+          flexDirection: "column",
+          backgroundColor: theme === "dark" ? "#121212" : "rgb(246, 243, 243)",
         }}
       >
-        <Button onClick={() => onClose()} variant="outlined">
-          <ArrowBackIcon /> Go Back
-        </Button>
-        {/* <Typography
-          variant="h4"
-          sx={{ ml: "20px", fontWeight: "bold" }}
-        >
-          Account details
-        </Typography> */}
-        <Typography
-          variant="h4"
-          sx={{ ml: "20px", fontWeight: "bold", flexGrow: 1 }}
-        >
-          {`${parentAccount.name ? parentAccount.name : ""} (${
-            parentAccount.normalSide ? parentAccount.normalSide : ""
-          })`}
-        </Typography>
-        <Typography variant="h5" sx={{ mr: "20px", fontWeight: "bold" }}>
-          {`Account Balance: ${
-            balance >= 0
-              ? toCurrency.format(balance)
-              : `(${toCurrency.format(balance * -1)})`
-          }`}
-        </Typography>
-      </Box>
-      <Box
-        sx={{
-          pl: "50px",
-          display: "flex",
-          width: "100%",
-          borderBottom: 1,
-          borderColor: "divider",
-        }}
-      >
-        <Tabs
-          value={tab}
-          onChange={(e, n) => {
-            handleTab(n);
+        <Box
+          sx={{
+            pl: "25px",
+            display: "flex",
+            width: "100%",
+            alignItems: "center",
+            pt: "20px",
           }}
         >
-          {ViewTabs}
-        </Tabs>
+          <Button onClick={() => onClose()} variant="outlined">
+            <ArrowBackIcon /> Go Back
+          </Button>
+          <Typography
+            variant="h4"
+            sx={{ ml: "20px", fontWeight: "bold", flexGrow: 1 }}
+          >
+            {`${parentAccount.name ? parentAccount.name : ""} (${
+              parentAccount.normalSide ? parentAccount.normalSide : ""
+            })`}
+          </Typography>
+          <Typography variant="h5" sx={{ mr: "20px", fontWeight: "bold" }}>
+            {`Account Balance: ${
+              balance >= 0
+                ? toCurrency.format(balance)
+                : `(${toCurrency.format(balance * -1)})`
+            }`}
+          </Typography>
+        </Box>
+        <Box
+          sx={{
+            pl: "50px",
+            display: "flex",
+            width: "100%",
+            borderBottom: 1,
+            borderColor: "divider",
+          }}
+        >
+          <Tabs
+            TabIndicatorProps={{
+              sx: {
+                height: "5px",
+                borderRadius: "2px",
+              },
+            }}
+            value={tab}
+            onChange={(e, n) => {
+              handleTab(n);
+            }}
+          >
+            {ViewTabs}
+          </Tabs>
+        </Box>
       </Box>
       <Box
         sx={{
-          height: "83%",
-          mb: "60px",
+          height: "84%",
           minWidth: "100%",
-          backgroundColor:
-            theme === "dark"
-              ? "rgba(41, 37, 37, 0.745)"
-              : "rgb(246, 243, 243);",
+          backgroundColor: theme === "dark" ? "#121212" : "rgb(246, 243, 243)",
         }}
       >
         <DataGrid
@@ -581,7 +613,7 @@ const AccountDetail = ({ onClose }) => {
           open={dialogOpen}
           onClose={() => handleDialogClose()}
         >
-          <Toolbar>
+          <Toolbar sx={{ boxShadow: 5 }}>
             <IconButton
               id="menu-item"
               color="inherit"
@@ -590,8 +622,11 @@ const AccountDetail = ({ onClose }) => {
             >
               <CloseIcon />
             </IconButton>
+            <Typography sx={{ ml: "50px", fontWeight: "bold" }} variant="h4">
+              Create entry
+            </Typography>
           </Toolbar>
-          <AddEntriesContent setRefresh={setRefresh} />
+          <AddEntriesContent parent={true} />
         </Dialog>
         <Drawer
           anchor="right"
@@ -619,6 +654,35 @@ const AccountDetail = ({ onClose }) => {
             </Toolbar>
           </AppBar>
           <EventDetail detail={drawerContent} />
+        </Drawer>
+        <Drawer
+          anchor="bottom"
+          open={journalOpen}
+          onClose={() => handleJournalClose()}
+          sx={{ zIndex: 1202 }}
+        >
+          <AppBar
+            position="sticky"
+            sx={{
+              backgroundColor: "inherit",
+              boxShadow: "none",
+              color: "inherit",
+            }}
+          >
+            <Toolbar>
+              <IconButton
+                id="menu-item"
+                color="inherit"
+                edge="start"
+                onClick={() => handleJournalClose()}
+              >
+                <CloseIcon />
+              </IconButton>
+            </Toolbar>
+          </AppBar>
+          <Grid container sx={{ p: "50px" }}>
+            <EntryInfo entries={entries} />
+          </Grid>
         </Drawer>
         <Dialog open={open} onClose={() => handleClickCancel()}>
           <DialogTitle sx={{ fontWeight: "bold" }}>

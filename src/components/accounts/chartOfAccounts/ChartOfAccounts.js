@@ -377,6 +377,7 @@ const ChartOfAccounts = () => {
         backgroundColor:
           theme === "dark" ? "rgba(30, 27, 27, 0.745)" : "rgb(223, 223, 223)",
         pl: "16px",
+        pt: "3px",
       }}
     >
       {role === "admin" && tab === 0 && (
@@ -451,85 +452,98 @@ const ChartOfAccounts = () => {
           sx={{
             width: "100%",
             height: "100%",
-            gap: "20px",
+            gap: "2px",
             display: "flex",
             flexDirection: "column",
-            backgroundColor:
-              theme === "dark" ? "#121212" : "rgb(246, 243, 243)",
+            backgroundColor: balance === 0 ? "success.main" : "error.main",
           }}
         >
           <Box
             sx={{
-              pl: "50px",
-              display: "flex",
               width: "100%",
-              flexGrow: 1,
+              display: "flex",
+              flexDirection: "column",
+              backgroundColor:
+                theme === "dark" ? "#121212" : "rgb(246, 243, 243)",
             }}
           >
-            <Typography
-              variant="h4"
-              sx={{ mt: "20px", ml: "20px", fontWeight: "bold", flexGrow: 1 }}
-            >
-              {" "}
-              Chart of Accounts
-            </Typography>
-            <Box sx={{ display: "flex", gap: "10px", mt: "20px", mr: "20px" }}>
-              <Box>
-                {balance === 0 ? (
-                  <CheckCircleIcon
-                    fontSize="large"
-                    sx={{
-                      color:
-                        theme === "dark" ? "success.dark" : "success.light",
-                    }}
-                  />
-                ) : (
-                  <ReportProblemIcon
-                    fontSize="large"
-                    sx={{
-                      color: theme === "dark" ? "error.dark" : "error.light",
-                    }}
-                  />
-                )}
-              </Box>
-              <Typography variant="h5" sx={{ fontWeight: "bold" }}>
-                {`Balance: ${
-                  balance >= 0
-                    ? toCurrency.format(balance)
-                    : `(${toCurrency.format(balance * -1)})`
-                }`}
-              </Typography>
-            </Box>
-          </Box>
-          {role === "admin" && (
             <Box
               sx={{
                 pl: "50px",
                 display: "flex",
                 width: "100%",
-                borderBottom: 1,
-                borderColor: "divider",
               }}
             >
-              <Tabs
-                value={tab}
-                onChange={(e, n) => {
-                  handleTab(n);
+              <Typography
+                variant="h4"
+                sx={{ mt: "20px", ml: "20px", fontWeight: "bold", flexGrow: 1 }}
+              >
+                {" "}
+                Chart of Accounts
+              </Typography>
+              <Box
+                sx={{ display: "flex", gap: "10px", mt: "20px", mr: "20px" }}
+              >
+                <Box>
+                  {balance === 0 ? (
+                    <CheckCircleIcon
+                      fontSize="large"
+                      sx={{
+                        color:
+                          theme === "dark" ? "success.dark" : "success.light",
+                      }}
+                    />
+                  ) : (
+                    <ReportProblemIcon
+                      fontSize="large"
+                      sx={{
+                        color: theme === "dark" ? "error.dark" : "error.light",
+                      }}
+                    />
+                  )}
+                </Box>
+                <Typography variant="h5" sx={{ fontWeight: "bold" }}>
+                  {`Balance: ${
+                    balance >= 0
+                      ? toCurrency.format(balance)
+                      : `(${toCurrency.format(balance * -1)})`
+                  }`}
+                </Typography>
+              </Box>
+            </Box>
+            {role === "admin" && (
+              <Box
+                sx={{
+                  pl: "50px",
+                  display: "flex",
+                  width: "100%",
+                  borderBottom: 1,
+                  borderColor: "divider",
                 }}
               >
-                {ViewTabs}
-              </Tabs>
-            </Box>
-          )}
+                <Tabs
+                  TabIndicatorProps={{
+                    sx: {
+                      height: "5px",
+                      borderRadius: "2px",
+                    },
+                  }}
+                  value={tab}
+                  onChange={(e, n) => {
+                    handleTab(n);
+                  }}
+                >
+                  {ViewTabs}
+                </Tabs>
+              </Box>
+            )}
+          </Box>
           <Box
             sx={{
-              height: "83%",
-              mb: "60px",
+              height: "84%",
               minWidth: "100%",
               backgroundColor:
-                theme === "dark"
-                  ? "rgba(41, 37, 37, 0.745)"
-                  : "rgb(246, 243, 243);",
+                theme === "dark" ? "#121212" : "rgb(246, 243, 243)",
             }}
           >
             {tab !== 1 && (

@@ -250,6 +250,22 @@ export const getAllAccounts = async () => {
     console.log(error);
   }
 };
+/**
+ * This function gets all accounts and return a list of id and name
+ * @param {*} id
+ * @returns account data
+ */
+export const getAccountList = async () => {
+  try {
+    const myDoc = await getAllAccounts();
+    const arr = [];
+    myDoc.map((item) => arr.push(`${item.data().id} - ${item.data().name}`));
+    arr.sort((a, b) => a.localeCompare(b));
+    return arr;
+  } catch (error) {
+    console.log(error);
+  }
+};
 
 /**
  * This function gets the individual account with with the given id
@@ -426,6 +442,28 @@ export const createEntry = async (newEntry) => {
 };
 
 /**
+ * This function the entry based on the parent account and the entry id
+ * @returns
+ */
+export const getEntry = async (parent, id) => {
+  try {
+    const myDoc = await getDoc(
+      doc(
+        db,
+        "accounting",
+        "chartOfAccounts",
+        "accounts",
+        `${parent}`,
+        "entries",
+        `${id}`
+      )
+    );
+    return myDoc.data();
+  } catch (error) {
+    console.log(error);
+  }
+};
+/**
  * This function gets all entries at once from the parent account
  * @returns
  */
@@ -520,6 +558,43 @@ export const getAllEntryEvents = async (parent) => {
       )
     );
     return myDoc.docs;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+/**
+ * This function create a journal reference every time a set of entries is created.
+ * @param {*} event an event object which has the event date, previous object,
+ * current object, and what has changed object
+ */
+export const createJournal = async (journal) => {
+  try {
+    await setDoc(doc(db, "journal", `${journal.id}`), journal);
+  } catch (error) {
+    console.log(error);
+  }
+};
+/**
+ * This function gets all journals
+ */
+export const getJournals = async () => {
+  try {
+    const myDoc = await getDocs(collection(db, "journal"));
+    const arr = [];
+    myDoc.docs.map((d) => arr.push(d.data()));
+    return arr;
+  } catch (error) {
+    console.log(error);
+  }
+};
+/**
+ * This function a journal with a provided id
+ */
+export const getJournal = async (id) => {
+  try {
+    const myDoc = await getDoc(doc(db, "journal", `${id}`));
+    return myDoc.data();
   } catch (error) {
     console.log(error);
   }
