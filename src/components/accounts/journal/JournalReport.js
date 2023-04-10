@@ -54,6 +54,8 @@ const JournalReport = () => {
       headerName: "On Date",
       renderHeader: (param) => headerElement(param),
       renderCell: (row) => toLink(row),
+      type: "date",
+      valueGetter: ({ value }) => new Date(value),
       flex: 1,
       width: 500,
     },

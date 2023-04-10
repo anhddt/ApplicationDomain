@@ -257,10 +257,11 @@ const AccountDetail = ({ onClose }) => {
     {
       field: "id",
       headerName: "On date",
-      type: "string",
+      type: "date",
       flex: 1,
       renderHeader: (param) => headerElement(param),
       renderCell: (row) => toLink(row),
+      valueGetter: ({ value }) => new Date(value),
       width: 500,
     },
     {
@@ -314,7 +315,8 @@ const AccountDetail = ({ onClose }) => {
     {
       field: "id",
       headerName: "On date",
-      type: "string",
+      type: "date",
+      valueGetter: ({ value }) => new Date(value),
       flex: 1,
       renderHeader: (param) => headerElement(param),
       renderCell: (row) => toLink2(row),
