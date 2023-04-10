@@ -40,7 +40,7 @@ import {
  * of the accounting page. When clicking on the add account
  * on the table, this shows up with the steps hard coded below.
  */
-const AddEntriesContent = ({ setRefresh, parent }) => {
+const AddEntriesContent = ({ parent }) => {
   const [allAccounts, setAllAccounts] = useState([""]);
   const { theme } = useThemeProvider();
   const { user, accountDetailPersistence } = useAuth();
@@ -49,7 +49,7 @@ const AddEntriesContent = ({ setRefresh, parent }) => {
   const [entries, setEntries] = useState([
     {
       id: "",
-      parent: null,
+      parent: parent? accountDetailPersistence.id : null,
       name: "",
       type: "",
       amount: [{ amount: "", description: "" }],
@@ -83,11 +83,6 @@ const AddEntriesContent = ({ setRefresh, parent }) => {
     const getAllAccounts = async () => {
       const accounts = await getAccountList();
       setAllAccounts(accounts);
-      if (parent) {
-        const arr = [...entries];
-        arr[0].parent = accountDetailPersistence.id;
-        setEntries(arr);
-      }
     };
     getAllAccounts();
   }, []);
