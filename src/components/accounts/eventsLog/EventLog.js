@@ -69,10 +69,11 @@ const EventLog = () => {
     {
       field: "id",
       headerName: "On date",
-      type: "string",
+      type: "date",
       flex: 1,
       renderHeader: (param) => headerElement(param),
       renderCell: (row) => toLink(row),
+      valueGetter: ({ value }) => new Date(value),
       minWidth: 425,
     },
     {
