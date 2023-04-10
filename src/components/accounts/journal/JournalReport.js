@@ -246,7 +246,10 @@ const JournalReport = () => {
         >
           <Box
             sx={{
+
+              pt: "25px",
               pl: "50px",
+              pb: "25px",
               display: "flex",
               width: "100%",
             }}
