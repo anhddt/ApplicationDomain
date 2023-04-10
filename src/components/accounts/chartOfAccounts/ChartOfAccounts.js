@@ -401,9 +401,7 @@ const ChartOfAccounts = () => {
         <DialogTitle sx={{ fontWeight: "bold" }}>Are you sure?</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            {
-              "Deleting the account also deletes its entries and events. Are you sure you want to delete the following account(s)?"
-            }
+            {"Are you sure you want to delete the following account(s)?"}
           </DialogContentText>
           <DialogContentText sx={{ fontWeight: "bold" }}>
             {`To be deleted: ${selectedRows.toString()}.`}

@@ -1,25 +1,8 @@
-import { useEffect, useState } from "react";
 import { Box, Grid, InputAdornment, TextField } from "@mui/material";
 import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
 import { useThemeProvider } from "../../utils/themeProvider/CustomThemeProvier";
-import { getAccountList } from "../../../middleware/firebase/FireStoreUtils";
 const EntryInfo = ({ entries }) => {
   const { theme } = useThemeProvider();
-  const [allAccounts, setAllAccounts] = useState([""]);
-  const getParentAccount = (parent) => {
-    let parentAccount = "Test";
-    parentAccount = allAccounts.filter((account) =>
-      account.includes(parent)
-    )[0];
-    return parentAccount;
-  };
-  useEffect(() => {
-    const getAccounts = async () => {
-      const accounts = await getAccountList();
-      setAllAccounts(accounts);
-    };
-    getAccounts();
-  }, []);
   const Info = entries.map((entry, index) => (
     <Grid
       item
@@ -40,8 +23,7 @@ const EntryInfo = ({ entries }) => {
         variant="standard"
         fullWidth
         label="Parent account"
-        value={getParentAccount(entry.parent)}
-        InputLabelProps={{ shrink: true }}
+        value={entry.parentLabel}
         size="small"
         inputProps={{ readOnly: true }}
       />

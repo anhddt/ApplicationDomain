@@ -328,40 +328,6 @@ export const updateAccountBalance = async (id, balance) => {
 export const deleteAccount = async (id) => {
   id.map(async (i) => {
     try {
-      const events = [];
-      const entries = [];
-      const en = await getAllEntries(i);
-      const ev = await getAllEntryEvents(i);
-      en.map((entry) => entries.push(entry.data().id));
-      ev.map((event) => events.push(event.data().eventDate));
-      events.map(
-        async (eventID) =>
-          await deleteDoc(
-            doc(
-              db,
-              "accounting",
-              "chartOfAccounts",
-              "accounts",
-              `${i}`,
-              "events",
-              eventID
-            )
-          )
-      );
-      entries.map(
-        async (entryID) =>
-          await deleteDoc(
-            doc(
-              db,
-              "accounting",
-              "chartOfAccounts",
-              "accounts",
-              `${i}`,
-              "entries",
-              entryID
-            )
-          )
-      );
       await deleteDoc(
         doc(db, "accounting", "chartOfAccounts", "accounts", `${i}`)
       );
