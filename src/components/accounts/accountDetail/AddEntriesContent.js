@@ -49,7 +49,7 @@ const AddEntriesContent = ({ parent }) => {
   const [entries, setEntries] = useState([
     {
       id: "",
-      parent: parent? accountDetailPersistence.id : null,
+      parent: parent ? accountDetailPersistence.id : null,
       name: "",
       type: "",
       amount: [{ amount: "", description: "" }],
