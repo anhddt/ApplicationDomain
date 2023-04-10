@@ -7,7 +7,11 @@ const EntryInfo = ({ entries }) => {
   const { theme } = useThemeProvider();
   const [allAccounts, setAllAccounts] = useState([""]);
   const getParentAccount = (parent) => {
-    return allAccounts.filter((account) => account.includes(parent))[0] || null;
+    let parentAccount = "Test";
+    parentAccount = allAccounts.filter((account) =>
+      account.includes(parent)
+    )[0];
+    return parentAccount;
   };
   useEffect(() => {
     const getAccounts = async () => {
@@ -37,6 +41,7 @@ const EntryInfo = ({ entries }) => {
         fullWidth
         label="Parent account"
         value={getParentAccount(entry.parent)}
+        InputLabelProps={{ shrink: true }}
         size="small"
         inputProps={{ readOnly: true }}
       />
