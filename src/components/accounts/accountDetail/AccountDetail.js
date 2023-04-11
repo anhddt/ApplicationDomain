@@ -573,7 +573,7 @@ const AccountDetail = ({ onClose }) => {
       </Box>
       <Box
         sx={{
-          height: "84%",
+          flexGrow: 1,
           minWidth: "100%",
           backgroundColor: theme === "dark" ? "#121212" : "rgb(246, 243, 243)",
         }}
