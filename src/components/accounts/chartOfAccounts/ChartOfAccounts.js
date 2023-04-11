@@ -538,8 +538,8 @@ const ChartOfAccounts = () => {
           </Box>
           <Box
             sx={{
-              height: "84%",
               minWidth: "100%",
+              flexGrow: 1,
               backgroundColor:
                 theme === "dark" ? "#121212" : "rgb(246, 243, 243)",
             }}

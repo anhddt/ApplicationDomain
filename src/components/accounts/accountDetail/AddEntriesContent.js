@@ -60,7 +60,7 @@ const AddEntriesContent = ({ parent }) => {
       comment: "",
       user: user,
       journal: "",
-      files:[],
+      files: [],
     },
     {
       id: "",
@@ -155,7 +155,7 @@ const AddEntriesContent = ({ parent }) => {
         comment: "",
         user: user,
         journal: "",
-        files:[],
+        files: [],
       },
       {
         id: "",
@@ -169,7 +169,7 @@ const AddEntriesContent = ({ parent }) => {
         status: "Pending",
         comment: "",
         journal: "",
-        files:[],
+        files: [],
       },
     ]);
   };
