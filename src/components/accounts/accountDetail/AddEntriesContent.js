@@ -60,6 +60,7 @@ const AddEntriesContent = ({ parent }) => {
       comment: "",
       user: user,
       journal: "",
+      files:[],
     },
     {
       id: "",
@@ -74,6 +75,7 @@ const AddEntriesContent = ({ parent }) => {
       comment: "",
       user: user,
       journal: "",
+      files: [],
     },
   ]);
   // This is for indicating which step the user is currently on.
@@ -153,6 +155,7 @@ const AddEntriesContent = ({ parent }) => {
         comment: "",
         user: user,
         journal: "",
+        files:[],
       },
       {
         id: "",
@@ -166,6 +169,7 @@ const AddEntriesContent = ({ parent }) => {
         status: "Pending",
         comment: "",
         journal: "",
+        files:[],
       },
     ]);
   };
