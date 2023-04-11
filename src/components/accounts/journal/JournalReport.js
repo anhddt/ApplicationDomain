@@ -46,6 +46,26 @@ const JournalReport = () => {
   const [credits, setCredits] = useState(0);
   const page = 10;
   const pageSizeOptions = [10, 20, 50, 100];
+  const RenderAccount = (row) => {
+    const [label1, setLabel1] = useState("");
+    const [label2, setLabel2] = useState("");
+    useEffect(() => {
+      const e = row.row.entries;
+      const getLabels = async () => {
+        const l1 = await getEntry(e[0].parent, e[0].entry);
+        const l2 = await getEntry(e[1].parent, e[1].entry);
+        setLabel1(l1.parentLabel);
+        setLabel2(l2.parentLabel);
+      };
+      getLabels();
+    }, [row]);
+    return (
+      <Box sx={{ display: "flex", flexDirection: "column" }}>
+        <Typography>{label1}</Typography>
+        <Typography>{label2}</Typography>
+      </Box>
+    );
+  };
   const columns = [
     {
       field: "id",
@@ -62,7 +82,8 @@ const JournalReport = () => {
       headerName: "Accounts",
       renderHeader: (param) => headerElement(param),
       renderCell: (row) => RenderAccount(row),
-      flex: 1,
+      hideable: false,
+      flex: 0.7,
       width: 300,
     },
     {
@@ -139,26 +160,6 @@ const JournalReport = () => {
       >
         {new Date(row.value).toString()}
       </Link>
-    );
-  };
-  const RenderAccount = (row) => {
-    const [label1, setLabel1] = useState("");
-    const [label2, setLabel2] = useState("");
-    const e = row.row.entries;
-    useEffect(() => {
-      const getLabels = async () => {
-        const l1 = await getEntry(e[0].parent, e[0].entry);
-        const l2 = await getEntry(e[1].parent, e[1].entry);
-        setLabel1(l1.parentLabel);
-        setLabel2(l2.parentLabel);
-      };
-      getLabels();
-    }, [e]);
-    return (
-      <Box sx={{ display: "flex", flexDirection: "column" }}>
-        <Typography>{label1}</Typography>
-        <Typography>{label2}</Typography>
-      </Box>
     );
   };
   const renderDebit = (row) => {
