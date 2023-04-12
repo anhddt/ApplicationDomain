@@ -7,8 +7,6 @@
     "@emotion/styled": "^11.10.6",
     "@fontsource/public-sans": "^4.5.12",
     "@mui/icons-material": "^5.11.0",
-    "@mui/joy": "^5.0.0-alpha.74",
-    "@mui/lab": "^5.0.0-alpha.124",
     "@mui/material": "^5.11.6",
     "@mui/x-data-grid": "^6.0.2",
     "@mui/x-date-pickers": "^6.1.0",
@@ -23,8 +21,7 @@
     "react-dom": "^18.2.0",
     "react-number-format": "^5.1.4",
     "react-router-dom": "^6.8.1",
-    "react-scripts": "5.0.1",
-    "web-vitals": "^2.1.4"
+    "react-scripts": "^5.0.1"
   },
   "scripts": {
     "start": "react-scripts start",
