@@ -17,6 +17,7 @@ import HomeBar from "../common/header/Homebar";
 import CustomDrawer from "../common/drawer/Drawer";
 import ChartOfAccounts from "./chartOfAccounts/ChartOfAccounts";
 import JournalReport from "./journal/JournalReport";
+import Statement from "./statements/Satement";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import FormatListNumberedIcon from "@mui/icons-material/FormatListNumbered";
@@ -42,7 +43,7 @@ const AcccountsPage = () => {
     { primary: "Journal", icon: <BorderColorIcon /> },
     { primary: "Calculator", icon: <CalculateIcon /> },
     { primary: "Add file", icon: <AttachFileIcon /> },
-    { primary: "Download", icon: <DownloadIcon /> },
+    { primary: "Get Statements", icon: <DownloadIcon /> },
   ];
   /**
    * This allows the showing of the children components after clicking on the icons
@@ -90,7 +91,7 @@ const AcccountsPage = () => {
     setDrawerOpen(!drawerOpen);
   };
   return (
-    <Box>
+    <Box sx={{ width: "100%", height: "100%", overflow: "scroll" }}>
       <HomeBar />
       <CustomDrawer
         variant="permanent"
@@ -130,6 +131,7 @@ const AcccountsPage = () => {
       >
         {showIf(show === "Chart of accounts", <ChartOfAccounts />)}
         {showIf(show === "Journal", <JournalReport />)}
+        {showIf(show === "Get Statements", <Statement />)}
       </Box>
     </Box>
   );

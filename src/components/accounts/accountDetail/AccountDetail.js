@@ -106,8 +106,8 @@ const AccountDetail = ({ onClose }) => {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [journalOpen, setJournalOpen] = useState(false);
   const [tab, setTab] = useState(0);
-  const page = 10;
-  const pageSizeOptions = [10, 20, 50, 100];
+  const page = 20;
+  const pageSizeOptions = [5, 10, 20, 50, 100];
   const toLink = (row) => {
     return (
       <Link
@@ -314,7 +314,7 @@ const AccountDetail = ({ onClose }) => {
   const columns = [
     {
       field: "id",
-      headerName: "On date",
+      headerName: "Date created",
       type: "date",
       valueGetter: ({ value }) => new Date(value),
       flex: 1,
