@@ -44,20 +44,15 @@ const AdminPage = () => {
   const [addUser, setAddUser] = useState(false);
   const refState = useRef(false);
   const [button, setButton] = useState("");
-  const [refresh, setRefresh] = useState(false);
 
   const updateUser = async() => {
-    getProfile(username);
     await bulkUpdateUserProperty(UID, userInfo);
     handleClose();
-    setRefresh(!refresh);
   }
 
   const deleteUser = async() => {
-    getProfile(username);
     await removeUser(UID);
-    closeAlert();
-    setRefresh(!refresh);    
+    closeAlert();   
   }
 
   const handleSave = () => {
@@ -129,7 +124,7 @@ const AdminPage = () => {
       } catch (error) {}
     };
     allUsers();
-  }, [refresh]);
+  });
 
   useEffect(() => {
     if (button === "save") {
@@ -158,6 +153,7 @@ const renderEditButton = (params) => {
           style={{ marginLeft: 16 }}
           onClick={() => {
             setUsername(params.row.id);
+            getProfile(username);
             handleClickOpen();
             //console.log("username from table: " + params.row.id);
             console.log("username from table: " + username);
