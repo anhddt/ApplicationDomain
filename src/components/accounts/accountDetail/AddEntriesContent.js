@@ -34,6 +34,7 @@ import {
   entriesBalance,
   isGood,
 } from "../../../middleware/verification/userInfo";
+import CustomMoneyFormat from "./CustomMoneyFormat";
 
 /**
  * This component is used as a drawer on the right hand side
@@ -114,12 +115,12 @@ const AddEntriesContent = ({ parent }) => {
     const name = e.target.name;
     const value = e.target.value;
     const arr = [...entries];
-    arr[i].amount[ai][name] = value;
     if (name === "amount") {
+      arr[i].amount[ai][name] = parseFloat(value);
       arr[i].total = arr[i].amount
         .map((amt) => Number(amt.amount))
         .reduce((a, b) => a + b);
-    }
+    } else arr[i].amount[ai][name] = value;
     setEntries(arr);
   };
 
@@ -306,6 +307,7 @@ const AddEntriesContent = ({ parent }) => {
                   <AttachMoneyIcon fontSize="small" />
                 </InputAdornment>
               ),
+              inputComponent: CustomMoneyFormat,
             }}
             value={a.amount}
             size="small"
@@ -349,7 +351,7 @@ const AddEntriesContent = ({ parent }) => {
         variant="standard"
         sx={{ width: "500px" }}
         name="total"
-        value={entry.total.toFixed(2)}
+        value={entry.total}
         size="small"
         label="Total"
         inputProps={{ readOnly: true }}
@@ -359,6 +361,7 @@ const AddEntriesContent = ({ parent }) => {
               <AttachMoneyIcon fontSize="small" />
             </InputAdornment>
           ),
+          inputComponent: CustomMoneyFormat,
         }}
       />
     </Grid>

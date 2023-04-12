@@ -108,9 +108,9 @@ const ChartOfAccounts = () => {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [rows, setRows] = useState([]);
   const { tableStyles, theme } = useThemeProvider();
-  const page = 10;
+  const page = 20;
   // This allows the user to choose how many rows to display on each page
-  const pageSizeOptions = [10, 20, 50, 100];
+  const pageSizeOptions = [5, 10, 20, 50, 100];
   const handleClose = () => {
     setShowInfo(false);
     setAccountDetailPersistence((rest) => ({ ...rest, open: false }));
@@ -186,7 +186,7 @@ const ChartOfAccounts = () => {
     {
       field: "name",
       headerName: "Name",
-      flex: 1,
+      flex: 0.5,
       minWidth: 250,
       renderHeader: (param) => headerElement(param),
       renderCell: (row) => toLink(row),
@@ -196,6 +196,7 @@ const ChartOfAccounts = () => {
       field: "description",
       headerName: "Description",
       width: 250,
+      flex: 0.5,
       renderHeader: (param) => headerElement(param),
       editable: role === "admin",
     },
@@ -203,8 +204,7 @@ const ChartOfAccounts = () => {
       field: "normalSide",
       headerName: "Normal Side",
       headerAlign: "center",
-      flex: 0.3,
-      minWidth: 150,
+      width: 150,
       renderHeader: (param) => headerElement(param),
       renderCell: (row) => (
         <Box
@@ -236,7 +236,7 @@ const ChartOfAccounts = () => {
       field: "category",
       headerName: "Category",
       type: role === "admin" ? "singleSelect" : "string",
-      flex: 0.5,
+      flex: 0.2,
       minWidth: 180,
       renderHeader: (param) => headerElement(param),
       editable: role === "admin",
@@ -245,7 +245,7 @@ const ChartOfAccounts = () => {
     {
       field: "subCat",
       headerName: "Sub-category",
-      flex: 0.8,
+      flex: 0.5,
       minWidth: 200,
       renderHeader: (param) => headerElement(param),
       editable: role === "admin",
@@ -467,6 +467,8 @@ const ChartOfAccounts = () => {
           >
             <Box
               sx={{
+                pt: role === "user" ? "24px" : "auto",
+                pb: role === "user" ? "24px" : "auto",
                 pl: "50px",
                 display: "flex",
                 width: "100%",

@@ -1,4 +1,4 @@
-import { Fragment, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   AppBar,
   Box,
@@ -26,6 +26,7 @@ import {
   linkStyle,
   toCurrency,
 } from "../chartOfAccounts/ChartOfAccounts";
+import { f } from "../eventsLog/EventLog";
 import { Transition } from "../accountDetail/AccountDetail";
 import AddEntriesContent from "../accountDetail/AddEntriesContent";
 import EntryInfo from "../accountDetail/EntryInfo";
@@ -44,8 +45,8 @@ const JournalReport = () => {
   const [entries, setEntries] = useState([]);
   const [debits, setDebits] = useState(0);
   const [credits, setCredits] = useState(0);
-  const page = 10;
-  const pageSizeOptions = [10, 20, 50, 100];
+  const page = 20;
+  const pageSizeOptions = [5, 10, 20, 50, 100];
   const RenderAccount = (row) => {
     const [label1, setLabel1] = useState("");
     const [label2, setLabel2] = useState("");
@@ -88,14 +89,14 @@ const JournalReport = () => {
     },
     {
       field: "debit",
-      headerName: `Debit - ${toCurrency.format(debits)}`,
+      headerName: `Debit  ${toCurrency.format(debits)}`,
       renderHeader: (param) => headerElement(param),
       renderCell: (row) => renderDebit(row),
       width: 250,
     },
     {
       field: "credit",
-      headerName: `Credit - ${toCurrency.format(credits)}`,
+      headerName: `Credit  ${toCurrency.format(credits)}`,
       renderHeader: (param) => headerElement(param),
       renderCell: (row) => renderCredit(row),
       width: 250,
@@ -141,7 +142,7 @@ const JournalReport = () => {
   useEffect(() => {
     const journals = async () => {
       const allJournals = await getJournals();
-      setRows(allJournals);
+      setRows(allJournals.sort(f));
     };
     journals();
   }, [refresh]);
@@ -226,12 +227,19 @@ const JournalReport = () => {
     </Box>
   );
   return (
-    <Fragment>
+    <Box
+      sx={{
+        width: "100%",
+        height: "100%",
+        gap: "2px",
+        display: "flex",
+        flexDirection: "column",
+        backgroundColor: theme === "dark" ? "#121212" : "rgb(246, 243, 243)",
+      }}
+    >
       <Box
         sx={{
           width: "100%",
-          height: "100%",
-          gap: "2px",
           display: "flex",
           flexDirection: "column",
           backgroundColor: theme === "dark" ? "#121212" : "rgb(246, 243, 243)",
@@ -239,123 +247,112 @@ const JournalReport = () => {
       >
         <Box
           sx={{
-            width: "100%",
+            pt: "24px",
+            pl: "50px",
+            pb: "24px",
             display: "flex",
-            flexDirection: "column",
-            backgroundColor:
-              theme === "dark" ? "#121212" : "rgb(246, 243, 243)",
+            width: "100%",
           }}
         >
-          <Box
-            sx={{
-              pt: "25px",
-              pl: "50px",
-              pb: "25px",
-              display: "flex",
-              width: "100%",
-            }}
+          <Typography
+            variant="h4"
+            sx={{ mt: "20px", ml: "20px", fontWeight: "bold", flexGrow: 1 }}
           >
-            <Typography
-              variant="h4"
-              sx={{ mt: "20px", ml: "20px", fontWeight: "bold", flexGrow: 1 }}
-            >
-              {" "}
-              Journal
-            </Typography>
-          </Box>
+            {" "}
+            Journal
+          </Typography>
         </Box>
-        <Box
-          sx={{
-            flexGrow: 1,
-            minWidth: "100%",
-            backgroundColor:
-              theme === "dark" ? "#121212" : "rgb(246, 243, 243)",
+      </Box>
+      <Box
+        sx={{
+          flexGrow: 1,
+          minWidth: "100%",
+          backgroundColor: theme === "dark" ? "#121212" : "rgb(246, 243, 243)",
+        }}
+      >
+        <DataGrid
+          apiRef={apiRef}
+          columns={columns}
+          rows={rows}
+          slots={{
+            toolbar: GridToolbar,
           }}
-        >
-          <DataGrid
-            apiRef={apiRef}
-            columns={columns}
-            rows={rows}
-            slots={{
-              toolbar: GridToolbar,
-            }}
-            checkboxSelection
-            disableRowSelectionOnClick
-            initialState={{
-              pagination: {
-                paginationModel: {
-                  pageSize: page,
-                },
+          checkboxSelection
+          disableRowSelectionOnClick
+          initialState={{
+            pagination: {
+              paginationModel: {
+                pageSize: page,
               },
-            }}
-            pageSizeOptions={pageSizeOptions}
-            sx={tableStyles}
-            onStateChange={() => {
-              getTotal(gridFilteredSortedRowIdsSelector(apiRef), rows);
-            }}
-          />
-        </Box>
-        <Drawer
-          anchor="bottom"
-          open={drawerOpen}
-          onClose={() => handleDrawerClose()}
-          sx={{ zIndex: 1202 }}
-        >
-          <AppBar
-            position="sticky"
-            sx={{
-              backgroundColor: "inherit",
-              boxShadow: "none",
-              color: "inherit",
-            }}
-          >
-            <Toolbar sx={{ boxShadow: 5 }}>
-              <IconButton
-                id="menu-item"
-                color="inherit"
-                edge="start"
-                onClick={() => handleDrawerClose()}
-              >
-                <CloseIcon />
-              </IconButton>
-            </Toolbar>
-          </AppBar>
-          <Grid
-            container
-            sx={{
-              p: "50px",
-              backgroundColor:
-                theme === "dark"
-                  ? "rgba(30, 27, 27, 0.745)"
-                  : "rgb(223, 223, 223)",
-            }}
-          >
-            <EntryInfo entries={entries} />
-          </Grid>
-        </Drawer>
-        <Dialog
-          TransitionComponent={Transition}
-          fullScreen
-          open={dialogOpen}
-          onClose={() => handleDialogClose()}
+            },
+          }}
+          pageSizeOptions={pageSizeOptions}
+          sx={tableStyles}
+          onStateChange={() => {
+            getTotal(gridFilteredSortedRowIdsSelector(apiRef), rows);
+          }}
+        />
+      </Box>
+      <Drawer
+        anchor="bottom"
+        open={drawerOpen}
+        onClose={() => handleDrawerClose()}
+        sx={{ zIndex: 1202 }}
+      >
+        <AppBar
+          position="sticky"
+          sx={{
+            backgroundColor: "inherit",
+            boxShadow: "none",
+            color: "inherit",
+          }}
         >
           <Toolbar sx={{ boxShadow: 5 }}>
             <IconButton
               id="menu-item"
               color="inherit"
               edge="start"
-              onClick={() => handleDialogClose()}
+              onClick={() => handleDrawerClose()}
             >
               <CloseIcon />
             </IconButton>
-            <Typography sx={{ ml: "50px", fontWeight: "bold" }} variant="h4">
-              Create entry
-            </Typography>
           </Toolbar>
-          <AddEntriesContent />
-        </Dialog>
-      </Box>
-    </Fragment>
+        </AppBar>
+        <Grid
+          container
+          sx={{
+            p: "50px",
+            backgroundColor:
+              theme === "dark"
+                ? "rgba(30, 27, 27, 0.745)"
+                : "rgb(223, 223, 223)",
+          }}
+        >
+          <EntryInfo entries={entries} />
+        </Grid>
+      </Drawer>
+      <Dialog
+        TransitionComponent={Transition}
+        fullScreen
+        open={dialogOpen}
+        onClose={() => handleDialogClose()}
+      >
+        <Toolbar sx={{ boxShadow: 5 }}>
+          <IconButton
+            id="menu-item"
+            color="inherit"
+            edge="start"
+            onClick={() => handleDialogClose()}
+          >
+            <CloseIcon />
+          </IconButton>
+          <Typography sx={{ ml: "50px", fontWeight: "bold" }} variant="h4">
+            Create entry
+          </Typography>
+        </Toolbar>
+        <AddEntriesContent />
+      </Dialog>
+    </Box>
   );
 };
 
