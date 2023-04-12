@@ -1,6 +1,7 @@
 import { Box, Grid, InputAdornment, TextField } from "@mui/material";
 import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
 import { useThemeProvider } from "../../utils/themeProvider/CustomThemeProvier";
+import CustomMoneyFormat from "./CustomMoneyFormat";
 const EntryInfo = ({ entries }) => {
   const { theme } = useThemeProvider();
   const Info = entries.map((entry, index) => (
@@ -56,6 +57,7 @@ const EntryInfo = ({ entries }) => {
       {entry.amount.map((a, ai) => (
         <Box key={`amount-${ai}`} sx={{ display: "flex", gap: "10px" }}>
           <TextField
+            value={a.amount}
             variant="standard"
             InputProps={{
               startAdornment: (
@@ -63,9 +65,9 @@ const EntryInfo = ({ entries }) => {
                   <AttachMoneyIcon fontSize="small" />
                 </InputAdornment>
               ),
+              inputComponent: CustomMoneyFormat,
             }}
             label="Amount"
-            value={Number(a.amount).toFixed(2)}
             size="small"
             inputProps={{ readOnly: true }}
           />
@@ -84,7 +86,7 @@ const EntryInfo = ({ entries }) => {
         fullWidth
         variant="standard"
         sx={{ width: "500px" }}
-        value={entry.total.toFixed(2)}
+        value={entry.total}
         size="small"
         label="Total"
         inputProps={{ readOnly: true }}
@@ -94,6 +96,7 @@ const EntryInfo = ({ entries }) => {
               <AttachMoneyIcon fontSize="small" />
             </InputAdornment>
           ),
+          inputComponent: CustomMoneyFormat,
         }}
       />
     </Grid>

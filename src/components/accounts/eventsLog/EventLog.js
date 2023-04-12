@@ -39,8 +39,8 @@ const EventLog = () => {
   const [rows, setRows] = useState([]);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const { tableStyles, theme } = useThemeProvider();
-  const page = 10;
-  const pageSizeOptions = [10, 20, 50, 100];
+  const page = 20;
+  const pageSizeOptions = [5, 10, 20, 50, 100];
   const handleCellRender = (cell) => {
     switch (cell.row.field) {
       case "balance":
