@@ -31,6 +31,7 @@ import { useThemeProvider } from "../utils/themeProvider/CustomThemeProvier";
 import Homebar from "../common/header/Homebar";
 import RegisterForm from "../register/RegisterForm";
 //import tableStyles from "../utils/themeProvider/CustomThemeProvier";
+import HelpButton  from "../common/help/HelpButton";
 
 const AdminPage = () => {
 
@@ -238,6 +239,8 @@ const addNewUser = () => {
         disableClickEventBubbling: true
     },
 ];
+
+let helpMessage = "this is page lets you edit, delete, and add users";
 
 //edit user contact and role, only view email, name, username
 
@@ -459,6 +462,9 @@ return (
           >
               Add User
           </Button>
+        </div>
+        <div>
+        <HelpButton message={helpMessage}/>
         </div>
 
         <Dialog open={addUser}
