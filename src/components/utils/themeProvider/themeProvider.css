@@ -21,3 +21,12 @@
 #bar-light {
   background-color: #fff;
 }
+
+#account-page-left-drawer-light {
+  background-color: #032b43;
+  color: white;
+}
+
+#account-page-left-drawer-dark {
+  background-color: rgba(255, 255, 255, 0.08);
+}

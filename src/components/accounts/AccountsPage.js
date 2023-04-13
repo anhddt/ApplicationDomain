@@ -13,21 +13,20 @@ import {
 } from "@mui/material";
 import { showIf } from "../utils/conditionalRendering";
 import { useThemeProvider } from "../utils/themeProvider/CustomThemeProvier";
-import { useAuth } from "../utils/AuthProvider";
 import HomeBar from "../common/header/Homebar";
 import CustomDrawer from "../common/drawer/Drawer";
 import ChartOfAccounts from "./chartOfAccounts/ChartOfAccounts";
-import EventLog from "./eventsLog/EventLog";
+import JournalReport from "./journal/JournalReport";
+import Statement from "./statements/Satement";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import FormatListNumberedIcon from "@mui/icons-material/FormatListNumbered";
-import NoteAltIcon from "@mui/icons-material/NoteAlt";
+import BorderColorIcon from "@mui/icons-material/BorderColor";
 import CalculateIcon from "@mui/icons-material/Calculate";
 import AttachFileIcon from "@mui/icons-material/AttachFile";
 import DownloadIcon from "@mui/icons-material/Download";
 
 const AcccountsPage = () => {
-  const { role } = useAuth();
   const { theme } = useThemeProvider();
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [show, setShow] = useState("Chart of accounts");
@@ -41,10 +40,10 @@ const AcccountsPage = () => {
    */
   const listItems = [
     { primary: "Chart of accounts", icon: <FormatListNumberedIcon /> },
-    { primary: "Event log", icon: <NoteAltIcon /> },
+    { primary: "Journal", icon: <BorderColorIcon /> },
     { primary: "Calculator", icon: <CalculateIcon /> },
     { primary: "Add file", icon: <AttachFileIcon /> },
-    { primary: "Download", icon: <DownloadIcon /> },
+    { primary: "Get Statements", icon: <DownloadIcon /> },
   ];
   /**
    * This allows the showing of the children components after clicking on the icons
@@ -54,8 +53,7 @@ const AcccountsPage = () => {
   const handleShow = (view) => {
     setShow(view);
   };
-  const ListItem = listItems.map((item, index) => {
-    if (index === 1 && role !== ("admin" || "manager")) return null;
+  const ListItem = listItems.map((item) => {
     return (
       <Tooltip
         key={item.primary}
@@ -93,7 +91,7 @@ const AcccountsPage = () => {
     setDrawerOpen(!drawerOpen);
   };
   return (
-    <Box>
+    <Box sx={{ width: "100%", height: "100%", overflow: "scroll" }}>
       <HomeBar />
       <CustomDrawer
         variant="permanent"
@@ -102,10 +100,16 @@ const AcccountsPage = () => {
         <Toolbar />
         <List
           sx={{ height: "100%", display: "block" }}
-          id={theme === "dark" ? "box-dark" : "box-light"}
+          id={
+            theme === "dark"
+              ? "account-page-left-drawer-dark"
+              : "account-page-left-drawer-light"
+          }
         >
           {ListItem}
-          <Divider />
+          <Divider
+            sx={{ backgroundColor: theme === "dark" ? "#B7B7B7" : "#DDDDDD" }}
+          />
           <List>
             <ListItemButton id="menu-item" onClick={() => handleDrawer()}>
               <ListItemIcon
@@ -126,7 +130,8 @@ const AcccountsPage = () => {
         id={theme === "dark" ? "paper-dark" : "paper-light"}
       >
         {showIf(show === "Chart of accounts", <ChartOfAccounts />)}
-        {showIf(show === "Event log", <EventLog />)}
+        {showIf(show === "Journal", <JournalReport />)}
+        {showIf(show === "Get Statements", <Statement />)}
       </Box>
     </Box>
   );

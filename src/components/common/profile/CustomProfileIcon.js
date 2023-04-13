@@ -20,7 +20,7 @@ import { showIf } from "../../utils/conditionalRendering";
  * add nother MenuItem
  * and handle it's onOnclick
  */
-const CustomProfileIcon = () => {
+const CustomProfileIcon = ({ id1, id2 }) => {
   const { theme, setTheme } = useThemeProvider();
   const navigateTo = useNavigate();
   const { logOut } = useAuth();
@@ -45,11 +45,11 @@ const CustomProfileIcon = () => {
     <Box>
       <IconButton
         color="inherit"
-        id={anchorEl ? "profile-icon" : "profile-expand-chevron"}
+        id={anchorEl ? id1 : id2}
         onClick={(e) => handleProfileClick(e)}
       >
         <AccountCircleIcon />
-        {showIf(!anchorEl, <ExpandMoreIcon id="profile-expand-chevron" />)}
+        {showIf(!anchorEl, <ExpandMoreIcon id={id2} />)}
         {showIf(anchorEl, <ExpandLessIcon />)}
       </IconButton>
       <Menu
