@@ -139,7 +139,7 @@ const AdminPage = () => {
         deleteUser();
       } catch (error) {}
     }
-    }, [button]);
+    }, [button, UID, userInfo]);
 
 
   //sets rows to be profiles recieved during use effect
