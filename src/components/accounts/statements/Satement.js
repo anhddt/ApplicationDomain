@@ -1,12 +1,24 @@
 import { useState } from "react";
-import { Autocomplete, Box, Button, TextField } from "@mui/material";
+import { Autocomplete, Box, Button, TextField, } from "@mui/material";
+import { showIf } from "../../utils/conditionalRendering";
+import dayjs from "dayjs";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { useThemeProvider } from "../../utils/themeProvider/CustomThemeProvier";
+import IncomeStatement from "./IncomeStatement";
+import relativeTime from 'dayjs/plugin/relativeTime';
+dayjs.extend(relativeTime);
+
 const Statement = () => {
   const { theme } = useThemeProvider();
   const [statement, setStatement] = useState(null);
+  const [fromDate, setFromDate] = useState(null);
+  const [toDate, setToDate] = useState(null);
+  const [releaseStatement, setReleaseStatement] = useState(false);
+  const isDisabled = (date1, date2) => {
+    return date1 === null || date2 === null || statement === null;
+  }
   const statements = [
     "BS (balance sheet)",
     "CF (cash flow statement)",
@@ -14,15 +26,27 @@ const Statement = () => {
     "IS (income statement)",
     "RE (retained earning statement)",
   ];
-  const handleAutocomplete = (v) => {
-    if (v !== null) {
-      const stmt = v.substr(0, v.indexOf(" "));
-      setStatement(stmt);
+  const Statement = ({statement}) => {
+    switch (statement) {
+      case "BS (balance sheet)":
+        return <></>;
+      case "CF (cash flow statement)":
+        return <></>;
+      case "CI (change in equity statement)":
+        return <></>;
+      case "IS (income statement)":
+        return <IncomeStatement fromDate={fromDate} toDate={toDate}/>;
+      case "RE (retained earning statement)":
+        return <></>;
+      default:
+        return <></>;
     }
-  };
+  }
   return (
     <Box
       sx={{
+        display: "flex",
+        justifyContent: "space-between",
         height: "100%",
         width: "100%",
         backgroundColor: "primary.main",
@@ -46,7 +70,7 @@ const Statement = () => {
             gap: "20px",
           }}
         >
-          <Box>
+          <Box sx={{width: "320px"}}>
             <DatePicker
               showDaysOutsideCurrentMonth
               label="Begin date *"
@@ -54,10 +78,15 @@ const Statement = () => {
                 "& .MuiSvgIcon-root: hover": {
                   color: "rgba(255, 145, 0, 0.855)",
                 },
+                width:"100%",
               }}
+              disableFuture
+              value={fromDate}
+              onChange={(value) => setFromDate(value)}
+              shouldDisableDate={(date) => dayjs(date).isAfter(dayjs(toDate))}
             />
           </Box>
-          <Box>
+          <Box sx={{width: "320px"}}>
             <DatePicker
               showDaysOutsideCurrentMonth
               label="End date *"
@@ -65,14 +94,19 @@ const Statement = () => {
                 "& .MuiSvgIcon-root: hover": {
                   color: "rgba(255, 145, 0, 0.855)",
                 },
+                width:"100%",
               }}
+              disableFuture
+              value={toDate}
+              onChange={(value) => setToDate(value)}
+              shouldDisableDate={(date) => dayjs(date).isBefore(dayjs(fromDate))}
             />
           </Box>
           <Box>
             <Autocomplete
               options={statements}
               sx={{
-                width: "240px",
+                width: "320px",
                 "& .MuiSvgIcon-root: hover": {
                   color: "rgba(255, 145, 0, 0.855)",
                 },
@@ -90,16 +124,19 @@ const Statement = () => {
                 />
               )}
               value={statement}
-              onChange={(e, v) => handleAutocomplete(v)}
+              onChange={(e, v) => setStatement(v)}
             />
           </Box>
-          <Box sx={{ width: "240px", pt: "20px" }}>
-            <Button fullWidth variant="contained" size="small">
+          <Box sx={{ width: "320px", pt: "20px" }}>
+            <Button fullWidth disabled={isDisabled(fromDate, toDate)} onClick={() => setReleaseStatement(true)} variant="contained" size="small">
               Generate statement
             </Button>
           </Box>
         </Box>
       </LocalizationProvider>
+      {showIf(releaseStatement,
+        <Statement statement={statement} />
+      )}
     </Box>
   );
 };
