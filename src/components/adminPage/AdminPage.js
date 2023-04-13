@@ -30,6 +30,7 @@ import AddIcon from '@mui/icons-material/Add';
 import { useThemeProvider } from "../utils/themeProvider/CustomThemeProvier";
 import Homebar from "../common/header/Homebar";
 import RegisterForm from "../register/RegisterForm";
+//import tableStyles from "../utils/themeProvider/CustomThemeProvier";
 
 const AdminPage = () => {
 
@@ -156,7 +157,7 @@ const renderEditButton = (params) => {
             getProfile(username);
             handleClickOpen();
             //console.log("username from table: " + params.row.id);
-            console.log("username from table: " + username);
+            //console.log("username from table: " + username);
           }}
         >
         Edit
@@ -248,6 +249,7 @@ return (
           <DataGrid
             rows={rows}
             columns={columns}
+            //sx={tableStyles}
           />
           <Dialog open={open} onClose={handleClose}>
             <DialogTitle>Edit User {userInfo.username}</DialogTitle>
