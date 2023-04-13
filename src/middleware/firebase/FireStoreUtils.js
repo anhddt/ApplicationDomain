@@ -44,14 +44,14 @@ export const getUserProfile = async (uid) => {
 };
 
 //returns the UID of a user based on their username
-export const getUserByUserName = async (username) => {
+export const getUIDByUserName = async (username) => {
   try {
     const q = query(
       collection(db, "newUsers"),
       where("username", "==", username)
     );
     const querySnapshot = await getDocs(q);
-    return querySnapshot;
+    return querySnapshot[0].id;
   } catch (error) {
     console.log(error);
   }
