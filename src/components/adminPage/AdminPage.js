@@ -46,15 +46,7 @@ const AdminPage = () => {
   const refState = useRef(false);
   const [button, setButton] = useState("");
 
-  const updateUser = async() => {
-    await bulkUpdateUserProperty(UID, userInfo);
-    handleClose();
-  }
 
-  const deleteUser = async() => {
-    await removeUser(UID);
-    closeAlert();   
-  }
 
   const handleSave = () => {
     setButton("save");
@@ -128,6 +120,16 @@ const AdminPage = () => {
   });
 
   useEffect(() => {
+    const updateUser = async() => {
+      await bulkUpdateUserProperty(UID, userInfo);
+      handleClose();
+    }
+  
+    const deleteUser = async() => {
+      await removeUser(UID);
+      closeAlert();   
+    }
+
     if (button === "save") {
       try {
         updateUser();
@@ -137,7 +139,7 @@ const AdminPage = () => {
         deleteUser();
       } catch (error) {}
     }
-    }, [button, updateUser, deleteUser]);
+    }, [button]);
 
 
   //sets rows to be profiles recieved during use effect
