@@ -1,7 +1,7 @@
 import "./registerPage.css";
 import "../utils/themeProvider/themeProvider.css";
 import { useThemeProvider } from "../utils/themeProvider/CustomThemeProvier";
-import { useMemo, useState } from "react";
+import { Fragment, useMemo, useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import {
   Box,
@@ -24,7 +24,7 @@ import {
   isValidPw,
 } from "../../middleware/verification/userInfo";
 
-const RegisterForm = ({ formName }) => {
+const RegisterForm = ({ formName, onClose }) => {
   const { theme } = useThemeProvider();
   const [password, setPassword] = useState("");
   const date = new Date();
@@ -119,10 +119,7 @@ const RegisterForm = ({ formName }) => {
   }, [inputs, password]);
 
   return (
-    <Box
-      className="container"
-      id={theme === "dark" ? "paper-dark" : "paper-light"}
-    >
+    <Fragment>
       {showIf(
         isEmailSent,
         <Box
@@ -139,7 +136,7 @@ const RegisterForm = ({ formName }) => {
           <Button
             variant="contained"
             onClick={() => {
-              navigateTo("/login");
+              onClose ? onClose() : navigateTo("/login");
             }}
           >
             OK
@@ -451,7 +448,7 @@ const RegisterForm = ({ formName }) => {
           </Box>
         </form>
       )}
-    </Box>
+    </Fragment>
   );
 };
 

@@ -58,6 +58,7 @@ const AuthProvider = ({ children }) => {
   const [isSignedIn, setIsNotSignedIn] = useState(false);
   const [userInfo, setUserInfo] = useState({});
   const [refresh, setRefresh] = useState(false);
+  const [currentAuth, setCurrentAuth] = useState(null);
 
   /**
    * What this function does is sign helping the user
@@ -113,6 +114,7 @@ const AuthProvider = ({ children }) => {
    * It takes in the email, password, a function, and another function
    */
   const createAccount = async (userInfo, password, setError) => {
+    setCurrentAuth(auth);
     try {
       const newUser = await createUserWithEmailAndPassword(
         auth,
@@ -148,6 +150,7 @@ const AuthProvider = ({ children }) => {
         logOut();
       }
     };
+    if (currentAuth !== null && currentAuth.currentUser !== null) return;
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       try {
         const userProfile = await getUserProfile(user.uid);
@@ -162,7 +165,7 @@ const AuthProvider = ({ children }) => {
       setIsNotSignedIn(true);
     });
     return unsubscribe;
-  }, [refresh]);
+  }, [refresh, currentAuth]);
 
   const firstName = userInfo.firstName;
   const lastName = userInfo.lastName;
