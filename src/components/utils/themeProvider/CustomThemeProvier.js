@@ -1,5 +1,10 @@
 import { createContext, useState, useContext } from "react";
-import { CssBaseline, ThemeProvider, createTheme } from "@mui/material";
+import {
+  CssBaseline,
+  ThemeProvider,
+  createTheme,
+  useMediaQuery,
+} from "@mui/material";
 
 const Context = createContext();
 export const useThemeProvider = () => {
@@ -16,8 +21,9 @@ export const useThemeProvider = () => {
  * @returns
  */
 const CustomThemeProvider = ({ children }) => {
+  const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
   const [theme, setTheme] = useState(
-    sessionStorage.getItem("theme") ? sessionStorage.getItem("theme") : "light"
+    sessionStorage.getItem("theme") || (prefersDarkMode ? "dark" : "light")
   );
   const getHeaderColor = () =>
     theme === "dark" ? "rgba(30, 27, 27, 0.745)" : "rgb(223, 223, 223)";
@@ -33,7 +39,6 @@ const CustomThemeProvider = ({ children }) => {
     border: "none",
     "& .MuiDataGrid-cell:hover": {
       backgroundColor: getBodyHoverColor(),
-      color: "primary.main",
     },
     "& .MuiDataGrid-columnHeaderCheckbox": {
       backgroundColor: getHeaderColor(),

@@ -15,7 +15,7 @@ import { useThemeProvider } from "../../utils/themeProvider/CustomThemeProvier";
  */
 const ReactCalendarIcon = (props) => {
   const { theme } = useThemeProvider();
-  const { size, fontSize, view } = { ...props };
+  const { size, fontSize, view, id1, id2 } = { ...props };
   const date = new Date();
   const [anchorElCalendar, setAnchorElCalendar] = useState(null);
   const handleOpenCalendar = (e) => {
@@ -27,7 +27,7 @@ const ReactCalendarIcon = (props) => {
   return (
     <Fragment>
       <IconButton
-        id={anchorElCalendar ? "lid-up-icon" : "menu-item"}
+        id={anchorElCalendar ? id1 : id2}
         onClick={(e) => handleOpenCalendar(e)}
         size={size}
         color="inherit"

@@ -28,9 +28,21 @@ function Header() {
           {currentUser ? `Hello ${firstName}!` : "Welcome!"}
         </Typography>
         {/* Custom profile icon, show if user is logged in, or not*/}
-        {showIf(currentUser, <CustomProfileIcon />)}
+        {showIf(
+          currentUser,
+          <CustomProfileIcon
+            id2="profile-expand-chevron-not-menu"
+            id1="profile-icon-not-menu"
+          />
+        )}
         {/* If the user is not logged in show the below instead */}
-        {showIf(!currentUser, <LoginDropDownIcon />)}
+        {showIf(
+          !currentUser,
+          <LoginDropDownIcon
+            id2="profile-expand-chevron-not-menu"
+            id1="profile-icon-not-menu"
+          />
+        )}
       </section>
       <section className="header-bottom_navbar">
         {/* <Navbar />*/}

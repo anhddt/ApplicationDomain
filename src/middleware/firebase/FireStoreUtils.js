@@ -44,14 +44,14 @@ export const getUserProfile = async (uid) => {
 };
 
 //returns the UID of a user based on their username
-export const getUIDByUserName = async (username) => {
+export const getUserByUserName = async (username) => {
   try {
     const q = query(
       collection(db, "newUsers"),
       where("username", "==", username)
     );
     const querySnapshot = await getDocs(q);
-    return querySnapshot[0].id;
+    return querySnapshot;
   } catch (error) {
     console.log(error);
   }
@@ -174,22 +174,6 @@ export const updateUserPassword = async (password, newPassword) => {
 };
 
 /**
- * DON'T BE MISTAKEN THIS WITH THE REGISTER FUNCTION. THIS IS NOT THE ONE!!!
- * This function is used to create new account in the chart of accounts
- * @param newAccount an object
- */
-export const createAccount = async (newAccount) => {
-  try {
-    await setDoc(
-      doc(db, "accounting", "chartOfAccounts"),
-      { [newAccount.id]: newAccount },
-      { merge: true }
-    );
-  } catch (error) {
-    console.log(error);
-  }
-};
-/**
  * This function is used to get the document from a collection
  */
 export const getDataBulk = async (collection, document) => {
@@ -201,6 +185,12 @@ export const getDataBulk = async (collection, document) => {
     console.log(error);
   }
 };
+
+/**
+ * =================================================================
+ * This section is dedicated for accounting acvivities.            *
+ * =================================================================
+ */
 
 // This function gets the counter to assign a unique id to the account
 export const getChartOfAccountsCounter = async () => {
@@ -230,16 +220,99 @@ export const setChartOfAccountsCounter = async (newCounter) => {
 };
 
 /**
+ * This function is used for creating a new financial account
+ * the chart of accounts
+ * @param newAccount an object
+ */
+export const createAccount = async (newAccount) => {
+  try {
+    await setDoc(
+      doc(db, "accounting", "chartOfAccounts", "accounts", `${newAccount.id}`),
+      newAccount
+    );
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+/**
+ * This function gets all accounts
+ * @param {*} id
+ * @returns account data
+ */
+export const getAllAccounts = async () => {
+  try {
+    const myDoc = await getDocs(
+      collection(db, "accounting", "chartOfAccounts", "accounts")
+    );
+    return myDoc.docs;
+  } catch (error) {
+    console.log(error);
+  }
+};
+/**
+ * This function gets all accounts and return a list of id and name
+ * @param {*} id
+ * @returns account data
+ */
+export const getAccountList = async () => {
+  try {
+    const myDoc = await getAllAccounts();
+    const arr = [];
+    myDoc.map((item) => arr.push(`${item.data().id} - ${item.data().name}`));
+    arr.sort((a, b) => a.localeCompare(b));
+    return arr;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+/**
+ * This function gets the individual account with with the given id
+ * @param {*} id
+ * @returns account data
+ */
+export const getAccount = async (id) => {
+  try {
+    const myDoc = await getDoc(
+      doc(db, "accounting", "chartOfAccounts", "accounts", `${id}`)
+    );
+    return myDoc.data();
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+/**
  * This function updates the chart of account cell, any cell
  * @param {*} current a row object
  * @param {*} change a synthetic event
  */
-export const updateChartOfAccounts = async (newRow) => {
+export const updateChartOfAccounts = async (row, value, date) => {
   try {
     await setDoc(
-      doc(db, "accounting", "chartOfAccounts"),
+      doc(db, "accounting", "chartOfAccounts", "accounts", `${row.id}`),
       {
-        [newRow.id]: newRow,
+        [row.field]: value,
+        modifiedDate: date,
+      },
+      { merge: true }
+    );
+  } catch (error) {
+    console.log(error);
+  }
+};
+/**
+ * This function updates the chart of account balance
+ * @param {*} id id of the account
+ * @param {*} balance newest balance
+ */
+export const updateAccountBalance = async (id, balance) => {
+  try {
+    await setDoc(
+      doc(db, "accounting", "chartOfAccounts", "accounts", `${id}`),
+      {
+        balance: balance,
       },
       { merge: true }
     );
@@ -249,19 +322,245 @@ export const updateChartOfAccounts = async (newRow) => {
 };
 
 /**
- * This function update the event to the database
+ * Delete an account and its childrents(events and entries).
+ * @param {*} id
+ */
+export const deleteAccount = async (id) => {
+  id.map(async (i) => {
+    try {
+      await deleteDoc(
+        doc(db, "accounting", "chartOfAccounts", "accounts", `${i}`)
+      );
+      return true;
+    } catch (error) {
+      console.log(error);
+    }
+  });
+};
+/**
+ * This function create an event in the database
  * @param {*} event an event object which has the event date, previous object,
  * current object, and what has changed object
  */
-export const updateAccountingEvents = async (event) => {
+export const createAccountEvent = async (event) => {
   try {
     await setDoc(
-      doc(db, "accounting", "accountingEvents"),
+      doc(db, "accounting", "chartOfAccounts", "events", event.eventDate),
+      event
+    );
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+/**
+ * =================================================================
+ * This function gets all events in CHART OF ACCOUNTS              *
+ * =================================================================
+ * @param {*} id
+ * @returns account data
+ */
+export const getAllEvents = async () => {
+  try {
+    const myDoc = await getDocs(
+      collection(db, "accounting", "chartOfAccounts", "events")
+    );
+    return myDoc.docs;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+/**
+ * ======================================================================
+ * This section is dedicated for account details and event log for each *
+ * account                                                              *
+ * ======================================================================
+ * @param {*} id
+ * @returns account data
+ */
+
+/**
+ * This function create an entry to the database
+ * @param {*} entry an object which has the date, and the content
+ * of the entry such as name, date, balance, status, etc.
+ * NOTICE!!!
+ * The date is the id of the entry
+ * Entry parent is the account id that it's associated with
+ */
+export const createEntry = async (newEntry) => {
+  try {
+    await setDoc(
+      doc(
+        db,
+        "accounting",
+        "chartOfAccounts",
+        "accounts",
+        `${newEntry.parent}`,
+        "entries",
+        `${newEntry.id}`
+      ),
+      newEntry
+    );
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+/**
+ * This function the entry based on the parent account and the entry id
+ * @returns
+ */
+export const getEntry = async (parent, id) => {
+  try {
+    const myDoc = await getDoc(
+      doc(
+        db,
+        "accounting",
+        "chartOfAccounts",
+        "accounts",
+        `${parent}`,
+        "entries",
+        `${id}`
+      )
+    );
+    return myDoc.data();
+  } catch (error) {
+    console.log(error);
+  }
+};
+/**
+ * This function gets all entries at once from the parent account
+ * @returns
+ */
+export const getAllEntries = async (id) => {
+  try {
+    const myDoc = await getDocs(
+      collection(
+        db,
+        "accounting",
+        "chartOfAccounts",
+        "accounts",
+        `${id}`,
+        "entries"
+      )
+    );
+    return myDoc.docs;
+  } catch (error) {
+    console.log(error);
+  }
+};
+/**
+ * This function create an entry to the database
+ * @param {*} entry an object which has the date, and the content
+ * of the entry such as name, date, balance, status, etc.
+ * NOTICE!!!
+ * The date is the id of the entry
+ * Entry parent is the account id that it's associated with
+ */
+export const updateEntry = async (row, parent, value) => {
+  try {
+    await setDoc(
+      doc(
+        db,
+        "accounting",
+        "chartOfAccounts",
+        "accounts",
+        `${parent}`,
+        "entries",
+        `${row.id}`
+      ),
       {
-        [event.eventDate]: event,
+        [row.field]: value,
       },
       { merge: true }
     );
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+/**
+ * This function create an event in the database
+ * @param {*} event an event object which has the event date, previous object,
+ * current object, and what has changed object
+ */
+export const createEntryEvent = async (event, parent) => {
+  try {
+    await setDoc(
+      doc(
+        db,
+        "accounting",
+        "chartOfAccounts",
+        "accounts",
+        `${parent}`,
+        "events",
+        `${event.eventDate}`
+      ),
+      event
+    );
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+/**
+ * =================================================================
+ * This function gets all events related to AN ACCOUNT entries     *
+ * =================================================================
+ * @param {*} id
+ * @returns account data
+ */
+export const getAllEntryEvents = async (parent) => {
+  try {
+    const myDoc = await getDocs(
+      collection(
+        db,
+        "accounting",
+        "chartOfAccounts",
+        "accounts",
+        `${parent}`,
+        "events"
+      )
+    );
+    return myDoc.docs;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+/**
+ * This function create a journal reference every time a set of entries is created.
+ * @param {*} event an event object which has the event date, previous object,
+ * current object, and what has changed object
+ */
+export const createJournal = async (journal) => {
+  try {
+    await setDoc(doc(db, "journal", `${journal.id}`), journal);
+  } catch (error) {
+    console.log(error);
+  }
+};
+/**
+ * This function gets all journals
+ */
+export const getJournals = async () => {
+  try {
+    const myDoc = await getDocs(collection(db, "journal"));
+    const arr = [];
+    myDoc.docs.map((d) => arr.push(d.data()));
+    return arr;
+  } catch (error) {
+    console.log(error);
+  }
+};
+/**
+ * This function a journal with a provided id
+ */
+export const getJournal = async (id) => {
+  try {
+    const myDoc = await getDoc(doc(db, "journal", `${id}`));
+    return myDoc.data();
   } catch (error) {
     console.log(error);
   }

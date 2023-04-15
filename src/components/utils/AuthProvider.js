@@ -17,16 +17,13 @@ import {
 
 /**
  * The whole purpose of this file is allowing
- * the chile components to be able to access the functions
+ * the child components to be able to access the functions
  * within the AuthProvider
  * inside
  * to authenticate a user,
  * import useAuth()
  * const { user } = useAuth();
  * The user is in form of a dictionary returned from firebase,
- */
-
-/**
  * The use of createContext allows the useAuth to access the variables
  * inside Auth provider.
  * Depend on what goes inside value at line 55
@@ -51,11 +48,17 @@ export const useAuth = () => {
  * There is no other need to import this component
  * import useAuth() instead.
  */
-export function AuthProvider({ children }) {
+const AuthProvider = ({ children }) => {
+  const [accountDetailPersistence, setAccountDetailPersistence] = useState({
+    id: null,
+    normalSide: "Debit",
+    open: false,
+  });
   const [currentUser, setCurrentUser] = useState();
   const [isSignedIn, setIsNotSignedIn] = useState(false);
   const [userInfo, setUserInfo] = useState({});
   const [refresh, setRefresh] = useState(false);
+  const [currentAuth, setCurrentAuth] = useState(null);
 
   /**
    * What this function does is sign helping the user
@@ -111,6 +114,7 @@ export function AuthProvider({ children }) {
    * It takes in the email, password, a function, and another function
    */
   const createAccount = async (userInfo, password, setError) => {
+    setCurrentAuth(auth);
     try {
       const newUser = await createUserWithEmailAndPassword(
         auth,
@@ -146,6 +150,7 @@ export function AuthProvider({ children }) {
         logOut();
       }
     };
+    if (currentAuth !== null && currentAuth.currentUser !== null) return;
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       try {
         const userProfile = await getUserProfile(user.uid);
@@ -160,7 +165,7 @@ export function AuthProvider({ children }) {
       setIsNotSignedIn(true);
     });
     return unsubscribe;
-  }, [refresh]);
+  }, [refresh, currentAuth]);
 
   const firstName = userInfo.firstName;
   const lastName = userInfo.lastName;
@@ -184,6 +189,7 @@ export function AuthProvider({ children }) {
     lastName: lastName,
   };
   const values = {
+    accountDetailPersistence,
     city,
     country,
     currentUser,
@@ -196,6 +202,7 @@ export function AuthProvider({ children }) {
     logOut,
     phone,
     role,
+    setAccountDetailPersistence,
     setRefresh,
     signInEmailPassword,
     state,
@@ -209,4 +216,6 @@ export function AuthProvider({ children }) {
   return (
     <Context.Provider value={values}>{isSignedIn && children}</Context.Provider>
   );
-}
+};
+
+export default AuthProvider;

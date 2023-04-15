@@ -14,19 +14,32 @@ const cellUpdateEvent = (user, change) => {
     previous: change.formattedValue,
   };
   return {
-    eventDate: new Date(),
+    eventDate: new Date().toISOString(),
     change: changeEvent,
     user: user,
   };
 };
 
-const newRowInChart = (user, id) => {
+/**
+ * When an account is created, a create account event is created or deleted
+ * an event is created here.
+ * @param {*} user
+ * @param {*} change
+ * @param {*} type
+ * @returns
+ */
+const itemCreatedEvent = (user, change, type) => {
   const changeEvent = {
-    type: "create",
-    id: id,
+    type: type,
+    field: "",
+    row: {
+      id: change.id,
+      name: change.name,
+    },
+    previous: "",
   };
   return {
-    eventDate: new Date(),
+    eventDate: new Date().toISOString(),
     change: changeEvent,
     user: user,
   };
@@ -46,8 +59,10 @@ export const createEvent = (user, change, whatChange) => {
   switch (whatChange) {
     case "cell":
       return cellUpdateEvent(user, change);
-    case "newAccountInChart":
-      return newRowInChart(user, change);
+    case "new":
+      return itemCreatedEvent(user, change, "create");
+    case "delete":
+      return itemCreatedEvent(user, change, "delete");
     default:
       break;
   }

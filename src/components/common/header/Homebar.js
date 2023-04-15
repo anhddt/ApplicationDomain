@@ -33,7 +33,11 @@ const Homebar = () => {
     <AppBar position="sticky" color="inherit" sx={{ zIndex: 1201 }}>
       <Toolbar>
         <IconButton
-          id={anchorEl ? "lid-up-icon" : "menu-item"}
+          id={
+            anchorEl
+              ? "calendar-menu-icon-homebar"
+              : "calendar-menu-expand-homebar"
+          }
           size="medium"
           color="inherit"
           onClick={(e) => handleOpenNavMenu(e)}
@@ -61,7 +65,7 @@ const Homebar = () => {
             <Typography variant="subtitle1">About</Typography>
           </MenuItem>
           {showIf(
-            currentUser && role === "admin",
+            role === "admin",
             <MenuItem
               id="menu-item"
               onClick={() => {
@@ -87,7 +91,13 @@ const Homebar = () => {
             <Typography variant="subtitle1">Contact</Typography>
           </MenuItem>
         </Menu>
-        <ReactCalendarIcon size="medium" fontSize="medium" view="month" />
+        <ReactCalendarIcon
+          id1="calendar-menu-icon-homebar"
+          id2="calendar-menu-expand-homebar"
+          size="medium"
+          fontSize="medium"
+          view="month"
+        />
         <Box sx={{ ml: 2 }} flexGrow={1}>
           <LogoIcon />
         </Box>
@@ -97,8 +107,20 @@ const Homebar = () => {
               {currentUser ? `HELLO ${firstName.toUpperCase()}!` : "WELCOME!"}
             </Typography>
           </Box>
-          {showIf(!currentUser, <LoginDropDownIcon />)}
-          {showIf(currentUser, <CustomProfileIcon />)}
+          {showIf(
+            !currentUser,
+            <LoginDropDownIcon
+              id1="profile-icon-not-menu-homebar"
+              id2="profile-expand-chevron-not-menu-homebar"
+            />
+          )}
+          {showIf(
+            currentUser,
+            <CustomProfileIcon
+              id1="profile-icon-not-menu-homebar"
+              id2="profile-expand-chevron-not-menu-homebar"
+            />
+          )}
         </Stack>
       </Toolbar>
     </AppBar>
