@@ -10,7 +10,7 @@ import {
     //getDownloadURL
 } from "firebase/storage";
 import { Box } from "@mui/material";
-import Popup from 'reactjs-popup';
+//import Popup from 'reactjs-popup';
 
 const UploadDownload = () => {
     // State to store uploaded file
@@ -19,15 +19,14 @@ const UploadDownload = () => {
     // Select file to upload
     function handleChange(event) {
         setFile(event.target.files[0]);
-        console.log(file);
     }
     
     // Method to upload files
     const handleUpload = async(event) => {
-        // event.preventDefault();
+        event.preventDefault();
         console.log(file);
         const storage = getStorage();
-        const storageRef = ref(storage, 'files/' + `${file.name}`);
+        const storageRef = ref(storage, 'files/' + file.name);
             
         // Receives the storage reference and the file to upload.
         uploadBytes(storageRef, file).then((snapshot) => {
