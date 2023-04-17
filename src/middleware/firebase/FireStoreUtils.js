@@ -1,3 +1,4 @@
+import dayjs from "dayjs";
 import {
   collection,
   doc,
@@ -17,6 +18,8 @@ import {
   verifyBeforeUpdateEmail,
   updatePassword,
 } from "firebase/auth";
+import isBetween from "dayjs/plugin/isBetween";
+dayjs.extend(isBetween);
 
 /**
  * This function takes in a user ID, and a collection of information.
@@ -250,6 +253,32 @@ export const getAllAccounts = async () => {
     console.log(error);
   }
 };
+
+/**
+ * The name said it all, get all of the accounts by it's subcategory components
+ * @param {*} subCat
+ * @returns a list with all of the account objects with the same subCat value
+ */
+export const getAccountsBySubCat = async (subCat) => {
+  try {
+    const accountsRef = collection(
+      db,
+      "accounting",
+      "chartOfAccounts",
+      "accounts"
+    );
+    const q = query(accountsRef, where("subCat", "==", subCat));
+    const querySnapshot = await getDocs(q);
+    const list = [];
+    querySnapshot.forEach((doc) => {
+      list.push(doc.data());
+    });
+    return list;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 /**
  * This function gets all accounts and return a list of id and name
  * @param {*} id
@@ -316,6 +345,46 @@ export const updateAccountBalance = async (id, balance) => {
       },
       { merge: true }
     );
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+/**
+ * All accounts automatically has a balance with them.
+ * However they do not have the balance for any arbitary range.
+ * Therefore, this function is made to serve the purpose.
+ * fromDate <= entry created date, which is the ID of the entry <= toDate
+ * @param {*} id number, id of the account
+ * @param {*} fromDate string, date object from the calendar
+ * @param {*} toDate string, date object from the calendar
+ * @return the balance corresponding to the account and the date [range] provided
+ */
+export const getAccountBalanceWithDateRange = async (
+  id,
+  normalSide,
+  fromDate,
+  toDate
+) => {
+  try {
+    const allEntries = await getAllEntries(id);
+    const arr = allEntries.filter(
+      (entry) =>
+        entry.data().status === "Approved" &&
+        dayjs(entry.data().id).isBetween(fromDate, toDate, "day", [])
+    );
+    let total = 0;
+    arr.forEach((entry) => {
+      const e = entry.data();
+      if (normalSide === "Debit") {
+        if (e.type === "Debit") total += e.total;
+        else total -= e.total;
+      } else {
+        if (e.type === "Credit") total += e.total;
+        else total -= e.total;
+      }
+    });
+    return total;
   } catch (error) {
     console.log(error);
   }
