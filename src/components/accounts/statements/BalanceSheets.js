@@ -1,7 +1,6 @@
 import "./statement.css";
 import { Box, Grid, Typography } from "@mui/material";
 import dayjs from "dayjs";
-import { useThemeProvider } from "../../utils/themeProvider/CustomThemeProvier";
 import {
   getAccountsBySubCat,
   getAccountBalanceWithDateRange,
@@ -19,9 +18,6 @@ export const getDate = (fromDate, toDate) => {
 };
 
 const BalanceSheets = ({ fromDate, toDate, docRef }) => {
-  const { theme } = useThemeProvider();
-  const className =
-    theme === "dark" ? "total-underline-dark" : "total-underline";
   const [currentAssets, setCurrentAssets] = useState([]);
   const [totalCA, setTotalCA] = useState(0);
   const [nonCurrentAssets, setNonCurrentAssets] = useState([]);
@@ -268,7 +264,7 @@ const BalanceSheets = ({ fromDate, toDate, docRef }) => {
               Total assets:
             </Typography>
             <Typography
-              className={className}
+              className="total-underline"
               variant="subtitle1"
               sx={{
                 borderTop: 2,
@@ -356,7 +352,7 @@ const BalanceSheets = ({ fromDate, toDate, docRef }) => {
             Total liabilities and stockholders' equity:
           </Typography>
           <Typography
-            className={className}
+            className="total-underline"
             variant="subtitle1"
             sx={{
               borderTop: 2,
