@@ -371,7 +371,12 @@ export const getAccountBalanceWithDateRange = async (
     const arr = allEntries.filter(
       (entry) =>
         entry.data().status === "Approved" &&
-        dayjs(entry.data().id).isBetween(fromDate, toDate, "day", [])
+        dayjs(entry.data().id).isBetween(
+          dayjs(fromDate),
+          dayjs(toDate),
+          "day",
+          []
+        )
     );
     let total = 0;
     arr.forEach((entry) => {
