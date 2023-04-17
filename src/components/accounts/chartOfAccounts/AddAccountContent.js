@@ -190,7 +190,7 @@ const AddAccountContent = ({ setRefresh }) => {
             <MenuItem disabled value="">
               <em>Select a statement</em>
             </MenuItem>
-            <MenuItem value="BS">{"BS (balance sheet)"}</MenuItem>
+            <MenuItem value="BS">{"BS (balance sheets)"}</MenuItem>
             <MenuItem value="CF">{"CF (cash flow statement)"}</MenuItem>
             <MenuItem value="CI">{"CI (change in equity statement)"}</MenuItem>
             <MenuItem value="IS">{"IS (income statement)"}</MenuItem>

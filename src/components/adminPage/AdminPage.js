@@ -34,7 +34,7 @@ import AddIcon from "@mui/icons-material/Add";
 import { useThemeProvider } from "../utils/themeProvider/CustomThemeProvier";
 import Homebar from "../common/header/Homebar";
 import RegisterForm from "../register/RegisterForm";
-import HelpButton  from "../common/help/HelpButton";
+import HelpButton from "../common/help/HelpButton";
 
 const AdminPage = () => {
   const { theme } = useThemeProvider();
@@ -265,7 +265,7 @@ const AdminPage = () => {
     },
   ];
 
-let helpMessage = "this is page lets you edit, delete, and add users";
+  let helpMessage = "this is page lets you edit, delete, and add users";
 
   //edit user contact and role, only view email, name, username
 
@@ -486,9 +486,9 @@ let helpMessage = "this is page lets you edit, delete, and add users";
               Add User
             </Button>
           </div>
-        <div>
-        <HelpButton message={helpMessage}/>
-        </div>
+          <div>
+            <HelpButton message={helpMessage} />
+          </div>
 
           <Dialog open={addUser} onClose={HandleNewUserClose}>
             <RegisterForm
