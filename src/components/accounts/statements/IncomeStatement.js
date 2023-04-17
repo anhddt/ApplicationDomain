@@ -1,7 +1,6 @@
 import "./statement.css";
 import { Box, Grid, Typography } from "@mui/material";
 import dayjs from "dayjs";
-import { useThemeProvider } from "../../utils/themeProvider/CustomThemeProvier";
 import {
   getAccountsBySubCat,
   getAccountBalanceWithDateRange,
@@ -18,10 +17,7 @@ export const getDate = (fromDate, toDate) => {
   return `From ${month1}/${date1}/${day.year()} to ${month2}/${date2}/${day2.year()} in U.S. Dollar`;
 };
 
-const IncomeStatement = ({ fromDate, toDate, docRef, setLoading }) => {
-  const { theme } = useThemeProvider();
-  const className =
-    theme === "dark" ? "total-underline-dark" : "total-underline";
+const IncomeStatement = ({ fromDate, toDate, docRef }) => {
   const [revenue, setRevenue] = useState([]);
   const [expenses, setExpenses] = useState([]);
   const [totalRv, setTotalRv] = useState(0);
@@ -213,7 +209,7 @@ const IncomeStatement = ({ fromDate, toDate, docRef, setLoading }) => {
             Net income:
           </Typography>
           <Typography
-            className={className}
+            className="total-underline"
             variant="subtitle1"
             sx={{
               borderTop: 2,
