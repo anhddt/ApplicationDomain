@@ -32,103 +32,103 @@ const BalanceSheets = ({ fromDate, toDate, docRef }) => {
   useMemo(() => {
     const getIncomeStatementInfo = async () => {
       const currAssets = await getAccountsBySubCat("Current Assets");
-      currAssets.map(
-        async (account, index) =>
-          (currAssets[index].balance = await getAccountBalanceWithDateRange(
-            account.id,
-            account.normalSide,
-            fromDate.$d,
-            toDate.$d
-          ))
-      );
-      let tCA = 0;
-      currAssets.forEach((acc) => (tCA += acc.balance));
-      setCurrentAssets(currAssets);
-      setTotalCA(tCA);
       const nonCurrAssets = await getAccountsBySubCat("Non-current Assets");
-      nonCurrAssets.map(
-        async (account, index) =>
-          (nonCurrAssets[index].balance = await getAccountBalanceWithDateRange(
-            account.id,
-            account.normalSide,
-            fromDate.$d,
-            toDate.$d
-          ))
-      );
-      let tNCA = 0;
-      nonCurrAssets.forEach((acc) => (tNCA += acc.balance));
-      setNonCurrentAssets(nonCurrAssets);
-      setTotalA(tCA + tNCA);
       const currLiabilities = await getAccountsBySubCat("Current Liabilities");
-      currLiabilities.map(
-        async (account, index) =>
-          (currLiabilities[index].balance =
-            await getAccountBalanceWithDateRange(
-              account.id,
-              account.normalSide,
-              fromDate.$d,
-              toDate.$d
-            ))
-      );
-      setCurrentLiabilities(currLiabilities);
-      let tCL = 0;
-      currLiabilities.forEach((acc) => (tCL += acc.balance));
-      setTotalCL(tCL);
       const nonCurrLiabilities = await getAccountsBySubCat(
         "Non-current Liabilities"
       );
-      nonCurrLiabilities.map(
-        async (account, index) =>
-          (nonCurrLiabilities[index].balance =
-            await getAccountBalanceWithDateRange(
-              account.id,
-              account.normalSide,
-              fromDate.$d,
-              toDate.$d
-            ))
-      );
-      setNonCurrentLiabilities(nonCurrLiabilities);
-      let tNCL = 0;
-      nonCurrLiabilities.forEach((acc) => (tNCL += acc.balance));
       const stockhlders = await getAccountsBySubCat("Stockholders' equity");
-      stockhlders.map(
-        async (account, index) =>
-          (stockhlders[index].balance = await getAccountBalanceWithDateRange(
-            account.id,
-            account.normalSide,
-            fromDate.$d,
-            toDate.$d
-          ))
-      );
-      setStockholdersEquity(stockhlders);
-      let tSE = 0;
-      stockhlders.forEach((acc) => (tSE += acc.balance));
       const rv = await getAccountsBySubCat("Revenue");
-      rv.map(
-        async (account, index) =>
-          (rv[index].balance = await getAccountBalanceWithDateRange(
-            account.id,
-            account.normalSide,
-            fromDate.$d,
-            toDate.$d
-          ))
-      );
       const ex = await getAccountsBySubCat("Expenses");
-      ex.map(
-        async (account, index) =>
-          (ex[index].balance = await getAccountBalanceWithDateRange(
-            account.id,
-            account.normalSide,
-            fromDate.$d,
-            toDate.$d
-          ))
-      );
+      let tCA = 0;
+      let tNCA = 0;
+      let tCL = 0;
+      let tNCL = 0;
+      let tSE = 0;
       let t1 = 0;
       let t2 = 0;
-      rv.forEach((acc) => (t1 += acc.balance));
-      ex.forEach((acc) => (t2 += acc.balance));
-      setNetIncome(t1 - t2);
-      setTotalLE(tCL + tNCL + tSE + t1 - t2);
+      currAssets.forEach(async (account, index) => {
+        const balance = await getAccountBalanceWithDateRange(
+          account.id,
+          account.normalSide,
+          fromDate.$d,
+          toDate.$d
+        );
+        currAssets[index].balance = balance;
+        tCA += balance;
+      });
+      nonCurrAssets.forEach(async (account, index) => {
+        const balance = await getAccountBalanceWithDateRange(
+          account.id,
+          account.normalSide,
+          fromDate.$d,
+          toDate.$d
+        );
+        nonCurrAssets[index].balance = balance;
+        tNCA += balance;
+      });
+      currLiabilities.forEach(async (account, index) => {
+        const balance = await getAccountBalanceWithDateRange(
+          account.id,
+          account.normalSide,
+          fromDate.$d,
+          toDate.$d
+        );
+        currLiabilities[index].balance = balance;
+        tCL += balance;
+      });
+      nonCurrLiabilities.forEach(async (account, index) => {
+        const balance = await getAccountBalanceWithDateRange(
+          account.id,
+          account.normalSide,
+          fromDate.$d,
+          toDate.$d
+        );
+        nonCurrLiabilities[index].balance = balance;
+        tNCL += balance;
+      });
+      stockhlders.forEach(async (account, index) => {
+        const balance = await getAccountBalanceWithDateRange(
+          account.id,
+          account.normalSide,
+          fromDate.$d,
+          toDate.$d
+        );
+        stockhlders[index].balance = balance;
+        tSE += balance;
+      });
+      rv.forEach(async (account, index) => {
+        const balance = await getAccountBalanceWithDateRange(
+          account.id,
+          account.normalSide,
+          fromDate.$d,
+          toDate.$d
+        );
+        rv[index].balance = balance;
+        t1 += balance;
+      });
+      ex.forEach(async (account, index) => {
+        const balance = await getAccountBalanceWithDateRange(
+          account.id,
+          account.normalSide,
+          fromDate.$d,
+          toDate.$d
+        );
+        ex[index].balance = balance;
+        t2 += balance;
+      });
+      setTimeout(() => {
+        setCurrentAssets(currAssets);
+        setTotalCA(tCA);
+        setNonCurrentAssets(nonCurrAssets);
+        setTotalA(tCA + tNCA);
+        setCurrentLiabilities(currLiabilities);
+        setTotalCL(tCL);
+        setNonCurrentLiabilities(nonCurrLiabilities);
+        setStockholdersEquity(stockhlders);
+        setNetIncome(t1 - t2);
+        setTotalLE(tCL + tNCL + tSE + t1 - t2);
+      }, 1000);
     };
     getIncomeStatementInfo();
   }, [fromDate, toDate]);

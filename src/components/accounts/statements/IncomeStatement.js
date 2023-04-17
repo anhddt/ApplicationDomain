@@ -25,35 +25,37 @@ const IncomeStatement = ({ fromDate, toDate, docRef }) => {
   const [netIncome, setNetIncome] = useState(0);
   useMemo(() => {
     const getIncomeStatementInfo = async () => {
-      const rv = await getAccountsBySubCat("Revenue");
-      rv.map(
-        async (account, index) =>
-          (rv[index].balance = await getAccountBalanceWithDateRange(
-            account.id,
-            account.normalSide,
-            fromDate.$d,
-            toDate.$d
-          ))
-      );
-      const ex = await getAccountsBySubCat("Expenses");
-      ex.map(
-        async (account, index) =>
-          (ex[index].balance = await getAccountBalanceWithDateRange(
-            account.id,
-            account.normalSide,
-            fromDate.$d,
-            toDate.$d
-          ))
-      );
-      setRevenue(rv);
-      setExpenses(ex);
       let t1 = 0;
       let t2 = 0;
-      rv.forEach((acc) => (t1 += acc.balance));
-      setTotalRv(t1);
-      ex.forEach((acc) => (t2 += acc.balance));
-      setTotalEx(t2);
-      setNetIncome(t1 - t2);
+      const rv = await getAccountsBySubCat("Revenue");
+      const ex = await getAccountsBySubCat("Expenses");
+      rv.forEach(async (account, index) => {
+        const balance = await getAccountBalanceWithDateRange(
+          account.id,
+          account.normalSide,
+          fromDate.$d,
+          toDate.$d
+        );
+        rv[index].balance = balance;
+        t1 += balance;
+      });
+      ex.forEach(async (account, index) => {
+        const balance = await getAccountBalanceWithDateRange(
+          account.id,
+          account.normalSide,
+          fromDate.$d,
+          toDate.$d
+        );
+        ex[index].balance = balance;
+        t2 += balance;
+      });
+      setTimeout(() => {
+        setRevenue(rv);
+        setExpenses(ex);
+        setTotalRv(t1);
+        setTotalEx(t2);
+        setNetIncome(t1 - t2);
+      }, 1000);
     };
     getIncomeStatementInfo();
   }, [fromDate, toDate]);
