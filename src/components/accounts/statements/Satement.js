@@ -6,6 +6,7 @@ import {
   Button,
   IconButton,
   TextField,
+  Tooltip,
 } from "@mui/material";
 import PrintIcon from "@mui/icons-material/Print";
 import { showIf } from "../../utils/conditionalRendering";
@@ -198,9 +199,11 @@ const Statement = () => {
             boxShadow: 5,
           }}
         >
-          <IconButton sx={{ color: "inherit" }} onClick={() => printDoc()}>
-            <PrintIcon />
-          </IconButton>
+          <Tooltip title="Print statement" placement="right">
+            <IconButton sx={{ color: "inherit" }} onClick={() => printDoc()}>
+              <PrintIcon id="print-icon"/>
+            </IconButton>
+          </Tooltip>
         </Box>
       )}
     </Box>
