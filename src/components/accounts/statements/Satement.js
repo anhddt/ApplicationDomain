@@ -201,7 +201,7 @@ const Statement = () => {
         >
           <Tooltip title="Print statement" placement="right">
             <IconButton sx={{ color: "inherit" }} onClick={() => printDoc()}>
-              <PrintIcon id="print-icon"/>
+              <PrintIcon id="print-icon" />
             </IconButton>
           </Tooltip>
         </Box>
