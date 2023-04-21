@@ -60,7 +60,7 @@ const EventLog = () => {
         component="button"
         onClick={() => handleDrawerOpen(row)}
       >
-        {new Date(row.value).toString()}
+        {row.value.toString()}
       </Link>
     );
   };

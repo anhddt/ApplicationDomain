@@ -118,7 +118,7 @@ const AccountDetail = ({ onClose }) => {
           handleDrawerOpen(row);
         }}
       >
-        {new Date(row.value).toString()}
+        {row.value.toString()}
       </Link>
     );
   };
@@ -132,7 +132,7 @@ const AccountDetail = ({ onClose }) => {
           handleJournalOpen(row);
         }}
       >
-        {new Date(row.value).toString()}
+        {row.value.toString()}
       </Link>
     );
   };
