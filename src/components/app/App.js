@@ -52,7 +52,7 @@ const App = () => {
       <AuthProvider>
         <BrowserRouter>
           <Routes>
-            <Route index element={<HomePage />} />
+            <Route path="*" element={<HomePage />}/>
             {PublicRoutes}
             {PrivateRoutes}
           </Routes>
