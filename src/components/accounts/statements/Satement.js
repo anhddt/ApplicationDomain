@@ -176,7 +176,7 @@ const Statement = () => {
         releaseStatement,
         <Box
           sx={{
-            mlm: "20px",
+            ml: "20px",
             height: "297mm",
             width: "210mm",
             backgroundColor: "whitesmoke",
