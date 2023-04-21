@@ -173,9 +173,8 @@ const Statement = () => {
         releaseStatement,
         <Box
           sx={{
-            height: "1000px",
-            mr: "50px",
-            width: "800px",
+            height: "297mm",
+            width: "210mm",
             backgroundColor: "whitesmoke",
             elevation: 1,
             boxShadow: 5,
@@ -190,7 +189,8 @@ const Statement = () => {
           sx={{
             position: "sticky",
             top: 2,
-            mr: "150px",
+            ml: "20px",
+            mr: "2%",
             width: "40px",
             height: "40px",
             borderRadius: "50%",
