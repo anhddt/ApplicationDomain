@@ -75,16 +75,19 @@ const Statement = () => {
         height: "100%",
         width: "100%",
         backgroundColor: "#737373",
-        p: "20px",
+        pl: "20px",
+        pt: "20px",
+        pb: "20px",
+        pr: "90px",
         overflow: "scroll",
       }}
     >
-      <Box sx={{ flexGrow: 1 }}>
+      <Box sx={{height: "400px", width: "350px", top: 2, flexGrow: 1, position: "sticky"}}>
         <LocalizationProvider dateAdapter={AdapterDayjs}>
           <Box
             sx={{
-              width: "350px",
-              height: "400px",
+              width: "inherit",
+              height: "inherit",
               backgroundColor: theme === "dark" ? "#121212" : "#f6f7f9",
               elevation: 1,
               boxShadow: 5,
@@ -173,6 +176,7 @@ const Statement = () => {
         releaseStatement,
         <Box
           sx={{
+            mlm: "20px",
             height: "297mm",
             width: "210mm",
             backgroundColor: "whitesmoke",
