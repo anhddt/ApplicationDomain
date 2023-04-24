@@ -12,8 +12,10 @@ export const getDate = (fromDate, toDate) => {
   const day2 = dayjs(toDate);
   const date1 = day.date() <= 9 ? `0${day.date()}` : `${day.date()}`;
   const date2 = day2.date() <= 9 ? `0${day2.date()}` : `${day2.date()}`;
-  const month1 = day.month() <= 9 ? `0${day.month()}` : `${day.month()}`;
-  const month2 = day2.month() <= 9 ? `0${day2.month()}` : `${day2.month()}`;
+  const month1 =
+    day.month() + 1 <= 9 ? `0${day.month() + 1}` : `${day.month() + 1}`;
+  const month2 =
+    day2.month() + 1 <= 9 ? `0${day2.month() + 1}` : `${day2.month() + 1}`;
   return `From ${month1}/${date1}/${day.year()} to ${month2}/${date2}/${day2.year()} in US Dollar`;
 };
 

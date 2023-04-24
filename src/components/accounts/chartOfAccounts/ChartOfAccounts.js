@@ -295,8 +295,9 @@ const ChartOfAccounts = () => {
       type: "date",
       flex: 1,
       renderHeader: (param) => headerElement(param),
-      renderCell: (row) => row.value === null ? "N/A" : new Date(row.value).toString(),
-      valueGetter: ({ value }) => value === "" ? null : new Date(value),
+      renderCell: (row) =>
+        row.value === null ? "N/A" : new Date(row.value).toString(),
+      valueGetter: ({ value }) => (value === "" ? null : new Date(value)),
       minWidth: 420,
     },
     {

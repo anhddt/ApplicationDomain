@@ -2,7 +2,7 @@ import "react-calendar/dist/Calendar.css";
 import "./reactCalendar.css";
 import { Fragment, useState } from "react";
 import Calendar from "react-calendar";
-import { IconButton, Menu, MenuItem } from "@mui/material";
+import { IconButton, Menu, MenuItem, Tooltip } from "@mui/material";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import { useThemeProvider } from "../../utils/themeProvider/CustomThemeProvier";
 
@@ -26,14 +26,16 @@ const ReactCalendarIcon = (props) => {
   };
   return (
     <Fragment>
-      <IconButton
-        id={anchorElCalendar ? id1 : id2}
-        onClick={(e) => handleOpenCalendar(e)}
-        size={size}
-        color="inherit"
-      >
-        <CalendarMonthIcon fontSize={fontSize} />
-      </IconButton>
+      <Tooltip title={!anchorElCalendar ? "Calendar" : ""} placement="bottom">
+        <IconButton
+          id={anchorElCalendar ? id1 : id2}
+          onClick={(e) => handleOpenCalendar(e)}
+          size={size}
+          color="inherit"
+        >
+          <CalendarMonthIcon fontSize={fontSize} />
+        </IconButton>
+      </Tooltip>
       <Menu
         open={anchorElCalendar ? true : false}
         onClose={() => {

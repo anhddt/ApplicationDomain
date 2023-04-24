@@ -82,7 +82,15 @@ const Statement = () => {
         overflow: "scroll",
       }}
     >
-      <Box sx={{height: "400px", width: "350px", top: 2, flexGrow: 1, position: "sticky"}}>
+      <Box
+        sx={{
+          height: "400px",
+          width: "350px",
+          top: 2,
+          flexGrow: 1,
+          position: "sticky",
+        }}
+      >
         <LocalizationProvider dateAdapter={AdapterDayjs}>
           <Box
             sx={{

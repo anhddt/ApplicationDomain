@@ -14,6 +14,7 @@ import {
 import { showIf } from "../utils/conditionalRendering";
 import { useThemeProvider } from "../utils/themeProvider/CustomThemeProvier";
 import { useAuth } from "../utils/AuthProvider";
+import { useLocation } from "react-router-dom";
 import HomeBar from "../common/header/Homebar";
 import CustomDrawer from "../common/drawer/Drawer";
 import ChartOfAccounts from "./chartOfAccounts/ChartOfAccounts";
@@ -28,10 +29,11 @@ import AttachFileIcon from "@mui/icons-material/AttachFile";
 import DownloadIcon from "@mui/icons-material/Download";
 
 const AcccountsPage = () => {
+  const { state } = useLocation();
   const { role } = useAuth();
   const { theme } = useThemeProvider();
   const [drawerOpen, setDrawerOpen] = useState(false);
-  const [show, setShow] = useState("Chart of accounts");
+  const [show, setShow] = useState(state?.showItem || "Chart of accounts");
   const openWidth = 205;
   /**
    * To add a nav on the side just pass the
@@ -161,7 +163,10 @@ const AcccountsPage = () => {
         id={theme === "dark" ? "paper-dark" : "paper-light"}
       >
         {showIf(show === "Chart of accounts", <ChartOfAccounts />)}
-        {showIf(show === "Journal", <JournalReport />)}
+        {showIf(
+          show === "Journal",
+          <JournalReport defaultTab={state?.tab || 0} />
+        )}
         {showIf(show === "Get Statements", <Statement />)}
       </Box>
     </Box>

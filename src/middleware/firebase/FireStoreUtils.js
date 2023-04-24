@@ -9,8 +9,10 @@ import {
   deleteDoc,
   query,
   where,
+  getCountFromServer,
 } from "firebase/firestore";
 import { firestore as db } from "./firebase";
+import { getBalance } from "../../components/accounts/accountDetail/AccountDetail";
 import { auth } from "./firebase";
 import {
   reauthenticateWithCredential,
@@ -331,13 +333,39 @@ export const updateChartOfAccounts = async (row, value, date) => {
     console.log(error);
   }
 };
+// /**
+//  * This function updates the chart of account balance
+//  * @param {*} id id of the account
+//  * @param {*} balance newest balance
+//  */
+// export const updateAccountBalance = async (id, balance) => {
+//   try {
+//     await setDoc(
+//       doc(db, "accounting", "chartOfAccounts", "accounts", `${id}`),
+//       {
+//         balance: balance,
+//       },
+//       { merge: true }
+//     );
+//   } catch (error) {
+//     console.log(error);
+//   }
+// };
 /**
  * This function updates the chart of account balance
  * @param {*} id id of the account
  * @param {*} balance newest balance
  */
-export const updateAccountBalance = async (id, balance) => {
+export const updateAccountBalance = async (id) => {
   try {
+    const parentAcc = await getAccount(id);
+    const details = await getAllEntries(id);
+    const rawData = [];
+    details.map((detail) => rawData.push(detail.data()));
+    const balance = getBalance(
+      rawData.filter((row) => row.status === "Approved"),
+      parentAcc.normalSide
+    );
     await setDoc(
       doc(db, "accounting", "chartOfAccounts", "accounts", `${id}`),
       {
@@ -635,6 +663,40 @@ export const getJournal = async (id) => {
   try {
     const myDoc = await getDoc(doc(db, "journal", `${id}`));
     return myDoc.data();
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+/**
+ * This function updates and return pending journals everytime the user is logged in.
+ */
+export const updateJournalsStatus = async (id, value) => {
+  try {
+    await setDoc(
+      doc(db, "journal", `${id}`),
+      {
+        status: value,
+      },
+      { merge: true }
+    );
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+/**
+ * Get a quick count of how many pending journal entries
+ * @returns a count of how many pending journal entries
+ */
+export const countPendingJournals = async () => {
+  try {
+    const q = query(
+      collection(db, "journal"),
+      where("status", "==", "Pending")
+    );
+    const snapshot = await getCountFromServer(q);
+    return snapshot.data().count;
   } catch (error) {
     console.log(error);
   }

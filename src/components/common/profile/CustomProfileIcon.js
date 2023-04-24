@@ -3,7 +3,14 @@ import { useThemeProvider } from "../../utils/themeProvider/CustomThemeProvier";
 import { useState } from "react";
 import { useAuth } from "../../utils/AuthProvider";
 import { useNavigate } from "react-router-dom";
-import { Box, IconButton, Menu, MenuItem, Typography } from "@mui/material";
+import {
+  Box,
+  IconButton,
+  Menu,
+  MenuItem,
+  Tooltip,
+  Typography,
+} from "@mui/material";
 import LogoutIcon from "@mui/icons-material/Logout";
 import AccountBoxIcon from "@mui/icons-material/AccountBox";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
@@ -25,10 +32,12 @@ const CustomProfileIcon = ({ id1, id2 }) => {
   const navigateTo = useNavigate();
   const { logOut } = useAuth();
   const [anchorEl, setAnchorEl] = useState();
+  const [open, setOpen] = useState(false);
   const handleProfileClick = (e) => {
     setAnchorEl(e.currentTarget);
   };
   const handleClose = () => {
+    setOpen(false);
     setAnchorEl();
   };
   const handleMenuClick = () => {
@@ -43,15 +52,23 @@ const CustomProfileIcon = ({ id1, id2 }) => {
   };
   return (
     <Box>
-      <IconButton
-        color="inherit"
-        id={anchorEl ? id1 : id2}
-        onClick={(e) => handleProfileClick(e)}
+      <Tooltip
+        open={open}
+        title={!anchorEl ? "Account" : ""}
+        placement="bottom"
       >
-        <AccountCircleIcon />
-        {showIf(!anchorEl, <ExpandMoreIcon id={id2} />)}
-        {showIf(anchorEl, <ExpandLessIcon />)}
-      </IconButton>
+        <IconButton
+          onMouseEnter={() => setOpen(true)}
+          onMouseLeave={() => setOpen(false)}
+          color="inherit"
+          id={anchorEl ? id1 : id2}
+          onClick={(e) => handleProfileClick(e)}
+        >
+          <AccountCircleIcon />
+          {showIf(!anchorEl, <ExpandMoreIcon id={id2} />)}
+          {showIf(anchorEl, <ExpandLessIcon />)}
+        </IconButton>
+      </Tooltip>
       <Menu
         open={anchorEl ? true : false}
         onClose={() => {
