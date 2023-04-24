@@ -379,7 +379,7 @@ const JournalReport = ({ defaultTab }) => {
         >
           <Typography
             variant="h4"
-            sx={{ mt: "20px", ml: "20px", fontWeight: "bold", flexGrow: 1 }}
+            sx={{ ml: "20px", fontWeight: "bold", flexGrow: 1 }}
           >
             {" "}
             Journal

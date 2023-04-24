@@ -68,6 +68,17 @@ const Homebar = () => {
           <MenuItem id="menu-item">
             <Typography variant="subtitle1">About</Typography>
           </MenuItem>
+          {currentUser && (
+            <MenuItem
+              onClick={() => {
+                handleCloseNavMenu();
+                navigateTo("/dashboard");
+              }}
+              id="menu-item"
+            >
+              <Typography variant="subtitle1">Dashboard</Typography>
+            </MenuItem>
+          )}
           {showIf(
             currentUser && role === "admin",
             <MenuItem

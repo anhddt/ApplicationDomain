@@ -4,10 +4,14 @@ import { PrivateRoute } from "../customRoute/PrivateRoute";
 import LoginPage from "../loginPage/LoginPage";
 import RegisterPage from "../register/RegisterPage";
 import HomePage from "../homePage/Home";
+import AboutPage from "../about/AboutPage";
+import ContactPage from "../contact/ContactPage";
+import DashboardPage from "../dashboard/DashboardPage";
 import AdminPage from "../adminPage/AdminPage";
 import ProfilePage from "../profilePage/ProfilePage";
 import CustomThemeProvider from "../utils/themeProvider/CustomThemeProvier";
 import AccountsPage from "../accounts/AccountsPage";
+import NotFoundPage from "../404/NotFoundPage";
 
 /**
  * The App components consists of the theme provider
@@ -23,6 +27,8 @@ import AccountsPage from "../accounts/AccountsPage";
 const publicPages = [
   { path: "/login", component: <LoginPage /> },
   { path: "/register", component: <RegisterPage /> },
+  { path: "/about", component: <AboutPage /> },
+  { path: "/contact", component: <ContactPage /> },
 ];
 const PublicRoutes = publicPages.map((page) => {
   return (
@@ -34,6 +40,7 @@ const privatePages = [
   { path: "/admin", component: <AdminPage /> },
   { path: "/userProfile", component: <ProfilePage /> },
   { path: "/accounts", component: <AccountsPage /> },
+  { path: "/dashboard", component: <DashboardPage /> },
 ];
 
 const PrivateRoutes = privatePages.map((page) => {
@@ -52,9 +59,10 @@ const App = () => {
       <AuthProvider>
         <BrowserRouter>
           <Routes>
-            <Route path="*" element={<HomePage />} />
+            <Route index element={<HomePage />} />
             {PublicRoutes}
             {PrivateRoutes}
+            <Route path="*" element={<NotFoundPage />} />
           </Routes>
         </BrowserRouter>
       </AuthProvider>

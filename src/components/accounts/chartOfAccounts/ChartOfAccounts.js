@@ -33,6 +33,7 @@ import {
   createAccountEvent,
   deleteAccount,
   getAllAccounts,
+  getAllActiveAccounts,
   updateChartOfAccounts,
 } from "../../../middleware/firebase/FireStoreUtils";
 import { createEvent } from "../eventsLog/event";
@@ -329,14 +330,13 @@ const ChartOfAccounts = () => {
   useEffect(() => {
     const getAccounts = setTimeout(async () => {
       try {
-        const q = await getAllAccounts();
+        const q =
+          role === "admin"
+            ? await getAllAccounts()
+            : await getAllActiveAccounts();
         const arr = [];
         q.map((item) => arr.push(item.data()));
-        setRows(
-          role === "admin"
-            ? arr.sort(f)
-            : arr.filter((row) => row.status === "Active").sort(f)
-        );
+        setRows(arr.sort(f));
         const balance = getBalance(
           arr.filter((row) => row.status === "Active")
         );
