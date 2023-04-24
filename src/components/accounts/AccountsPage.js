@@ -24,8 +24,8 @@ import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import FormatListNumberedIcon from "@mui/icons-material/FormatListNumbered";
 import BorderColorIcon from "@mui/icons-material/BorderColor";
-import CalculateIcon from "@mui/icons-material/Calculate";
-import AttachFileIcon from "@mui/icons-material/AttachFile";
+// import CalculateIcon from "@mui/icons-material/Calculate";
+// import AttachFileIcon from "@mui/icons-material/AttachFile";
 import DownloadIcon from "@mui/icons-material/Download";
 
 const AcccountsPage = () => {
@@ -45,8 +45,8 @@ const AcccountsPage = () => {
   const listItems = [
     { primary: "Chart of accounts", icon: <FormatListNumberedIcon /> },
     { primary: "Journal", icon: <BorderColorIcon /> },
-    { primary: "Calculator", icon: <CalculateIcon /> },
-    { primary: "Add file", icon: <AttachFileIcon /> },
+    // { primary: "Calculator", icon: <CalculateIcon /> },
+    // { primary: "Add file", icon: <AttachFileIcon /> },
   ];
 
   /**
