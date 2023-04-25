@@ -1,9 +1,11 @@
 import Chart from "react-apexcharts";
 import { useThemeProvider } from "../../utils/themeProvider/CustomThemeProvier";
+import { toCurrency } from "../../accounts/chartOfAccounts/ChartOfAccounts";
 
 /**
  * Straight forward component for rendering charts.
  * Apexcharts has a lot of chart variations.
+ * For more information, please checkout Apexcharts documentation.
  * Checkout Apexcharts for more information about their chart.
  */
 const DonutChart = ({ inMoney, outMoney }) => {
@@ -16,6 +18,17 @@ const DonutChart = ({ inMoney, outMoney }) => {
       legend: {
         labels: {
           colors: theme === "dark" ? ["white"] : ["black"],
+        },
+        position: "bottom",
+      },
+      stroke: {
+        colors: theme === "dark" ? ["white"] : ["#595959"],
+      },
+      tooltip: {
+        y: {
+          formatter: (val) => {
+            return toCurrency.format(val);
+          },
         },
       },
     },
