@@ -4,7 +4,10 @@ import { useThemeProvider } from "../utils/themeProvider/CustomThemeProvier";
 import { Header } from "../common";
 import Homebar from "../common/header/Homebar";
 import { Box } from "@mui/material";
-
+/**
+ * Home page, still under development
+ * @returns
+ */
 const HomePage = () => {
   const { theme } = useThemeProvider();
   return (

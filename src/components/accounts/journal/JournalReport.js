@@ -44,6 +44,13 @@ import {
 import { createEvent } from "../eventsLog/event";
 import CommentDialog from "./CommentDialog";
 
+/**
+ * Show all journal entries on a table.
+ * User can also edit the status of the entries here.
+ * Once a journal status is changed, the status is applied to both entries on the journal.
+ * @param {*} param0
+ * @returns
+ */
 const JournalReport = ({ defaultTab }) => {
   const { role, user } = useAuth();
   const { theme, tableStyles } = useThemeProvider();
@@ -62,6 +69,16 @@ const JournalReport = ({ defaultTab }) => {
   const [tab, setTab] = useState(defaultTab);
   const page = 20;
   const pageSizeOptions = [5, 10, 20, 50, 100];
+
+  /**
+   * A separate component that has its own useEffect
+   * Separate component is a good practice since it reduces the rendering load that the parent component has to carry
+   * This make rendering smoother.
+   * One caveat to this component is that it cannot be hidden from the table.
+   * The hidden option for the column that has this component is turned off.
+   * @param {*} row
+   * @returns
+   */
   const RenderAccount = (row) => {
     const [label1, setLabel1] = useState("");
     const [label2, setLabel2] = useState("");

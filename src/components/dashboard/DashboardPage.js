@@ -7,6 +7,13 @@ import { Box } from "@mui/material";
 import QuickRatio from "./ratio/QuickRatio";
 import CurrentRatio from "./ratio/CurrentRatio";
 import CashBalance from "./cashFlow/CashBalance";
+
+/**
+ * The dashboard is reserved for users with accounts only.
+ * Show the financial health through ratios and chart.
+ * Utilized by small components.
+ * Basic layout understanding is required to compregent this layout scheme.s
+ */
 const DashboardPage = () => {
   const { theme } = useThemeProvider();
   return (

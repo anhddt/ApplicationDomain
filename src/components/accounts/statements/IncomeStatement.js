@@ -19,12 +19,22 @@ export const getDate = (fromDate, toDate) => {
   return `From ${month1}/${date1}/${day.year()} to ${month2}/${date2}/${day2.year()} in U.S. Dollar`;
 };
 
+/**
+ * Generate income statement based on predefined sub-categories
+ * @param {*} param0
+ * @returns
+ */
 const IncomeStatement = ({ fromDate, toDate, docRef }) => {
   const [revenue, setRevenue] = useState([]);
   const [expenses, setExpenses] = useState([]);
   const [totalRv, setTotalRv] = useState(0);
   const [totalEx, setTotalEx] = useState(0);
   const [netIncome, setNetIncome] = useState(0);
+
+  /**
+   * useMemo makes API calls to the backend to get the accounts
+   * This is straight forward.
+   */
   useMemo(() => {
     const getIncomeStatementInfo = async () => {
       let t1 = 0;

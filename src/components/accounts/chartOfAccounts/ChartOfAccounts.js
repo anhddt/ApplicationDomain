@@ -94,6 +94,7 @@ const getBalance = (array) => {
  * This renders the table with differnt accounts
  * Admin can change anything except the id and the balance of the account
  * Account can be disabled at any balance but can only be deleted when balance is 0.
+ * Basic userstanding of component layout is required. Contact Anh for more information on how to layout your components.
  * @returns a table JSX component
  */
 const ChartOfAccounts = () => {
@@ -327,6 +328,14 @@ const ChartOfAccounts = () => {
       }
     });
   }, [tab, rows]);
+
+  /**
+   * The useEffect makes API calls to the backend to retrieve the data
+   * The right way of doing this is to make a store that holds the state of the API.
+   * Since the scale of this project is small, useEffect is acceptable for making API calls.
+   * Due to multiple editting activities are being done on this page. A timeout is provides to
+   * halt the useEffect from triggering too early before the edit commit is stored in the backend.
+   */
   useEffect(() => {
     const getAccounts = setTimeout(async () => {
       try {

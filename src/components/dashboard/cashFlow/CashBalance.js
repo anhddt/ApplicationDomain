@@ -8,6 +8,11 @@ import {
 import { toCurrency } from "../../accounts/chartOfAccounts/ChartOfAccounts";
 import DonutChart from "./DonutChart";
 
+/**
+ * Present the cash balance
+ * This is straight forward
+ * @returns
+ */
 const CashBalance = () => {
   const { theme } = useThemeProvider();
   const [cashAccounts, setCashAccounts] = useState([{ balance: 0 }]);

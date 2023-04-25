@@ -49,10 +49,20 @@ import EventDetail from "../eventsLog/EventDetail";
 import EntryInfo from "./EntryInfo";
 import RejectCommentDialog from "./RejectCommentDialog";
 
+/**
+ * Just like its name, this component makes the dialog slides
+ * The direction is from right to left.
+ */
 export const Transition = forwardRef((props, ref) => {
   return <Slide direction="left" ref={ref} {...props} />;
 });
 
+/**
+ * Tell whether the entries should be positive or negative.
+ * It depends on the parent normal side.
+ * For example, if the parent normal side it credit, then the entries
+ * with type Credit is positive. The same goes for Debit accounts.
+ */
 export const plusOrMinus = (row, parentNormalSide) => {
   let number = row.total;
   if (parentNormalSide === "Debit") {
@@ -68,6 +78,13 @@ export const plusOrMinus = (row, parentNormalSide) => {
   }
   return number;
 };
+
+/**
+ * Compute the balance of a given list of entries
+ * @param {*} array an array of entries
+ * @param {*} parentNormalSide require the parent account normal side to tell whether the entry should be positive or negative
+ * @returns the account balance
+ */
 export const getBalance = (array, parentNormalSide) => {
   let balance = 0;
   if (array.length > 0)
@@ -76,12 +93,26 @@ export const getBalance = (array, parentNormalSide) => {
       .reduce((total, amount) => amount + total);
   return balance;
 };
+
+/**
+ * Compute the total of the entries' amount shown on the table.
+ * Takes in a list of entries ids and a list of entries
+ * Filter out the entries that are not included in the ids
+ * Then compute the total for the entries that are included in the ids.
+ */
 const getTotal = (ids, filteredRows, parentNormalSide) => {
   const arr = filteredRows.filter((item) => ids.includes(item.id));
   const total = getBalance(arr, parentNormalSide);
   return total;
 };
 
+/**
+ * Show the detail of the an account.
+ * The content of this function is straight forward, reference the ChartOfAccounts component for more information.
+ * Most of the components are imported from Material UI. Check MUI for more information.
+ * @param {*} onClose a call back function that tells the parent component whether this component should be unmounted
+ * @returns A component that show the detail for the selected account.
+ */
 const AccountDetail = ({ onClose }) => {
   const [parentAccount, setParentAccount] = useState({});
   const [dialogOpen, setDialogOpen] = useState(false);
