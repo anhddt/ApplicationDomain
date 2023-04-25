@@ -2,6 +2,9 @@ import WarningIcon from "@mui/icons-material/Warning";
 import ErrorIcon from "@mui/icons-material/Error";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 
+/**
+ * Return the icon corresponding to the specified range of value
+ */
 const StatusIcon = ({ current, good, warning }) => {
   const status = () => {
     let s = "";

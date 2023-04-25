@@ -3,7 +3,9 @@ import { useEffect, useState } from "react";
 import { getQuickRatio } from "../../../middleware/firebase/FireStoreUtils";
 import { useThemeProvider } from "../../utils/themeProvider/CustomThemeProvier";
 import StatusIcon from "./StatusIcon";
-
+/**
+ * A straight forward component that collects information and present the Quick ratio
+ */
 const QuickRatio = () => {
   const [quickRatio, setQuickRatio] = useState();
   const { theme } = useThemeProvider();

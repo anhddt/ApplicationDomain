@@ -4,6 +4,9 @@ import { getCurrentRatio } from "../../../middleware/firebase/FireStoreUtils";
 import { useThemeProvider } from "../../utils/themeProvider/CustomThemeProvier";
 import StatusIcon from "./StatusIcon";
 
+/**
+ * A straight forward component that collects information and present the current ratio
+ */
 const CurrentRatio = () => {
   const [currentRatio, setCurrentRatio] = useState();
   const { theme } = useThemeProvider();

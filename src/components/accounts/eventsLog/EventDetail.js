@@ -1,8 +1,13 @@
 import { Fragment } from "react";
 import { Box, ListItem, Typography } from "@mui/material";
 
+/**
+ * A recursive function that output the event object as string
+ * @param {*} o the object in the event
+ * @param {*} m margin
+ * @returns
+ */
 const List = (o, m) => {
-  // console.log(o);
   return (
     <Fragment>
       {typeof o === "object" &&

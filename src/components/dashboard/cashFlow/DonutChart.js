@@ -1,6 +1,11 @@
 import Chart from "react-apexcharts";
 import { useThemeProvider } from "../../utils/themeProvider/CustomThemeProvier";
 
+/**
+ * Straight forward component for rendering charts.
+ * Apexcharts has a lot of chart variations.
+ * Checkout Apexcharts for more information about their chart.
+ */
 const DonutChart = ({ inMoney, outMoney }) => {
   const { theme } = useThemeProvider();
   const state = {

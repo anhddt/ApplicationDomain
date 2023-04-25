@@ -19,6 +19,11 @@ export const getDate = (fromDate, toDate) => {
   return `From ${month1}/${date1}/${day.year()} to ${month2}/${date2}/${day2.year()} in US Dollar`;
 };
 
+/**
+ * Generate the balance sheet
+ * @param {*} param0
+ * @returns
+ */
 const BalanceSheets = ({ fromDate, toDate, docRef }) => {
   const [currentAssets, setCurrentAssets] = useState([]);
   const [totalCA, setTotalCA] = useState(0);
@@ -31,6 +36,9 @@ const BalanceSheets = ({ fromDate, toDate, docRef }) => {
   const [totalLE, setTotalLE] = useState([]);
   const [netIncome, setNetIncome] = useState(0);
 
+  /**
+   * The forEach could be reduced to one method to reduce the extra code.
+   */
   useMemo(() => {
     const getIncomeStatementInfo = async () => {
       const currAssets = await getAccountsBySubCat("Current Assets");

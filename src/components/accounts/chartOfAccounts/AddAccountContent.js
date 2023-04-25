@@ -50,12 +50,23 @@ const blankAccount = {
   createdDate: "",
   modifiedDate: "",
 };
+
+/**
+ * This is a series of seteps for a user to follow when they want to make a new account.
+ * @param {*} param0
+ * @returns
+ */
 const AddAccountContent = ({ setRefresh }) => {
   const { user } = useAuth();
   // This is for indicating which step the user is currently on.
   const [currentStep, setCurrentStep] = useState(0);
   const [newAccount, setNewAccount] = useState(blankAccount);
 
+  /**
+   * A counter is stored in the backend to serve as a uid for the account.
+   * As an attempt to prevent multiple accesss to the counter,
+   * the counter is retrieved once the process is nearly complete.
+   */
   useMemo(() => {
     const getCounter = async () => {
       const counter = await getChartOfAccountsCounter();
@@ -67,6 +78,7 @@ const AddAccountContent = ({ setRefresh }) => {
     };
     currentStep === steps.length - 1 && getCounter();
   }, [currentStep]);
+
   const getName = (index) => {
     switch (index) {
       case 0:
