@@ -1,14 +1,10 @@
-import "./home.css";
+import "../homePage/home.css";
 import "../utils/themeProvider/themeProvider.css";
 import { useThemeProvider } from "../utils/themeProvider/CustomThemeProvier";
 import { Header } from "../common";
 import Homebar from "../common/header/Homebar";
 import { Box } from "@mui/material";
-/**
- * Home page, still under development
- * @returns
- */
-const HomePage = () => {
+const ContactPage = () => {
   const { theme } = useThemeProvider();
   return (
     <Box
@@ -25,4 +21,4 @@ const HomePage = () => {
   );
 };
 
-export default HomePage;
+export default ContactPage;

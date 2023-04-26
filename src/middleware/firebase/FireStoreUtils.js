@@ -1,3 +1,4 @@
+import dayjs from "dayjs";
 import {
   collection,
   doc,
@@ -8,8 +9,10 @@ import {
   deleteDoc,
   query,
   where,
+  getCountFromServer,
 } from "firebase/firestore";
 import { firestore as db } from "./firebase";
+import { getBalance } from "../../components/accounts/accountDetail/AccountDetail";
 import { auth } from "./firebase";
 import {
   reauthenticateWithCredential,
@@ -17,6 +20,8 @@ import {
   verifyBeforeUpdateEmail,
   updatePassword,
 } from "firebase/auth";
+import isBetween from "dayjs/plugin/isBetween";
+dayjs.extend(isBetween);
 
 /**
  * This function takes in a user ID, and a collection of information.
@@ -250,6 +255,48 @@ export const getAllAccounts = async () => {
     console.log(error);
   }
 };
+
+/**
+ * This function gets all active accounts
+ * @param {*} id
+ * @returns account data
+ */
+export const getAllActiveAccounts = async () => {
+  try {
+    const coll = collection(db, "accounting", "chartOfAccounts", "accounts");
+    const q = query(coll, where("status", "==", "Active"));
+    const myDoc = await getDocs(q);
+    return myDoc.docs;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+/**
+ * The name said it all, get all of the accounts by it's subcategory components
+ * @param {*} subCat
+ * @returns a list with all of the account objects with the same subCat value
+ */
+export const getAccountsBySubCat = async (subCat) => {
+  try {
+    const accountsRef = collection(
+      db,
+      "accounting",
+      "chartOfAccounts",
+      "accounts"
+    );
+    const q = query(accountsRef, where("subCat", "==", subCat));
+    const querySnapshot = await getDocs(q);
+    const list = [];
+    querySnapshot.forEach((doc) => {
+      list.push(doc.data());
+    });
+    return list;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 /**
  * This function gets all accounts and return a list of id and name
  * @param {*} id
@@ -257,7 +304,7 @@ export const getAllAccounts = async () => {
  */
 export const getAccountList = async () => {
   try {
-    const myDoc = await getAllAccounts();
+    const myDoc = await getAllActiveAccounts();
     const arr = [];
     myDoc.map((item) => arr.push(`${item.data().id} - ${item.data().name}`));
     arr.sort((a, b) => a.localeCompare(b));
@@ -282,6 +329,21 @@ export const getAccount = async (id) => {
     console.log(error);
   }
 };
+/**
+ * This function gets the individual account with with the given id
+ * @param {*} name a string
+ * @returns account data
+ */
+export const getAccountByName = async (name) => {
+  try {
+    const coll = collection(db, "accounting", "chartOfAccounts", "accounts");
+    const q = query(coll, where("name", "==", name));
+    const myDoc = await getDocs(q);
+    return myDoc.docs;
+  } catch (error) {
+    console.log(error);
+  }
+};
 
 /**
  * This function updates the chart of account cell, any cell
@@ -302,13 +364,22 @@ export const updateChartOfAccounts = async (row, value, date) => {
     console.log(error);
   }
 };
+
 /**
  * This function updates the chart of account balance
  * @param {*} id id of the account
  * @param {*} balance newest balance
  */
-export const updateAccountBalance = async (id, balance) => {
+export const updateAccountBalance = async (id) => {
   try {
+    const parentAcc = await getAccount(id);
+    const details = await getAllEntries(id);
+    const rawData = [];
+    details.map((detail) => rawData.push(detail.data()));
+    const balance = getBalance(
+      rawData.filter((row) => row.status === "Approved"),
+      parentAcc.normalSide
+    );
     await setDoc(
       doc(db, "accounting", "chartOfAccounts", "accounts", `${id}`),
       {
@@ -316,6 +387,51 @@ export const updateAccountBalance = async (id, balance) => {
       },
       { merge: true }
     );
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+/**
+ * All accounts automatically has a balance with them.
+ * However they do not have the balance for any arbitary range.
+ * Therefore, this function is made to serve the purpose.
+ * fromDate <= entry created date, which is the ID of the entry <= toDate
+ * @param {*} id number, id of the account
+ * @param {*} fromDate string, date object from the calendar
+ * @param {*} toDate string, date object from the calendar
+ * @return the balance corresponding to the account and the date [range] provided
+ */
+export const getAccountBalanceWithDateRange = async (
+  id,
+  normalSide,
+  fromDate,
+  toDate
+) => {
+  try {
+    const allEntries = await getAllEntries(id);
+    const arr = allEntries.filter(
+      (entry) =>
+        entry.data().status === "Approved" &&
+        dayjs(entry.data().id).isBetween(
+          dayjs(fromDate),
+          dayjs(toDate),
+          "day",
+          []
+        )
+    );
+    let total = 0;
+    arr.forEach((entry) => {
+      const e = entry.data();
+      if (normalSide === "Debit") {
+        if (e.type === "Debit") total += e.total;
+        else total -= e.total;
+      } else {
+        if (e.type === "Credit") total += e.total;
+        else total -= e.total;
+      }
+    });
+    return total;
   } catch (error) {
     console.log(error);
   }
@@ -376,8 +492,6 @@ export const getAllEvents = async () => {
  * This section is dedicated for account details and event log for each *
  * account                                                              *
  * ======================================================================
- * @param {*} id
- * @returns account data
  */
 
 /**
@@ -431,7 +545,7 @@ export const getEntry = async (parent, id) => {
 };
 /**
  * This function gets all entries at once from the parent account
- * @returns
+ * @returns a list of all entries
  */
 export const getAllEntries = async (id) => {
   try {
@@ -445,6 +559,27 @@ export const getAllEntries = async (id) => {
         "entries"
       )
     );
+    return myDoc.docs;
+  } catch (error) {
+    console.log(error);
+  }
+};
+/**
+ * This function gets all approved entries at once from the parent account
+ * @returns a list of approved entries
+ */
+export const getAllApprovedEntries = async (id) => {
+  try {
+    const coll = collection(
+      db,
+      "accounting",
+      "chartOfAccounts",
+      "accounts",
+      `${id}`,
+      "entries"
+    );
+    const q = query(coll, where("status", "==", "Approved"));
+    const myDoc = await getDocs(q);
     return myDoc.docs;
   } catch (error) {
     console.log(error);
@@ -561,6 +696,77 @@ export const getJournal = async (id) => {
   try {
     const myDoc = await getDoc(doc(db, "journal", `${id}`));
     return myDoc.data();
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+/**
+ * This function updates and return pending journals everytime the user is logged in.
+ */
+export const updateJournalsStatus = async (id, value) => {
+  try {
+    await setDoc(
+      doc(db, "journal", `${id}`),
+      {
+        status: value,
+      },
+      { merge: true }
+    );
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+/**
+ * Get a quick count of how many pending journal entries
+ * @returns a count of how many pending journal entries
+ */
+export const countPendingJournals = async () => {
+  try {
+    const q = query(
+      collection(db, "journal"),
+      where("status", "==", "Pending")
+    );
+    const snapshot = await getCountFromServer(q);
+    return snapshot.data().count;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+/**
+ * =================================================================
+ * This section is dedicated for getting the ratios                =
+ * =================================================================
+ * The functions calculate and return the requested ratios.
+ */
+
+export const getQuickRatio = async () => {
+  try {
+    const currentAssets = await getAccountsBySubCat("Current Assets");
+    const currentLiabilities = await getAccountsBySubCat("Current Liabilities");
+    let sum1 = 0;
+    let sum2 = 0;
+    currentAssets
+      .filter((asset) => asset.name === "Inventory")
+      .forEach((asset) => (sum1 += asset.balance));
+    currentLiabilities.forEach((liability) => (sum2 += liability.balance));
+    return (sum1 / sum2).toFixed(2);
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const getCurrentRatio = async () => {
+  try {
+    const currentAssets = await getAccountsBySubCat("Current Assets");
+    const currentLiabilities = await getAccountsBySubCat("Current Liabilities");
+    let sum1 = 0;
+    let sum2 = 0;
+    currentAssets.forEach((asset) => (sum1 += asset.balance));
+    currentLiabilities.forEach((liability) => (sum2 += liability.balance));
+    return (sum1 / sum2).toFixed(2);
   } catch (error) {
     console.log(error);
   }

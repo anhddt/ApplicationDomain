@@ -2,6 +2,14 @@ import { Box, Grid, InputAdornment, TextField } from "@mui/material";
 import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
 import { useThemeProvider } from "../../utils/themeProvider/CustomThemeProvier";
 import CustomMoneyFormat from "./CustomMoneyFormat";
+
+/**
+ * When clicking on an entry on the table, a dialog will be shown with the entry's information
+ * displayed by these components.
+ * Given a list of entries, the function will map out a set of details corresponding to the entries.
+ * @param {*} entries the list of entries
+ * @returns a map
+ */
 const EntryInfo = ({ entries }) => {
   const { theme } = useThemeProvider();
   const Info = entries.map((entry, index) => (

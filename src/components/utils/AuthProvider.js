@@ -92,7 +92,7 @@ const AuthProvider = ({ children }) => {
           loginToken.user.email
         );
         if (!profile.isDisabled) {
-          navigateTo(location.state?.from || "/");
+          navigateTo(location.state?.from || "/dashboard");
           setRefresh((refresh) => !refresh);
         } else {
           throw new Error();

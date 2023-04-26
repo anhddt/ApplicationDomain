@@ -34,6 +34,11 @@ export const f = (a, b) => {
     return 1;
   } else return 0;
 };
+
+/**
+ * Show the events on a table
+ * @returns
+ */
 const EventLog = () => {
   const [drawerContent, setDrawerContent] = useState({});
   const [rows, setRows] = useState([]);
@@ -60,7 +65,7 @@ const EventLog = () => {
         component="button"
         onClick={() => handleDrawerOpen(row)}
       >
-        {new Date(row.value).toString()}
+        {row.value.toString()}
       </Link>
     );
   };

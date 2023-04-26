@@ -8,8 +8,9 @@ import { showIf } from "../../utils/conditionalRendering";
 import LogoIcon from "../logo/LogoIcon";
 import CustomProfileIcon from "../profile/CustomProfileIcon";
 import LoginDropDownIcon from "../profile/LoginDropDownIcon";
+import CustomNotificationIcon from "../notification/CustomNotificationIcon";
 function Header() {
-  const { firstName, currentUser } = useAuth();
+  const { firstName, currentUser, role } = useAuth();
   const { theme } = useThemeProvider();
   return (
     <section
@@ -27,6 +28,14 @@ function Header() {
         <Typography variant="subtitle1">
           {currentUser ? `Hello ${firstName}!` : "Welcome!"}
         </Typography>
+        {currentUser && role !== "user" && (
+          <Box sx={{ ml: "15px", mr: "15px" }}>
+            <CustomNotificationIcon
+              id1="notification-icon"
+              id2="notification-icon-expand"
+            />
+          </Box>
+        )}
         {/* Custom profile icon, show if user is logged in, or not*/}
         {showIf(
           currentUser,

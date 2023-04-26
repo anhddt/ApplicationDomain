@@ -4,10 +4,14 @@ import { PrivateRoute } from "../customRoute/PrivateRoute";
 import LoginPage from "../loginPage/LoginPage";
 import RegisterPage from "../register/RegisterPage";
 import HomePage from "../homePage/Home";
+import AboutPage from "../about/AboutPage";
+import ContactPage from "../contact/ContactPage";
+import DashboardPage from "../dashboard/DashboardPage";
 import AdminPage from "../adminPage/AdminPage";
 import ProfilePage from "../profilePage/ProfilePage";
 import CustomThemeProvider from "../utils/themeProvider/CustomThemeProvier";
 import AccountsPage from "../accounts/AccountsPage";
+import NotFoundPage from "../404/NotFoundPage";
 import UploadDownload from "../accounts/uploadDownload/UploadDownload";
 
 /**
@@ -24,6 +28,8 @@ import UploadDownload from "../accounts/uploadDownload/UploadDownload";
 const publicPages = [
   { path: "/login", component: <LoginPage /> },
   { path: "/register", component: <RegisterPage /> },
+  { path: "/about", component: <AboutPage /> },
+  { path: "/contact", component: <ContactPage /> },
   //Testing
   { path: "/uploader", component: <UploadDownload /> },
 
@@ -38,6 +44,7 @@ const privatePages = [
   { path: "/admin", component: <AdminPage /> },
   { path: "/userProfile", component: <ProfilePage /> },
   { path: "/accounts", component: <AccountsPage /> },
+  { path: "/dashboard", component: <DashboardPage /> },
 ];
 
 const PrivateRoutes = privatePages.map((page) => {
@@ -59,6 +66,7 @@ const App = () => {
             <Route index element={<HomePage />} />
             {PublicRoutes}
             {PrivateRoutes}
+            <Route path="*" element={<NotFoundPage />} />
           </Routes>
         </BrowserRouter>
       </AuthProvider>

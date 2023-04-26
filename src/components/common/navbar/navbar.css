@@ -27,6 +27,34 @@
   width: 0;
   background-color: rgb(27, 191, 220);
 }
+.navbar-item-active {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-left: 50px;
+  color: inherit;
+  text-decoration: inherit;
+  text-transform: uppercase;
+  outline: none;
+}
+
+.navbar-item-active::after {
+  content: "";
+  position: absolute;
+  display: block;
+  line-height: 2;
+  bottom: 0;
+  left: 0;
+  height: 5px;
+  border-radius: 2px;
+  width: 100%;
+  background-color: rgb(27, 191, 220);
+}
+
+.navbar-item-active {
+  color: rgb(27, 191, 220);
+}
 
 .navbar-item:hover {
   color: rgb(27, 191, 220);

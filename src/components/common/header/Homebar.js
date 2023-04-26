@@ -10,6 +10,7 @@ import {
   MenuItem,
   Stack,
   Toolbar,
+  Tooltip,
   Typography,
 } from "@mui/material";
 import LoginDropDownIcon from "../profile/LoginDropDownIcon";
@@ -17,6 +18,7 @@ import CustomProfileIcon from "../profile/CustomProfileIcon";
 import MenuIcon from "@mui/icons-material/Menu";
 import LogoIcon from "../logo/LogoIcon";
 import ReactCalendarIcon from "../calendar/ReactCalendarIcon";
+import CustomNotificationIcon from "../notification/CustomNotificationIcon";
 import { showIf } from "../../utils/conditionalRendering";
 
 const Homebar = () => {
@@ -32,19 +34,21 @@ const Homebar = () => {
   return (
     <AppBar position="sticky" color="inherit" sx={{ zIndex: 1201 }}>
       <Toolbar>
-        <IconButton
-          id={
-            anchorEl
-              ? "calendar-menu-icon-homebar"
-              : "calendar-menu-expand-homebar"
-          }
-          size="medium"
-          color="inherit"
-          onClick={(e) => handleOpenNavMenu(e)}
-          sx={{ mr: 2 }}
-        >
-          <MenuIcon fontSize="medium" />
-        </IconButton>
+        <Tooltip title={!anchorEl ? "Menu" : ""} placement="bottom">
+          <IconButton
+            id={
+              anchorEl
+                ? "calendar-menu-icon-homebar"
+                : "calendar-menu-expand-homebar"
+            }
+            size="medium"
+            color="inherit"
+            onClick={(e) => handleOpenNavMenu(e)}
+            sx={{ mr: 2 }}
+          >
+            <MenuIcon fontSize="medium" />
+          </IconButton>
+        </Tooltip>
         <Menu
           open={anchorEl ? true : false}
           onClose={() => {
@@ -64,8 +68,19 @@ const Homebar = () => {
           <MenuItem id="menu-item">
             <Typography variant="subtitle1">About</Typography>
           </MenuItem>
+          {currentUser && (
+            <MenuItem
+              onClick={() => {
+                handleCloseNavMenu();
+                navigateTo("/dashboard");
+              }}
+              id="menu-item"
+            >
+              <Typography variant="subtitle1">Dashboard</Typography>
+            </MenuItem>
+          )}
           {showIf(
-            role === "admin",
+            currentUser && role === "admin",
             <MenuItem
               id="menu-item"
               onClick={() => {
@@ -107,6 +122,12 @@ const Homebar = () => {
               {currentUser ? `HELLO ${firstName.toUpperCase()}!` : "WELCOME!"}
             </Typography>
           </Box>
+          {currentUser && role !== "user" && (
+            <CustomNotificationIcon
+              id1="notification-icon-homebar"
+              id2="notification-icon-expand-homebar"
+            />
+          )}
           {showIf(
             !currentUser,
             <LoginDropDownIcon

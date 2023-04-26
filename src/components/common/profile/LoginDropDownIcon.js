@@ -2,7 +2,14 @@ import "./customProfileIcon.css";
 import { useThemeProvider } from "../../utils/themeProvider/CustomThemeProvier";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Box, IconButton, Menu, MenuItem, Typography } from "@mui/material";
+import {
+  Box,
+  IconButton,
+  Menu,
+  MenuItem,
+  Tooltip,
+  Typography,
+} from "@mui/material";
 import { showIf } from "../../utils/conditionalRendering";
 import LoginIcon from "@mui/icons-material/Login";
 import AppRegistrationIcon from "@mui/icons-material/AppRegistration";
@@ -16,10 +23,12 @@ const LoginDropDownIcon = ({ id1, id2 }) => {
   const { theme, setTheme } = useThemeProvider();
   const navigateTo = useNavigate();
   const [anchorEl, setAnchorEl] = useState();
+  const [open, setOpen] = useState(false);
   const handleProfileClick = (e) => {
     setAnchorEl(e.currentTarget);
   };
   const handleClose = () => {
+    setOpen(false);
     setAnchorEl();
   };
   const handleMenuClick = () => {
@@ -34,15 +43,23 @@ const LoginDropDownIcon = ({ id1, id2 }) => {
   };
   return (
     <Box>
-      <IconButton
-        color="inherit"
-        id={anchorEl ? id1 : id2}
-        onClick={(e) => handleProfileClick(e)}
+      <Tooltip
+        open={open}
+        title={!anchorEl ? "Account" : ""}
+        placement="bottom"
       >
-        <ReadMoreIcon />
-        {showIf(!anchorEl, <ExpandMoreIcon id={id2} />)}
-        {showIf(anchorEl, <ExpandLessIcon />)}
-      </IconButton>
+        <IconButton
+          onMouseEnter={() => setOpen(true)}
+          onMouseLeave={() => setOpen(false)}
+          color="inherit"
+          id={anchorEl ? id1 : id2}
+          onClick={(e) => handleProfileClick(e)}
+        >
+          <ReadMoreIcon />
+          {showIf(!anchorEl, <ExpandMoreIcon id={id2} />)}
+          {showIf(anchorEl, <ExpandLessIcon />)}
+        </IconButton>
+      </Tooltip>
       <Menu
         open={anchorEl ? true : false}
         onClose={() => {

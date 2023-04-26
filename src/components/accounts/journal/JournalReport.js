@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   AppBar,
   Box,
@@ -8,6 +8,8 @@ import {
   Grid,
   IconButton,
   Link,
+  Tab,
+  Tabs,
   Toolbar,
   Typography,
 } from "@mui/material";
@@ -21,6 +23,7 @@ import {
   useGridApiRef,
 } from "@mui/x-data-grid";
 import { useThemeProvider } from "../../utils/themeProvider/CustomThemeProvier";
+import { useAuth } from "../../utils/AuthProvider";
 import {
   headerElement,
   linkStyle,
@@ -31,11 +34,25 @@ import { Transition } from "../accountDetail/AccountDetail";
 import AddEntriesContent from "../accountDetail/AddEntriesContent";
 import EntryInfo from "../accountDetail/EntryInfo";
 import {
+  createEntryEvent,
   getEntry,
   getJournals,
+  updateEntry,
+  updateAccountBalance,
+  updateJournalsStatus,
 } from "../../../middleware/firebase/FireStoreUtils";
+import { createEvent } from "../eventsLog/event";
+import CommentDialog from "./CommentDialog";
 
-const JournalReport = () => {
+/**
+ * Show all journal entries on a table.
+ * User can also edit the status of the entries here.
+ * Once a journal status is changed, the status is applied to both entries on the journal.
+ * @param {*} param0
+ * @returns
+ */
+const JournalReport = ({ defaultTab }) => {
+  const { role, user } = useAuth();
   const { theme, tableStyles } = useThemeProvider();
   const apiRef = useGridApiRef();
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -45,8 +62,23 @@ const JournalReport = () => {
   const [entries, setEntries] = useState([]);
   const [debits, setDebits] = useState(0);
   const [credits, setCredits] = useState(0);
+  const [open, setOpen] = useState(false);
+  const [row, setRow] = useState({});
+  const [changeValue, setChangeValue] = useState("");
+  const [filteredRows, setFilteredRows] = useState([]);
+  const [tab, setTab] = useState(defaultTab);
   const page = 20;
   const pageSizeOptions = [5, 10, 20, 50, 100];
+
+  /**
+   * A separate component that has its own useEffect
+   * Separate component is a good practice since it reduces the rendering load that the parent component has to carry
+   * This make rendering smoother.
+   * One caveat to this component is that it cannot be hidden from the table.
+   * The hidden option for the column that has this component is turned off.
+   * @param {*} row
+   * @returns
+   */
   const RenderAccount = (row) => {
     const [label1, setLabel1] = useState("");
     const [label2, setLabel2] = useState("");
@@ -101,6 +133,15 @@ const JournalReport = () => {
       renderCell: (row) => renderCredit(row),
       width: 250,
     },
+    {
+      field: "status",
+      headerName: "Status",
+      editable: role !== "user",
+      type: role === "user" ? "string" : "singleSelect",
+      renderHeader: (param) => headerElement(param),
+      width: 130,
+      valueOptions: ["Approved", "Pending", "Rejected"],
+    },
   ];
   const getTotal = (ids, rows) => {
     let total1 = 0;
@@ -119,12 +160,10 @@ const JournalReport = () => {
   const handleDialogOpen = () => {
     setDialogOpen(true);
   };
-
   const handleDialogClose = () => {
     setDialogOpen(false);
     setRefresh((r) => !r);
   };
-
   const handleDrawerOpen = (row) => {
     const e = row.row.entries;
     const getEntries = async () => {
@@ -139,6 +178,88 @@ const JournalReport = () => {
   const handleDrawerClose = () => {
     setDrawerOpen(false);
   };
+  const handleClickCancel = () => {
+    setChangeValue("");
+    setRow({});
+    setOpen(false);
+  };
+  const handleTab = (newTab) => {
+    setTab(newTab);
+  };
+  /**
+   * This function updates the cell everytime we changes the value inside the cell.
+   * once the cell is updated, an event is created and stored in the event log
+   * @param current a current state of the cell
+   * @param event an event
+   * this is a void function
+   * if the event code is Enter or Bab then proceed to update
+   * else abort
+   */
+  const updateCell = async (current, event) => {
+    if (event.code === "Enter" || event.code === "Tab") {
+      const value = event.target.defaultValue || event.target.textContent;
+      if (current.field === "status" && value === "Rejected") {
+        setOpen(true);
+        setRow(current);
+        setChangeValue(value);
+      } else handleSubmit(current, value);
+    }
+    setRefresh((refresh) => !refresh);
+  };
+  const handleEvents = (e, id) => {
+    createEntryEvent(e, id);
+    setRefresh((refresh) => !refresh);
+  };
+  const handleSubmit = async (current, value) => {
+    const entries = current.row.entries;
+    const entry1 = await getEntry(entries[0].parent, entries[0].entry);
+    const entry2 = await getEntry(entries[1].parent, entries[1].entry);
+    await updateEntry(current, entry2.parent, value);
+    await updateEntry(current, entry1.parent, value);
+    current.row[current.field] = value;
+    const change1 = {
+      field: current.field,
+      formattedValue: current.formattedValue,
+      row: {
+        [current.field]: value,
+        name: entry1.name,
+      },
+    };
+    const change2 = {
+      name: entry2.name,
+      field: current.field,
+      formattedValue: current.formattedValue,
+      row: {
+        [current.field]: value,
+        name: entry2.name,
+      },
+    };
+    const e1 = createEvent(user, change1, "cell");
+    const e2 = createEvent(user, change2, "cell");
+    if (value === "Approved") {
+      updateAccountBalance(entry2.parent);
+      updateAccountBalance(entry2.parent);
+    }
+    if (current.field === "status") updateJournalsStatus(current.row.id, value);
+    createEntryEvent(e2, entry2.parent);
+    handleEvents(e1, entry1.parent);
+  };
+  useMemo(() => {
+    setFilteredRows(() => {
+      switch (tab) {
+        case 1:
+          return rows.filter((row) => row.status === "Pending");
+        case 2:
+          return rows.filter((row) => row.status === "Rejected");
+        case 3:
+          return rows;
+        case 4:
+          return [];
+        default:
+          return rows.filter((row) => row.status === "Approved");
+      }
+    });
+  }, [tab, rows]);
   useEffect(() => {
     const journals = async () => {
       const allJournals = await getJournals();
@@ -226,6 +347,25 @@ const JournalReport = () => {
       <GridToolbarExport />
     </Box>
   );
+  const viewTabs = ["Approved", "Pending", "Rejected", "All journals"];
+  const ViewTabs = viewTabs.map((view, index) => (
+    <Tab
+      key={`tab-${index}`}
+      sx={{
+        ":hover":
+          theme === "dark"
+            ? {
+                backgroundColor: "#1a1a1a",
+                color: "white",
+              }
+            : {
+                backgroundColor: "#ccefff",
+                color: "black",
+              },
+      }}
+      label={view}
+    />
+  ));
   return (
     <Box
       sx={{
@@ -247,20 +387,44 @@ const JournalReport = () => {
       >
         <Box
           sx={{
-            pt: "24px",
             pl: "50px",
-            pb: "24px",
             display: "flex",
             width: "100%",
+            alignItems: "center",
+            pt: "20px",
           }}
         >
           <Typography
             variant="h4"
-            sx={{ mt: "20px", ml: "20px", fontWeight: "bold", flexGrow: 1 }}
+            sx={{ ml: "20px", fontWeight: "bold", flexGrow: 1 }}
           >
             {" "}
             Journal
           </Typography>
+        </Box>
+        <Box
+          sx={{
+            pl: "50px",
+            display: "flex",
+            width: "100%",
+            borderBottom: 1,
+            borderColor: "divider",
+          }}
+        >
+          <Tabs
+            TabIndicatorProps={{
+              sx: {
+                height: "5px",
+                borderRadius: "2px",
+              },
+            }}
+            value={tab}
+            onChange={(e, n) => {
+              handleTab(n);
+            }}
+          >
+            {ViewTabs}
+          </Tabs>
         </Box>
       </Box>
       <Box
@@ -273,10 +437,12 @@ const JournalReport = () => {
         <DataGrid
           apiRef={apiRef}
           columns={columns}
-          rows={rows}
+          rows={filteredRows}
           slots={{
             toolbar: GridToolbar,
           }}
+          isCellEditable={(oj) => oj.row.status === "Pending"}
+          onCellEditStop={(current, event) => updateCell(current, event)}
           checkboxSelection
           disableRowSelectionOnClick
           initialState={{
@@ -331,6 +497,13 @@ const JournalReport = () => {
           <EntryInfo entries={entries} />
         </Grid>
       </Drawer>
+      <CommentDialog
+        open={open}
+        row={row}
+        value={changeValue}
+        onSubmit={(row, value) => handleSubmit(row, value)}
+        onCancel={() => handleClickCancel()}
+      />
       <Dialog
         TransitionComponent={Transition}
         fullScreen

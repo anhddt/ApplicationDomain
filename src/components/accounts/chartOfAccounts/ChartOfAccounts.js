@@ -33,6 +33,7 @@ import {
   createAccountEvent,
   deleteAccount,
   getAllAccounts,
+  getAllActiveAccounts,
   updateChartOfAccounts,
 } from "../../../middleware/firebase/FireStoreUtils";
 import { createEvent } from "../eventsLog/event";
@@ -93,6 +94,7 @@ const getBalance = (array) => {
  * This renders the table with differnt accounts
  * Admin can change anything except the id and the balance of the account
  * Account can be disabled at any balance but can only be deleted when balance is 0.
+ * Basic userstanding of component layout is required. Contact Anh for more information on how to layout your components.
  * @returns a table JSX component
  */
 const ChartOfAccounts = () => {
@@ -282,19 +284,22 @@ const ChartOfAccounts = () => {
     {
       field: "createdDate",
       headerName: "Created On",
-      type: "string",
+      type: "date",
       flex: 1,
       renderHeader: (param) => headerElement(param),
-      renderCell: (row) => new Date(row.createdDate).toString(),
+      renderCell: (row) => row.value.toString(),
+      valueGetter: ({ value }) => new Date(value),
       minWidth: 420,
     },
     {
       field: "modifiedDate",
       headerName: "Modified On",
-      type: "string",
+      type: "date",
       flex: 1,
       renderHeader: (param) => headerElement(param),
-      renderCell: (row) => new Date(row.modifiedDate).toString(),
+      renderCell: (row) =>
+        row.value === null ? "N/A" : new Date(row.value).toString(),
+      valueGetter: ({ value }) => (value === "" ? null : new Date(value)),
       minWidth: 420,
     },
     {
@@ -323,17 +328,24 @@ const ChartOfAccounts = () => {
       }
     });
   }, [tab, rows]);
+
+  /**
+   * The useEffect makes API calls to the backend to retrieve the data
+   * The right way of doing this is to make a store that holds the state of the API.
+   * Since the scale of this project is small, useEffect is acceptable for making API calls.
+   * Due to multiple editting activities are being done on this page. A timeout is provides to
+   * halt the useEffect from triggering too early before the edit commit is stored in the backend.
+   */
   useEffect(() => {
     const getAccounts = setTimeout(async () => {
       try {
-        const q = await getAllAccounts();
+        const q =
+          role === "admin"
+            ? await getAllAccounts()
+            : await getAllActiveAccounts();
         const arr = [];
         q.map((item) => arr.push(item.data()));
-        setRows(
-          role === "admin"
-            ? arr.sort(f)
-            : arr.filter((row) => row.status === "Active").sort(f)
-        );
+        setRows(arr.sort(f));
         const balance = getBalance(
           arr.filter((row) => row.status === "Active")
         );

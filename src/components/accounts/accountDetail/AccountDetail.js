@@ -4,10 +4,6 @@ import {
   Box,
   Button,
   Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
   Drawer,
   Grid,
   IconButton,
@@ -17,7 +13,6 @@ import {
   Toolbar,
   Link,
   Typography,
-  TextField,
 } from "@mui/material";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import CloseIcon from "@mui/icons-material/Close";
@@ -46,17 +41,29 @@ import {
   getJournal,
   updateEntry,
   updateAccountBalance,
+  updateJournalsStatus,
 } from "../../../middleware/firebase/FireStoreUtils";
 import { f } from "../eventsLog/EventLog";
 import { createEvent } from "../eventsLog/event";
 import EventDetail from "../eventsLog/EventDetail";
 import EntryInfo from "./EntryInfo";
+import RejectCommentDialog from "./RejectCommentDialog";
 
+/**
+ * Just like its name, this component makes the dialog slides
+ * The direction is from right to left.
+ */
 export const Transition = forwardRef((props, ref) => {
   return <Slide direction="left" ref={ref} {...props} />;
 });
 
-const plusOrMinus = (row, parentNormalSide) => {
+/**
+ * Tell whether the entries should be positive or negative.
+ * It depends on the parent normal side.
+ * For example, if the parent normal side it credit, then the entries
+ * with type Credit is positive. The same goes for Debit accounts.
+ */
+export const plusOrMinus = (row, parentNormalSide) => {
   let number = row.total;
   if (parentNormalSide === "Debit") {
     if (row.type === "Credit") {
@@ -71,7 +78,14 @@ const plusOrMinus = (row, parentNormalSide) => {
   }
   return number;
 };
-const getBalance = (array, parentNormalSide) => {
+
+/**
+ * Compute the balance of a given list of entries
+ * @param {*} array an array of entries
+ * @param {*} parentNormalSide require the parent account normal side to tell whether the entry should be positive or negative
+ * @returns the account balance
+ */
+export const getBalance = (array, parentNormalSide) => {
   let balance = 0;
   if (array.length > 0)
     balance = array
@@ -79,12 +93,26 @@ const getBalance = (array, parentNormalSide) => {
       .reduce((total, amount) => amount + total);
   return balance;
 };
+
+/**
+ * Compute the total of the entries' amount shown on the table.
+ * Takes in a list of entries ids and a list of entries
+ * Filter out the entries that are not included in the ids
+ * Then compute the total for the entries that are included in the ids.
+ */
 const getTotal = (ids, filteredRows, parentNormalSide) => {
   const arr = filteredRows.filter((item) => ids.includes(item.id));
   const total = getBalance(arr, parentNormalSide);
   return total;
 };
 
+/**
+ * Show the detail of the an account.
+ * The content of this function is straight forward, reference the ChartOfAccounts component for more information.
+ * Most of the components are imported from Material UI. Check MUI for more information.
+ * @param {*} onClose a call back function that tells the parent component whether this component should be unmounted
+ * @returns A component that show the detail for the selected account.
+ */
 const AccountDetail = ({ onClose }) => {
   const [parentAccount, setParentAccount] = useState({});
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -95,7 +123,6 @@ const AccountDetail = ({ onClose }) => {
   const { tableStyles, theme } = useThemeProvider();
   const { accountDetailPersistence, role, user } = useAuth();
   const [open, setOpen] = useState(false);
-  const [comment, setComment] = useState("");
   const [row, setRow] = useState({});
   const [changeValue, setChangeValue] = useState("");
   const [balance, setBalance] = useState(0);
@@ -118,7 +145,7 @@ const AccountDetail = ({ onClose }) => {
           handleDrawerOpen(row);
         }}
       >
-        {new Date(row.value).toString()}
+        {row.value.toString()}
       </Link>
     );
   };
@@ -132,7 +159,7 @@ const AccountDetail = ({ onClose }) => {
           handleJournalOpen(row);
         }}
       >
-        {new Date(row.value).toString()}
+        {row.value.toString()}
       </Link>
     );
   };
@@ -152,9 +179,6 @@ const AccountDetail = ({ onClose }) => {
   const handleJournalClose = () => {
     setJournalOpen(false);
   };
-  const handleChange = (e) => {
-    setComment(e.target.value);
-  };
   const handleDrawerOpen = (row) => {
     setDrawerContent(eventRows.filter((item) => item.id === row.id)[0]);
     setDrawerOpen(true);
@@ -162,18 +186,7 @@ const AccountDetail = ({ onClose }) => {
   const handleDrawerClose = () => {
     setDrawerOpen(false);
   };
-  const handleClickClose = async () => {
-    handleSubmit(row, changeValue);
-    setTimeout(async () => {
-      const copy = row;
-      copy.field = "comment";
-      copy.formattedValue = copy.row.comment;
-      handleSubmit(copy, comment);
-    }, 2000);
-    handleClickCancel();
-  };
   const handleClickCancel = () => {
-    setComment("");
     setChangeValue("");
     setRow({});
     setOpen(false);
@@ -417,17 +430,30 @@ const AccountDetail = ({ onClose }) => {
         setChangeValue(value);
       } else handleSubmit(current, value);
     }
+    setRefresh((refresh) => !refresh);
   };
 
   const handleSubmit = async (current, value) => {
+    if (current.field === "status") {
+      const jn = current.row.journal;
+      const journal = await getJournal(jn);
+      const entries = journal.entries;
+      const entry1 = await getEntry(entries[0].parent, entries[0].entry);
+      const entry2 = await getEntry(entries[1].parent, entries[1].entry);
+      if (
+        (current.row.parent === entry1.parent && value === entry2.status) ||
+        (current.row.parent === entry2.parent && value === entry1.status)
+      )
+        updateJournalsStatus(journal.id, value);
+    }
     await updateEntry(current, accountDetailPersistence.id, value);
     current.row[current.field] = value;
     const e = createEvent(user, current, "cell");
-    handleEvents(e);
+    handleEvents(e, accountDetailPersistence.id);
   };
 
-  const handleEvents = (e) => {
-    createEntryEvent(e, accountDetailPersistence.id);
+  const handleEvents = (e, id) => {
+    createEntryEvent(e, id);
     setRefresh((refresh) => !refresh);
   };
 
@@ -450,12 +476,11 @@ const AccountDetail = ({ onClose }) => {
   useEffect(() => {
     const id = accountDetailPersistence.id;
     const getDetails = async () => {
-      const parentAcc = await getAccount(accountDetailPersistence.id);
+      const parentAcc = await getAccount(id);
       setParentAccount(parentAcc);
       const details = await getAllEntries(id);
       const rawData = [];
       details.map((detail) => rawData.push(detail.data()));
-      // if (role === "admin") setRawData(rawData);
       const filteredData = [];
       rawData.map(
         (data, index) =>
@@ -695,37 +720,13 @@ const AccountDetail = ({ onClose }) => {
             <EntryInfo entries={entries} />
           </Grid>
         </Drawer>
-        <Dialog open={open} onClose={() => handleClickCancel()}>
-          <DialogTitle sx={{ fontWeight: "bold" }}>
-            Please provide a comment.
-          </DialogTitle>
-          <DialogContent>
-            <DialogContentText>
-              <TextField
-                sx={{
-                  width: "350px",
-                }}
-                multiline
-                value={comment}
-                placeholder={"You must enter a comment to reject an entry."}
-                onChange={(e) => handleChange(e)}
-                size="small"
-              />
-            </DialogContentText>
-          </DialogContent>
-          <DialogActions>
-            <Button variant="outlined" onClick={() => handleClickClose()}>
-              Yes
-            </Button>
-            <Button
-              variant="contained"
-              onClick={() => handleClickCancel()}
-              autoFocus
-            >
-              No
-            </Button>
-          </DialogActions>
-        </Dialog>
+        <RejectCommentDialog
+          open={open}
+          row={row}
+          value={changeValue}
+          onSubmit={(row, value) => handleSubmit(row, value)}
+          onCancel={() => handleClickCancel()}
+        />
       </Box>
     </Box>
   );

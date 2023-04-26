@@ -1,0 +1,7 @@
+.total-underline {
+  border-bottom: 5px double;
+}
+
+#print-icon:hover {
+  color: rgba(255, 145, 0, 0.855);
+}
