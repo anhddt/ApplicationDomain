@@ -12,6 +12,14 @@ import {
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import { countPendingJournals } from "../../../middleware/firebase/FireStoreUtils";
 import { useNavigate } from "react-router-dom";
+
+/**
+ * The notification icon that notifies the user how many pending journal entries
+ * that need their approval
+ *
+ * Clicking on the icon show a menu allows the user to nagivate to the pending journal
+ * tab.
+ */
 const CustomNotificationIcon = ({ id1, id2 }) => {
   const navigateTo = useNavigate();
   const [content, setContent] = useState(0);
@@ -23,6 +31,11 @@ const CustomNotificationIcon = ({ id1, id2 }) => {
   const handleClose = () => {
     setOpen(false);
     setAnchorEl(null);
+  };
+
+  const handleNavigate = () => {
+    handleClose();
+    navigateTo("/accounts", { state: { showItem: "Journal", tab: 1 } });
   };
   useEffect(() => {
     (async () => {
@@ -56,13 +69,7 @@ const CustomNotificationIcon = ({ id1, id2 }) => {
         }}
         anchorEl={anchorEl}
       >
-        <MenuItem
-          onClick={() => {
-            handleClose();
-            navigateTo("/accounts", { state: { showItem: "Journal", tab: 1 } });
-          }}
-          sx={{ p: 0, m: 0 }}
-        >
+        <MenuItem onClick={() => handleNavigate()} sx={{ p: 0, m: 0 }}>
           <Box className="notification-box">
             <Typography>
               {`You have ${content} pending journal entries.`}

@@ -56,6 +56,7 @@ const AcccountsPage = () => {
    * @param {} view
    */
   const handleShow = (view) => {
+    window.history.replaceState({}, document.title);
     setShow(view);
   };
   const ListItem = listItems.map((item) => {
@@ -114,7 +115,10 @@ const AcccountsPage = () => {
         >
           {ListItem}
           {role !== "user" && (
-            <Tooltip title="Get Statements" placement="right">
+            <Tooltip
+              title={drawerOpen ? "" : "Get Statements"}
+              placement="right"
+            >
               <ListItemButton
                 id={show === "Get Statements" ? "lid-up-icon" : "menu-item"}
                 sx={{
