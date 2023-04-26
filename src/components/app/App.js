@@ -32,7 +32,6 @@ const publicPages = [
   { path: "/contact", component: <ContactPage /> },
   //Testing
   { path: "/uploader", component: <UploadDownload /> },
-
 ];
 const PublicRoutes = publicPages.map((page) => {
   return (

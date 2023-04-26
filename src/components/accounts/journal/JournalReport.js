@@ -43,7 +43,42 @@ import {
 } from "../../../middleware/firebase/FireStoreUtils";
 import { createEvent } from "../eventsLog/event";
 import CommentDialog from "./CommentDialog";
+import emailjs from "@emailjs/browser";
 
+/**
+ * Straight forward template for sending email to another user
+ * The function takes in two entry objects, a string value, and a user object
+ * @param {*} entry1 object
+ * @param {*} entry2 object
+ * @param {*} value string
+ * @param {*} user object
+ */
+export const sendEmail = (entry1, entry2, value, user) => {
+  //Email object to send email
+  const email = {
+    to_email: entry1.user.email,
+    to_name: entry1.user.firstName,
+    modification: value,
+    message1: `Account ids: ${entry1.parent}, and ${entry2.parent}.`,
+    message2: `Entries: ${entry1.name} (${entry1.type} - ${toCurrency.format(
+      entry1.total
+    )}), and ${entry2.name} (${entry2.type} - ${toCurrency.format(
+      entry2.total
+    )}) were ${value.toLowerCase()} by ${user.firstName} ${
+      user.lastName
+    } on ${new Date().toString()}.`,
+  };
+  /**
+   * Straight forward procedure
+   * Checkout emailjs documentation for more information
+   */
+  emailjs.send(
+    process.env.REACT_APP_EMAILJS_SERVICE_ID,
+    process.env.REACT_APP_EMAILJS_TEMPLATE_ID,
+    email,
+    process.env.REACT_APP_EMAILJS_PUBLISH_KEY
+  );
+};
 /**
  * Show all journal entries on a table.
  * User can also edit the status of the entries here.
@@ -210,6 +245,12 @@ const JournalReport = ({ defaultTab }) => {
     createEntryEvent(e, id);
     setRefresh((refresh) => !refresh);
   };
+
+  /**
+   * Update both entries at a time
+   * @param {*} current a row on the journal
+   * @param {*} value a user input cell value for replacement
+   */
   const handleSubmit = async (current, value) => {
     const entries = current.row.entries;
     const entry1 = await getEntry(entries[0].parent, entries[0].entry);
@@ -240,7 +281,11 @@ const JournalReport = ({ defaultTab }) => {
       updateAccountBalance(entry2.parent);
       updateAccountBalance(entry2.parent);
     }
-    if (current.field === "status") updateJournalsStatus(current.row.id, value);
+    if (current.field === "status") {
+      updateJournalsStatus(current.row.id, value);
+      sendEmail(entry1, entry2, value, user);
+    }
+
     createEntryEvent(e2, entry2.parent);
     handleEvents(e1, entry1.parent);
   };
