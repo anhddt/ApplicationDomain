@@ -27,6 +27,7 @@ import BorderColorIcon from "@mui/icons-material/BorderColor";
 // import CalculateIcon from "@mui/icons-material/Calculate";
 // import AttachFileIcon from "@mui/icons-material/AttachFile";
 import DownloadIcon from "@mui/icons-material/Download";
+import UploadDownload from "./uploadDownload/UploadDownload";
 
 const AcccountsPage = () => {
   const { state } = useLocation();
@@ -168,6 +169,7 @@ const AcccountsPage = () => {
           <JournalReport defaultTab={state?.tab || 0} />
         )}
         {showIf(show === "Get Statements", <Statement />)}
+        {showIf(show === "Add file", <UploadDownload />)}
       </Box>
     </Box>
   );

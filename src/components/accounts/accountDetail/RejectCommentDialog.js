@@ -30,13 +30,11 @@ const RejectCommentDialog = ({ open, onSubmit, row, value, onCancel }) => {
     onCancel();
   };
   const handleClickClose = async () => {
-    onSubmit(row, value);
-    setTimeout(async () => {
-      const copy = row;
-      copy.field = "comment";
-      copy.formattedValue = copy.row.comment;
-      onSubmit(copy, comment);
-    }, 2000);
+    await onSubmit(row, value);
+    const copy = row;
+    copy.field = "comment";
+    copy.formattedValue = copy.row.comment;
+    onSubmit(copy, comment);
     handleClickCancel();
   };
   return (
