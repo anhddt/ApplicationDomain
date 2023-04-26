@@ -48,7 +48,6 @@ import { createEvent } from "../eventsLog/event";
 import EventDetail from "../eventsLog/EventDetail";
 import EntryInfo from "./EntryInfo";
 import RejectCommentDialog from "./RejectCommentDialog";
-import emailjs from "@emailjs/browser";
 import { sendEmail } from "../journal/JournalReport";
 
 /**
