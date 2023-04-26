@@ -95,7 +95,9 @@ const Homebar = () => {
             <MenuItem
               onClick={() => {
                 handleCloseNavMenu();
-                navigateTo("/accounts");
+                navigateTo("/accounts", {
+                  state: { showItem: "Chart of accounts" },
+                });
               }}
               id="menu-item"
             >

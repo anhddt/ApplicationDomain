@@ -44,7 +44,11 @@ function Navbar() {
         </NavLink>
       )}
       {currentUser && (
-        <NavLink to="/accounts" className="navbar-item">
+        <NavLink
+          to="/accounts"
+          state={{ showItem: "Chart of accounts" }}
+          className="navbar-item"
+        >
           <Typography variant="subtitle1">Accounting</Typography>
         </NavLink>
       )}
