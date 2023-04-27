@@ -32,22 +32,13 @@ const UploadDownload = () => {
 
     // Method to download files
     const handleDownload = async(event) => {
-        const filename = "ReviewQuiz6-AnhTruong.pdf";
         event.preventDefault();
         const storage = getStorage();
-        const storageRef = ref(storage, "files/" + filename)
+        const storageRef = ref(storage, "files/" + file.name);
         // Get the download URL
         getDownloadURL(storageRef)
         .then((url) => {
-            // Insert url into an <img> tag to "download"
-            // const blob = new Blob([url], {type: "application/pdf"});
-            // const fileUrl = URL.createObjectURL(blob);
-            // const file = document.createElement("file-to-download");
-            // file.href = url;
-            // file.setAttribute("download", filename);
-            // document.body.appendChild(file);
-            // file.click();
-            // file.remove();
+
             window.open(url, "_blank");
         })
 

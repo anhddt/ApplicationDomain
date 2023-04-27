@@ -16,6 +16,7 @@ import {
   Tooltip,
   Typography,
   TextField,
+  Link,
 } from "@mui/material";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
@@ -35,6 +36,12 @@ import {
   isGood,
 } from "../../../middleware/verification/userInfo";
 import CustomMoneyFormat from "./CustomMoneyFormat";
+import {
+  ref,
+  uploadBytes,
+  getStorage,
+  getDownloadURL,
+} from "firebase/storage";
 
 /**
  * This component is used as a drawer on the right hand side
@@ -47,6 +54,7 @@ const AddEntriesContent = ({ parent }) => {
   const { user, accountDetailPersistence } = useAuth();
   const [errorMessage, setErrorMessage] = useState("");
   const [open, setOpen] = useState(false);
+
   const [entries, setEntries] = useState([
     {
       id: "",
@@ -104,6 +112,91 @@ const AddEntriesContent = ({ parent }) => {
       setEntries(arr);
     }
   };
+
+  const handleFileChange = (file, index) => {
+    const temparr = entries;
+    temparr[index].files.push(file)
+    setEntries(temparr);
+    console.log(temparr);
+  }
+
+  //Upload feature!
+  const UploadDownload = ({index, onChange}) => {
+    // State to store uploaded file
+    const [file, setFile] = useState("");
+    // Select file to upload
+    function handleChange(event) {
+        setFile(event.target.files[0]);
+    }
+    
+    // Method to upload files
+    const handleUpload = (event) => {
+        onChange('files/' + file.name, index);
+        event.preventDefault();
+        const storage = getStorage();
+        const storageRef = ref(storage, 'files/' + file.name);
+            
+        // Receives the storage reference and the file to upload.
+        uploadBytes(storageRef, file);
+    };
+
+    // Method to download files
+
+
+    return(
+        <form>
+            <Box className="uploader-box">
+                <input type="file" onChange={handleChange} />
+                <button onClick={handleUpload}>Upload</button>
+
+
+            </Box>
+        </form>
+    );
+};
+
+  const DownloadComp = ({file}) => {
+    console.log(file ?file: "no file");
+    const handleDownload = async(event) => {
+      event.preventDefault();
+      const storage = getStorage();
+      const storageRef = ref(storage, file);
+      // Get the download URL
+      getDownloadURL(storageRef)
+      .then((url) => {
+
+          window.open(url, "_blank");
+      })
+    };
+    console.log(file);
+    return(
+      <Box>
+        <Link onClick = {(e) => handleDownload(e)}>{file}</Link>
+        
+      </Box>
+    )
+  }
+
+  const DownloadLinks = ({files}) => {
+    console.log(files.length > 0 ?files: "no file");
+    return(
+      <Box>
+        {files.map(
+          
+          file => (
+          <Box key = {file}>
+            <DownloadComp file = {file}>
+            
+            </DownloadComp>
+          </Box>
+          
+          )
+      
+        )}
+
+      </Box>
+    )
+  }
 
   const handleEntryChange = (e, i) => {
     const arr = [...entries];
@@ -364,6 +457,10 @@ const AddEntriesContent = ({ parent }) => {
           inputComponent: CustomMoneyFormat,
         }}
       />
+      <Box>
+        <DownloadLinks files = {entry.files}/>
+        <UploadDownload onChange = {handleFileChange} index = {index}/>
+      </Box>
     </Grid>
   ));
   return (
