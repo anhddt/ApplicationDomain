@@ -21,6 +21,7 @@ import {
   updatePassword,
 } from "firebase/auth";
 import isBetween from "dayjs/plugin/isBetween";
+import { ref, uploadBytes, getStorage, getDownloadURL } from "firebase/storage";
 dayjs.extend(isBetween);
 
 /**
@@ -503,24 +504,69 @@ export const getAllEvents = async () => {
  * Entry parent is the account id that it's associated with
  */
 export const createEntry = async (newEntry) => {
+  const arr = [];
+  newEntry.files.map((file) =>
+    arr.push({
+      path: `files/${newEntry.parent}-${newEntry.id}/${file.name}`,
+      name: file.name,
+    })
+  );
+  const obj = newEntry;
   try {
+    await uploadEntryFiles(obj);
+    obj.files = arr;
     await setDoc(
       doc(
         db,
         "accounting",
         "chartOfAccounts",
         "accounts",
-        `${newEntry.parent}`,
+        `${obj.parent}`,
         "entries",
-        `${newEntry.id}`
+        `${obj.id}`
       ),
-      newEntry
+      obj
     );
   } catch (error) {
     console.log(error);
   }
 };
 
+/**
+ * Upload entry files to storage
+ * @param {*} entry object
+ */
+export const uploadEntryFiles = async (entry) => {
+  try {
+    const storage = getStorage();
+    entry.files.forEach((file) => {
+      const storageRef = ref(
+        storage,
+        `files/${entry.parent}-${entry.id}/` + file.name
+      );
+      uploadBytes(storageRef, file);
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
+/**
+ * Download file with the profiled file path
+ * @param {*} filePath string
+ */
+export const downloadEntryFile = async (file) => {
+  try {
+    const storage = getStorage();
+    const storageRef = ref(storage, file.path);
+    // Get the download URL
+    getDownloadURL(storageRef).then((url) => {
+      // For the shake of not saving any file let just open it on a new window and we can decide to save it or not.
+      window.open(url, "_blank");
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
 /**
  * This function the entry based on the parent account and the entry id
  * @returns
@@ -614,7 +660,6 @@ export const updateEntry = async (row, parent, value) => {
     console.log(error);
   }
 };
-
 /**
  * This function create an event in the database
  * @param {*} event an event object which has the event date, previous object,

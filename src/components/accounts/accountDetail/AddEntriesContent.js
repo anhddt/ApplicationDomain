@@ -16,11 +16,13 @@ import {
   Tooltip,
   Typography,
   TextField,
+  Link,
 } from "@mui/material";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
 import CancelIcon from "@mui/icons-material/Cancel";
 import ErrorIcon from "@mui/icons-material/Error";
+import AttachFileIcon from "@mui/icons-material/AttachFile";
 import {
   createEntry,
   createEntryEvent,
@@ -47,6 +49,7 @@ const AddEntriesContent = ({ parent }) => {
   const { user, accountDetailPersistence } = useAuth();
   const [errorMessage, setErrorMessage] = useState("");
   const [open, setOpen] = useState(false);
+
   const [entries, setEntries] = useState([
     {
       id: "",
@@ -228,6 +231,27 @@ const AddEntriesContent = ({ parent }) => {
   const handleClickClose = () => {
     setOpen(false);
   };
+
+  const handleOpenFile = (file) => {
+    const a = document.createElement("a");
+    a.download = file.name;
+    a.href = URL.createObjectURL(file);
+    a.addEventListener("click", (e) => {
+      setTimeout(() => URL.revokeObjectURL(a.href), 30 * 1000);
+    });
+    a.click();
+  };
+
+  const handleAddFile = (e, index) => {
+    const arr = [...entries];
+    arr[index].files.push(e.target.files[0]);
+    setEntries(arr);
+  };
+  const handleDiscardFile = (index, i) => {
+    const arr = [...entries];
+    arr[index].files.splice(i, 1);
+    setEntries(arr);
+  };
   const EntryInfo = entries.map((entry, index) => (
     <Grid
       item
@@ -364,6 +388,38 @@ const AddEntriesContent = ({ parent }) => {
           inputComponent: CustomMoneyFormat,
         }}
       />
+      <Box sx={{ display: "flex", flexDirection: "column" }}>
+        {entry.files.length > 0 &&
+          entry.files.map((file, i) => (
+            <Box key={`${file.name}-${i}`}>
+              <Link onClick={() => handleOpenFile(file)}>{file.name}</Link>
+              <Tooltip title="Discard" placement="right">
+                <IconButton
+                  sx={{ ml: "10px" }}
+                  id={
+                    theme === "dark"
+                      ? "cancel-x-button-dark"
+                      : "cancel-x-button"
+                  }
+                  onClick={() => handleDiscardFile(index, i)}
+                  size="small"
+                >
+                  <CancelIcon fontSize="small" />
+                </IconButton>
+              </Tooltip>
+            </Box>
+          ))}
+        <Button
+          sx={{ width: "25%" }}
+          size="small"
+          variant="contained"
+          component="label"
+        >
+          <AttachFileIcon />
+          <input hidden type="file" onChange={(e) => handleAddFile(e, index)} />
+          Browse file
+        </Button>
+      </Box>
     </Grid>
   ));
   return (
