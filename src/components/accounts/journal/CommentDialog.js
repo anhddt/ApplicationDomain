@@ -35,17 +35,16 @@ const CommentDialog = ({ open, onSubmit, row, value, onCancel }) => {
    * The setTimeout makes sure the process waits for the previous change is being recorded in the backend before making a new change.
    */
   const handleClickClose = async () => {
-    onSubmit(row, value);
-    setTimeout(async () => {
-      const commentObj = {
-        field: "comment",
-        formattedValue: "",
-        row: {
-          entries: row.row.entries,
-        },
-      };
-      onSubmit(commentObj, comment);
-    }, 2000);
+    await onSubmit(row, value);
+    const commentObj = {
+      id: row.id,
+      field: "comment",
+      formattedValue: "",
+      row: {
+        entries: row.row.entries,
+      },
+    };
+    onSubmit(commentObj, comment);
     handleClickCancel();
   };
   return (

@@ -48,6 +48,7 @@ import { createEvent } from "../eventsLog/event";
 import EventDetail from "../eventsLog/EventDetail";
 import EntryInfo from "./EntryInfo";
 import RejectCommentDialog from "./RejectCommentDialog";
+import { sendEmail } from "../journal/JournalReport";
 
 /**
  * Just like its name, this component makes the dialog slides
@@ -441,10 +442,14 @@ const AccountDetail = ({ onClose }) => {
       const entry1 = await getEntry(entries[0].parent, entries[0].entry);
       const entry2 = await getEntry(entries[1].parent, entries[1].entry);
       if (
-        (current.row.parent === entry1.parent && value === entry2.status) ||
-        (current.row.parent === entry2.parent && value === entry1.status)
-      )
+        (accountDetailPersistence.id === entry1.parent &&
+          value === entry2.status) ||
+        (accountDetailPersistence.id === entry2.parent &&
+          value === entry1.status)
+      ) {
         updateJournalsStatus(journal.id, value);
+        sendEmail(entry1, entry2, value, user);
+      }
     }
     await updateEntry(current, accountDetailPersistence.id, value);
     current.row[current.field] = value;
