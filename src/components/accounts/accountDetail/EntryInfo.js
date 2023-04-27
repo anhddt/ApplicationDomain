@@ -1,7 +1,8 @@
-import { Box, Grid, InputAdornment, TextField } from "@mui/material";
+import { Box, Grid, InputAdornment, Link, TextField } from "@mui/material";
 import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
 import { useThemeProvider } from "../../utils/themeProvider/CustomThemeProvier";
 import CustomMoneyFormat from "./CustomMoneyFormat";
+import { downloadEntryFile } from "../../../middleware/firebase/FireStoreUtils";
 
 /**
  * When clicking on an entry on the table, a dialog will be shown with the entry's information
@@ -12,6 +13,9 @@ import CustomMoneyFormat from "./CustomMoneyFormat";
  */
 const EntryInfo = ({ entries }) => {
   const { theme } = useThemeProvider();
+  const handleDownloadFile = (file) => {
+    downloadEntryFile(file);
+  };
   const Info = entries.map((entry, index) => (
     <Grid
       item
@@ -107,6 +111,15 @@ const EntryInfo = ({ entries }) => {
           inputComponent: CustomMoneyFormat,
         }}
       />
+      {entry.files.length > 0 &&
+        entry.files.map((file, i) => (
+          <Link
+            key={`${file.path}-${i}`}
+            onClick={() => handleDownloadFile(file)}
+          >
+            {file.name}
+          </Link>
+        ))}
     </Grid>
   ));
   return Info;

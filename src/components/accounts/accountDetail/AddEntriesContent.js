@@ -22,6 +22,7 @@ import AddCircleIcon from "@mui/icons-material/AddCircle";
 import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
 import CancelIcon from "@mui/icons-material/Cancel";
 import ErrorIcon from "@mui/icons-material/Error";
+import AttachFileIcon from "@mui/icons-material/AttachFile";
 import {
   createEntry,
   createEntryEvent,
@@ -36,12 +37,6 @@ import {
   isGood,
 } from "../../../middleware/verification/userInfo";
 import CustomMoneyFormat from "./CustomMoneyFormat";
-import {
-  ref,
-  uploadBytes,
-  getStorage,
-  getDownloadURL,
-} from "firebase/storage";
 
 /**
  * This component is used as a drawer on the right hand side
@@ -112,91 +107,6 @@ const AddEntriesContent = ({ parent }) => {
       setEntries(arr);
     }
   };
-
-  const handleFileChange = (file, index) => {
-    const temparr = entries;
-    temparr[index].files.push(file)
-    setEntries(temparr);
-    console.log(temparr);
-  }
-
-  //Upload feature!
-  const UploadDownload = ({index, onChange}) => {
-    // State to store uploaded file
-    const [file, setFile] = useState("");
-    // Select file to upload
-    function handleChange(event) {
-        setFile(event.target.files[0]);
-    }
-    
-    // Method to upload files
-    const handleUpload = (event) => {
-        onChange('files/' + file.name, index);
-        event.preventDefault();
-        const storage = getStorage();
-        const storageRef = ref(storage, 'files/' + file.name);
-            
-        // Receives the storage reference and the file to upload.
-        uploadBytes(storageRef, file);
-    };
-
-    // Method to download files
-
-
-    return(
-        <form>
-            <Box className="uploader-box">
-                <input type="file" onChange={handleChange} />
-                <button onClick={handleUpload}>Upload</button>
-
-
-            </Box>
-        </form>
-    );
-};
-
-  const DownloadComp = ({file}) => {
-    console.log(file ?file: "no file");
-    const handleDownload = async(event) => {
-      event.preventDefault();
-      const storage = getStorage();
-      const storageRef = ref(storage, file);
-      // Get the download URL
-      getDownloadURL(storageRef)
-      .then((url) => {
-
-          window.open(url, "_blank");
-      })
-    };
-    console.log(file);
-    return(
-      <Box>
-        <Link onClick = {(e) => handleDownload(e)}>{file}</Link>
-        
-      </Box>
-    )
-  }
-
-  const DownloadLinks = ({files}) => {
-    console.log(files.length > 0 ?files: "no file");
-    return(
-      <Box>
-        {files.map(
-          
-          file => (
-          <Box key = {file}>
-            <DownloadComp file = {file}>
-            
-            </DownloadComp>
-          </Box>
-          
-          )
-      
-        )}
-
-      </Box>
-    )
-  }
 
   const handleEntryChange = (e, i) => {
     const arr = [...entries];
@@ -320,6 +230,27 @@ const AddEntriesContent = ({ parent }) => {
 
   const handleClickClose = () => {
     setOpen(false);
+  };
+
+  const handleOpenFile = (file) => {
+    const a = document.createElement("a");
+    a.download = file.name;
+    a.href = URL.createObjectURL(file);
+    a.addEventListener("click", (e) => {
+      setTimeout(() => URL.revokeObjectURL(a.href), 30 * 1000);
+    });
+    a.click();
+  };
+
+  const handleAddFile = (e, index) => {
+    const arr = [...entries];
+    arr[index].files.push(e.target.files[0]);
+    setEntries(arr);
+  };
+  const handleDiscardFile = (index, i) => {
+    const arr = [...entries];
+    arr[index].files.splice(i, 1);
+    setEntries(arr);
   };
   const EntryInfo = entries.map((entry, index) => (
     <Grid
@@ -457,9 +388,37 @@ const AddEntriesContent = ({ parent }) => {
           inputComponent: CustomMoneyFormat,
         }}
       />
-      <Box>
-        <DownloadLinks files = {entry.files}/>
-        <UploadDownload onChange = {handleFileChange} index = {index}/>
+      <Box sx={{ display: "flex", flexDirection: "column" }}>
+        {entry.files.length > 0 &&
+          entry.files.map((file, i) => (
+            <Box key={`${file.name}-${i}`}>
+              <Link onClick={() => handleOpenFile(file)}>{file.name}</Link>
+              <Tooltip title="Discard" placement="right">
+                <IconButton
+                  sx={{ ml: "10px" }}
+                  id={
+                    theme === "dark"
+                      ? "cancel-x-button-dark"
+                      : "cancel-x-button"
+                  }
+                  onClick={() => handleDiscardFile(index, i)}
+                  size="small"
+                >
+                  <CancelIcon fontSize="small" />
+                </IconButton>
+              </Tooltip>
+            </Box>
+          ))}
+        <Button
+          sx={{ width: "25%" }}
+          size="small"
+          variant="contained"
+          component="label"
+        >
+          <AttachFileIcon />
+          <input hidden type="file" onChange={(e) => handleAddFile(e, index)} />
+          Browse file
+        </Button>
       </Box>
     </Grid>
   ));
