@@ -279,7 +279,7 @@ const JournalReport = ({ defaultTab }) => {
     const e2 = createEvent(user, change2, "cell");
     if (value === "Approved") {
       updateAccountBalance(entry2.parent);
-      updateAccountBalance(entry2.parent);
+      updateAccountBalance(entry1.parent);
     }
     if (current.field === "status") {
       updateJournalsStatus(current.row.id, value);
