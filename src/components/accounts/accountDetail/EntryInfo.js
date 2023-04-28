@@ -1,4 +1,14 @@
-import { Box, Grid, InputAdornment, Link, TextField } from "@mui/material";
+import {
+  Box,
+  Grid,
+  InputAdornment,
+  Link,
+  TextField,
+  Tooltip,
+} from "@mui/material";
+import PendingIcon from "@mui/icons-material/Pending";
+import ThumbUpAltIcon from "@mui/icons-material/ThumbUpAlt";
+import ThumbDownIcon from "@mui/icons-material/ThumbDown";
 import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
 import { useThemeProvider } from "../../utils/themeProvider/CustomThemeProvier";
 import CustomMoneyFormat from "./CustomMoneyFormat";
@@ -11,6 +21,32 @@ import { downloadEntryFile } from "../../../middleware/firebase/FireStoreUtils";
  * @param {*} entries the list of entries
  * @returns a map
  */
+
+const Indicator = (status) => {
+  switch (status) {
+    case "Pending":
+      return (
+        <Tooltip title="Pending" placement="top">
+          <PendingIcon sx={{ color: "info.main" }} />
+        </Tooltip>
+      );
+    case "Approved":
+      return (
+        <Tooltip title="Approved" placement="top">
+          <ThumbUpAltIcon sx={{ color: "success.main" }} />
+        </Tooltip>
+      );
+    case "Rejected":
+      return (
+        <Tooltip title="Rejected" placement="top">
+          <ThumbDownIcon sx={{ color: "error.main" }} />
+        </Tooltip>
+      );
+    default:
+      return <></>;
+  }
+};
+
 const EntryInfo = ({ entries }) => {
   const { theme } = useThemeProvider();
   const handleDownloadFile = (file) => {
@@ -47,6 +83,13 @@ const EntryInfo = ({ entries }) => {
         value={entry.name}
         size="small"
         inputProps={{ readOnly: true }}
+        InputProps={{
+          endAdornment: (
+            <InputAdornment position="start">
+              {Indicator(entry.status)}
+            </InputAdornment>
+          ),
+        }}
       />
       <TextField
         variant="standard"

@@ -121,6 +121,7 @@ const ChartOfAccounts = () => {
   const showDetail = (cell) => {
     const id = cell.id;
     setAccountDetailPersistence({
+      name: cell.row.name,
       open: true,
       normalSide: cell.row.normalSide,
       id: id,

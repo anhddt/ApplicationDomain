@@ -50,6 +50,7 @@ export const useAuth = () => {
  */
 const AuthProvider = ({ children }) => {
   const [accountDetailPersistence, setAccountDetailPersistence] = useState({
+    name: "",
     id: null,
     normalSide: "Debit",
     open: false,

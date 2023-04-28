@@ -34,7 +34,6 @@ import {
 import AddEntriesContent from "./AddEntriesContent";
 import {
   createEntryEvent,
-  getAccount,
   getAllEntries,
   getAllEntryEvents,
   getEntry,
@@ -115,7 +114,6 @@ const getTotal = (ids, filteredRows, parentNormalSide) => {
  * @returns A component that show the detail for the selected account.
  */
 const AccountDetail = ({ onClose }) => {
-  const [parentAccount, setParentAccount] = useState({});
   const [dialogOpen, setDialogOpen] = useState(false);
   const [drawerContent, setDrawerContent] = useState({});
   const [entries, setEntries] = useState([]);
@@ -481,8 +479,6 @@ const AccountDetail = ({ onClose }) => {
   useEffect(() => {
     const id = accountDetailPersistence.id;
     const getDetails = async () => {
-      const parentAcc = await getAccount(id);
-      setParentAccount(parentAcc);
       const details = await getAllEntries(id);
       const rawData = [];
       details.map((detail) => rawData.push(detail.data()));
@@ -564,9 +560,7 @@ const AccountDetail = ({ onClose }) => {
             variant="h4"
             sx={{ ml: "20px", fontWeight: "bold", flexGrow: 1 }}
           >
-            {`${parentAccount.name ? parentAccount.name : ""} (${
-              parentAccount.normalSide ? parentAccount.normalSide : ""
-            })`}
+            {`${accountDetailPersistence.name} (${accountDetailPersistence.normalSide})`}
           </Typography>
           <Typography variant="h5" sx={{ mr: "20px", fontWeight: "bold" }}>
             {`Account Balance: ${
